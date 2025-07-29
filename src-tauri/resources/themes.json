@@ -1,0 +1,36 @@
+[
+  {
+    "name": "catppucin",
+    "variables": {
+      "--color-brand-primary": "#fab387",
+      "--color-brand-secondary": "#cba6f7",
+      "--color-black": "#1e1e2e",
+      "--color-black-100": "#313244",
+      "--color-black-200": "#45475a",
+      "--color-black-300": "#585b70",
+      "--color-black-400": "#6c7086",
+      "--color-white": "#cdd6f4",
+      "--color-white-100": "#bac2de",
+      "--color-white-200": "#a6adc8",
+      "--color-white-300": "#9399b2",
+      "--color-white-400": "#949494"
+    }
+  },
+  {
+    "name": "dark",
+    "variables": {
+      "--color-primary": "oklch(70% 0.2 240)",
+      "--color-secondary": "oklch(50% 0.1 100)",
+      "--color-background": "oklch(10% 0 0)",
+      "--color-text": "oklch(90% 0 0)"
+    }
+  },
+  {
+    "name": "my-custom-red",
+    "variables": {
+      "--color-brand-primary": "#FF0000",
+      "--color-black-100": "#440000",
+      "--color-white": "#FFFFFF"
+    }
+  }
+]

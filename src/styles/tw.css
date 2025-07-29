@@ -1,0 +1,152 @@
+@import "tailwindcss";
+
+@custom-variant catppucin (&:where([data-theme="catppucin"], [data-theme="catppucin"] *));
+
+
+@font-face {
+    font-family: 'Mona Sans';
+    src: url('../assets/fonts/MonaItalic.ttf') format('truetype');
+    font-weight: 100 900;
+    font-stretch: 75% 125%;
+}
+
+@font-face {
+    font-family: 'Mona Sans';
+    src: url('../assets/fonts/Mona.ttf') format('truetype');
+    font-weight: 100 900;
+    font-stretch: 75% 125%;
+}
+
+@theme {
+    --font-mona: Mona Sans;
+    --color-brand-primary: #F4781A;
+    --color-brand-secondary: #FF2F7C;
+    --color-black: #131415;
+    --color-black-100: #181A1B;
+    --color-black-200: #303336;
+    --color-black-300: #494D50;
+    --color-black-400: #61666B;
+    --color-white: #FFFFF3;
+    --color-white-100: #E0E0E0;
+    --color-white-200: #C7C7C7;
+    --color-white-300: #ADADAD;
+    --color-white-400: #949494;
+    --block-width: 70rem;
+}
+
+@layer base {
+    [data-theme="Catppucin"] {
+        --color-brand-primary: #fab387;
+        --color-brand-secondary: #cba6f7;
+        --color-black: #1e1e2e;
+        --color-black-100: #313244;
+        --color-black-200: #45475a;
+        --color-black-300: #585b70;
+        --color-black-400: #6c7086;
+        --color-white: #cdd6f4;
+        --color-white-100: #bac2de;
+        --color-white-200: #a6adc8;
+        --color-white-300: #9399b2;
+        --color-white-400: #949494;
+    }
+}
+
+:root[data-theme="Catpputin"] {
+    --color-brand-primary: #fab387;
+    --color-brand-secondary: #cba6f7;
+    --color-black: #1e1e2e;
+    --color-black-100: #313244;
+    --color-black-200: #45475a;
+    --color-black-300: #585b70;
+    --color-black-400: #6c7086;
+    --color-white: #cdd6f4;
+    --color-white-100: #bac2de;
+    --color-white-200: #a6adc8;
+    --color-white-300: #9399b2;
+    --color-white-400: #949494;
+}
+
+.ce-inline-tool {
+    background: var(--color-black);
+}
+
+.ce-popover__container {
+    --color-border: var(--color-black-200);
+    --color-text-primary: var(--color-white);
+    --color-text-secondary: var(--color-white-400);
+    --color-background: var(--color-black)
+}
+
+.ce-popover__container>.ce-popover__items>button:hover {
+    background-color: var(--color-black-200);
+}
+
+.ce-popover-item-html>button:hover {
+    background-color: var(--color-black-200)
+}
+
+.ce-toolbar__actions>.ce-toolbar__plus {
+    color: var(--color-white);
+}
+
+.ce-toolbar__actions>.ce-toolbar__plus:hover {
+    background-color: var(--color-black-200);
+}
+
+.ce-toolbar__actions>.ce-toolbar__settings-btn {
+    color: var(--color-white);
+}
+
+.ce-toolbar__actions>.ce-toolbar__settings-btn:hover {
+    background-color: var(--color-black-200);
+}
+
+.ce-popover__container>.cdx-search-field {
+    background-color: var(--color-black-100)
+}
+
+.ce-popover__items>.ce-popover-item:hover {
+    background-color: var(--color-black-200)
+}
+
+.ct>.ct__content {
+    background-color: var(--color-black-100);
+    border-radius: 5px;
+}
+
+/* Apply the block width to EditorJS elements */
+.ce-block__content,
+/* Content inside each block */
+/* The block wrapper */
+.codex-editor__redactor,
+/* Main editing area */
+.ce-toolbar__content {
+    /* Toolbar content for editing */
+    max-width: var(--block-width);
+    /* Use the block width set in :root */
+    width: var(--block-width);
+    /* Apply the block width */
+    margin: 0 auto;
+}
+
+.ce-block__content {
+    margin: 0;
+}
+
+.ce-block--selected .ce-block__content {
+    background: var(--color-black-200);
+}
+
+::selection {
+    background-color: var(--color-black-200);
+}
+
+.ce-paragraph::selection {
+    background-color: var(--color-black-200);
+}
+
+#editorjs {
+    scrollbar-width: thin;
+    /* Can be 'auto', 'thin', or 'none' */
+    scrollbar-color: var(--color-black-200) var(--color-black);
+}
