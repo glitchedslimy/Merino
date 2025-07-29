@@ -4,7 +4,8 @@
     let { editor, changeToReadOnlymode, readOnly = $bindable(), closeMySpace, handleOpenMySpace } = $props();
 
 </script>
-<div class="flex justify-between flex-row bg-black py-2 px-3 ml-1">
+
+<div class="flex justify-between flex-row bg-black py-2 px-3">
     <div class="flex space-x-1 items-center">
         {#if closeMySpace}
             <Button type="button" icon handleClick={handleOpenMySpace}>
@@ -15,7 +16,7 @@
         <Icon iconName="forward" />
     </div>
     <div>
-        <p>Mi Espacio/Nueva Nota</p>
+        <p class="text-sm text-gray-400">Mi Espacio/Nueva Nota</p>
     </div>
     <div class="flex space-x-2 items-center">
         <Button type="button" icon handleClick={changeToReadOnlymode}>

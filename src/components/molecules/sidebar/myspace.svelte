@@ -1,7 +1,7 @@
 <script>
     import Button from "../../atoms/button/button.svelte";
     import Icon from "../../atoms/icon/icon.svelte";
-    let { handleMySpaceClose } = $props()
+    let { handleMySpaceClose, closeMySpace = $bindable() } = $props()
 </script>
 
 <div class="flex flex-col space-y-5">

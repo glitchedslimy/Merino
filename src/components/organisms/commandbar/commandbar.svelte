@@ -1,11 +1,12 @@
 <script lang="ts">
     import Button from "../../atoms/button/button.svelte";
     import Icon from "../../atoms/icon/icon.svelte";
-    let { onOpenSettings } = $props();
+    // Accept a 'class' prop from the parent
+    let { onOpenSettings, class: className = '' } = $props();
 </script>
 
 <section
-    class="flex flex-col justify-between px-4 bg-black-100 max-w-fit h-screen"
+    class="flex flex-col justify-between px-3 bg-black-100 h-screen ${className}"
 >
     <div class="flex flex-col space-y-8 py-7">
         <div>

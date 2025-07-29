@@ -1,7 +1,28 @@
-# Tauri + SvelteKit + TypeScript
+# Notalia
+The open-source note taking app for everyone focused on data privacy and local.
 
-This template should help get you started developing with Tauri, SvelteKit and TypeScript in Vite.
+Notalia is developed using _Tauri_ (Rust + Svelte).
 
-## Recommended IDE Setup
+## Why Notalia?
+You can choose _Notalia_ if you want something similar of a Notion / Obsidian experience with the best of both worlds.
 
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer).
+### Features
+- Theming (Alpha)
+- Syncing (Not implemented)
+- AI (Not implemented)
+- Markdown
+- Block-style editing like Notion
+- Databases in Notion style
+and more to come.
+
+## Documentation
+TODO
+
+## Support
+Get in touch with us in our official discord.
+
+## Contributing
+Right now contributing is closed until we have a proper document explaining how to contribute to the project, as well as its docs.
+
+## Sponsors
+No one yet :(

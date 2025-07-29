@@ -31,7 +31,6 @@
     --color-white-200: #C7C7C7;
     --color-white-300: #ADADAD;
     --color-white-400: #949494;
-    --block-width: 70rem;
 }
 
 @layer base {
@@ -114,24 +113,6 @@
     border-radius: 5px;
 }
 
-/* Apply the block width to EditorJS elements */
-.ce-block__content,
-/* Content inside each block */
-/* The block wrapper */
-.codex-editor__redactor,
-/* Main editing area */
-.ce-toolbar__content {
-    /* Toolbar content for editing */
-    max-width: var(--block-width);
-    /* Use the block width set in :root */
-    width: var(--block-width);
-    /* Apply the block width */
-    margin: 0 auto;
-}
-
-.ce-block__content {
-    margin: 0;
-}
 
 .ce-block--selected .ce-block__content {
     background: var(--color-black-200);
@@ -149,4 +130,39 @@
     scrollbar-width: thin;
     /* Can be 'auto', 'thin', or 'none' */
     scrollbar-color: var(--color-black-200) var(--color-black);
+}
+
+.ce-block__content > div{
+    overflow-wrap: break-word !important;
+}
+
+/* Styling for H1 elements */
+h1.ce-header {
+    @apply text-5xl font-extrabold; /* Example Tailwind classes */
+    /* You can customize these to match your design system */
+}
+
+/* Styling for H2 elements */
+h2.ce-header{
+    @apply text-4xl font-bold; /* Example Tailwind classes */
+}
+
+/* Styling for H3 elements */
+h3.ce-header{
+    @apply text-3xl font-semibold;
+}
+
+/* Styling for H4 elements */
+h4.ce-header {
+    @apply text-2xl font-medium;
+}
+
+/* Styling for H5 elements */
+h5.ce-header{
+    @apply text-xl font-medium;
+}
+
+/* Styling for H6 elements */
+h6.ce-header {
+    @apply text-lg font-medium;
 }

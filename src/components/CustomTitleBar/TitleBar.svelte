@@ -31,7 +31,7 @@
 </script>
 <main>
     <div class="w-full flex items-center justify-between bg-black-100 z-20" data-tauri-drag-region>
-        <div class="px-4 py-1 pointer-events-none">
+        <div class="px-3 py-1 pointer-events-none">
             <img src="/src/assets/logo.png" alt="" width="25"/>
         </div>
         <div class="flex">
