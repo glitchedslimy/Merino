@@ -1,0 +1,1 @@
+<img src="/src/assets/logo.png" alt="Notalia logo" width="25"/>
