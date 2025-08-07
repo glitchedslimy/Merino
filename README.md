@@ -13,3 +13,23 @@ But Merino is different, because we have the block style of Notion, the markdown
 
 > [!WARNING]
 > There will be dragons, the app is on alpha and there are bugs and missing features, be patience while you use this in alpha state.
+
+## Features
+- **MarkDown Support**: Merino supports markdown syntax to create rich text content with all its benefits.
+- Easy to use and private, we don't store anything on the cloud, only locally for you, we will give you the option to sync your notes across devices or server if needed (coming soon).
+- **Block Style Editor**: You can edit text in a block style way.
+- **Customizable 😎**, you like themes and customization? We got you covered.
+
+All the features are in the [Docs](#docs).
+
+## Docs
+😓 Sorry, I didn't do the docs yet. But I'm working on them!
+
+## Contributions
+This is an Open Source project, this means anyone can commit to the application with new features and improvements.
+
+For now they are closed, because I need to make a guide and some kind of rules for contributing. So It will come soon.
+
+## Links
+- [License (MIT)]()
+- [Website]()
