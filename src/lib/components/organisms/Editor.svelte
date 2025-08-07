@@ -3,6 +3,7 @@
     import { activeNote, activeSpaceName } from "@stores/workspace-store";
     import { convertMarkdownToJson } from "../../utils/editor-converter";
     import { invoke } from "@tauri-apps/api/core";
+    import Logo from "@components/atoms/Logo.svelte";
     
     // Use a local state variable for the editor's content
     let noteContent = $state<OutputData | null>(null);
@@ -52,8 +53,11 @@
     {:else if $activeNote && noteContent}
         <Editor noteName={$activeNote.name} initialContent={noteContent} />
     {:else if $activeNote}
-        <div class="flex items-center justify-center h-full">
-            <p class="text-white">Note has no content yet.</p>
+        <div class="flex flex-col items-center justify-center h-screen space-y-sm">
+            <Logo width={200}/>
+            <p class="text-white">
+                The space has no content yet, open a note to get started or create a new one.
+            </p>
         </div>
     {:else}
         <div class="flex items-center justify-center h-full">

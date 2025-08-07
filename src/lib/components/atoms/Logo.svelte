@@ -1,1 +1,5 @@
-<img src="/src/assets/logo.png" alt="Notalia logo" width="25"/>
+<script lang="ts">
+    let { width = 25 } = $props();
+</script>
+
+<img src="/src/assets/Wooly.svg" alt="Merino logo" width={width}/>

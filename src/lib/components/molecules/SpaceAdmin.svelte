@@ -45,19 +45,19 @@ onMount(() => {
                     <Icon iconName="close" />
                 </Button>
                 <div>
-                    <h1 class="text-2xl text-center font-bold">Notalia</h1>
+                    <h1 class="text-2xl text-center font-bold">Merino</h1>
                     <h2 class="text-sm text-center text-white-400">Versión 0.1.0</h2>
                     <div class="flex mt-lg">
                         <div class="w-3xl">
                             <p>Crear espacio nuevo</p>
-                            <p class="text-sm text-white-400">Crea un nuevo espacio de Notalia en un directorio.</p>
+                            <p class="text-sm text-white-400">Crea un nuevo espacio de Merino en un directorio.</p>
                         </div>
                         <Button intent="primary">Crear</Button>
                     </div>
                     <div class="flex mt-lg">
                         <div class="w-3xl">
                             <p>Abrir directorio como espacio</p>
-                            <p class="text-sm text-white-300">Abre un directorio ya existente como un espacio de Notalia.</p>
+                            <p class="text-sm text-white-300">Abre un directorio ya existente como un espacio de Merino.</p>
                         </div>
                         <Button intent="gray">Abrir</Button>
                     </div>

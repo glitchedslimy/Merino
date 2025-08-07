@@ -176,11 +176,11 @@
             <ul>
                 <li class="text-black-400 flex space-x-xs items-center">
                     <Icon iconName="ai" width="20" />
-                    <p>Notalia AI</p>
+                    <p>Ask Wooly</p>
                 </li>
                 <li class="text-black-400 flex space-x-xs items-center">
                     <Icon iconName="templates" width="20" />
-                    <p>Plantillas</p>
+                    <p>Templates</p>
                 </li>
             </ul>
         </div>

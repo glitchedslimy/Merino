@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "notalia",
+  "productName": "merino",
   "version": "0.1.0",
-  "identifier": "com.notalia.app",
+  "identifier": "com.merino.app",
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",
@@ -13,7 +13,7 @@
     "windows": [
       {
         "decorations": false,
-        "title": "Notalia",
+        "title": "Merino",
         "width": 800,
         "height": 600,
         "dragDropEnabled": false

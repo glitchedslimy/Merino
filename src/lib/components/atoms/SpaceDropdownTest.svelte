@@ -84,7 +84,7 @@
                 <hr class="border border-black-200"/>
                 <li>
                   <Button intent="ghost" handleClick={openAdminSpace}>
-                    Administrar espacios
+                    Administrate Spaces
                   </Button>
                 </li>
             </ul>

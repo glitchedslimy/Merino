@@ -2,7 +2,7 @@ use std::path::PathBuf;
 use tauri::{AppHandle, Manager};
 use tokio::fs;
 
-const BASE_DIR_NAME: &str = "notalia";
+const BASE_DIR_NAME: &str = "merino";
 
 pub fn get_base_path(app_handle: &AppHandle) -> PathBuf {
     return app_handle
