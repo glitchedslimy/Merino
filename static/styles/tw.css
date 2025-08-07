@@ -1,4 +1,9 @@
 @import "tailwindcss";
+@tailwind utilities;
+
+html, body {
+  height: 100%;
+}
 
 @custom-variant catppucin (&:where([data-theme="catppucin"], [data-theme="catppucin"] *));
 
@@ -210,10 +215,24 @@
     background-color: var(--color-black-200);
 }
 
-#editorjs {
-    scrollbar-width: thin;
-    /* Can be 'auto', 'thin', or 'none' */
-    scrollbar-color: var(--color-black-200) var(--color-black);
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: var(--color-black);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--color-black-200);
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-black-300);
 }
 
 .ce-block__content > div{

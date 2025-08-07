@@ -4,7 +4,7 @@
     import { handleOpenMySpace } from '@services/internal/workspace/control-hide-workspace'
 </script>
 
-<div class="flex justify-between flex-row bg-black py-2 px-3">
+<div class="flex justify-between flex-row bg-black py-2 px-3 rounded-md">
     <div class="flex space-x-xs items-center">
         {#if !$showWorkspace}
             <Button intent="icon" handleClick={handleOpenMySpace}>

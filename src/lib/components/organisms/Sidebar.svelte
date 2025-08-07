@@ -6,7 +6,7 @@
 </script>
 
 <!-- Sidebar component -->
-<aside class="flex flex-col justify-between px-md bg-black-100 h-screen">
+<aside class="flex flex-col justify-between px-md bg-black-100">
     <IconNavigationBar intent="vertical" verticalSpacing="md" class="py-md">
         <Icon iconName="terminal" width="20" />
         <Icon iconName="search" width="20" />
@@ -19,7 +19,7 @@
             </div>
         {/if}
     </IconNavigationBar>
-    <div class="py-12">
+    <div class="py-xs">
         <Button intent="icon">
             <Icon iconName="settings" width="20" />
         </Button>

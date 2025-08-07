@@ -17,7 +17,8 @@
             appbar: 'hover:bg-black-200 transition duration-200 px-4 py-1',
             appbarclose: 'hover:bg-utils-red transition duration-200 px-4 py-1',
             ghost: 'text-sm text-black-400 px-5 py-2 cursor-pointer font-medium transition duration-200 w-2xl hover:bg-black-200 hover:text-white',
-            notes: 'flex space-x-xs items-center text-black-300 hover:bg-black-200 px-1 py-1 w-full rounded-md mt-1'
+            notes: 'flex space-x-xs items-center text-black-300 hover:bg-black-200 px-1 py-1 w-full rounded-md mt-1',
+            link: 'text-brand-primary hover:text-brand-primary-light cursor-pointer duration-200 transition'
         }
     }
    })

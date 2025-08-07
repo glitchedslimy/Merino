@@ -4,6 +4,7 @@
     import { convertMarkdownToJson } from "../../utils/editor-converter";
     import { invoke } from "@tauri-apps/api/core";
     import Logo from "@components/atoms/Logo.svelte";
+    import NoNotesInSpace from "@components/molecules/NoNotesInSpace.svelte";
     
     // Use a local state variable for the editor's content
     let noteContent = $state<OutputData | null>(null);
@@ -51,17 +52,10 @@
             <p class="text-white">Cargando contenido...</p>
         </div>
     {:else if $activeNote && noteContent}
-        <Editor noteName={$activeNote.name} initialContent={noteContent} />
-    {:else if $activeNote}
-        <div class="flex flex-col items-center justify-center h-screen space-y-sm">
-            <Logo width={200}/>
-            <p class="text-white">
-                The space has no content yet, open a note to get started or create a new one.
-            </p>
-        </div>
+    <div id="editorjsHolder"class="h-screen bg-black overflow-y-auto mt-xs rounded-md">
+            <Editor noteName={$activeNote.name} initialContent={noteContent} />
+    </div>
     {:else}
-        <div class="flex items-center justify-center h-full">
-            <p class="text-white">Selecciona una nota para comenzar a editar.</p>
-        </div>
+        <NoNotesInSpace />
     {/if}
 </section>
