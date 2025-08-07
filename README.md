@@ -23,7 +23,7 @@ But Merino is different, because we have the block style of Notion, the markdown
 All the features are in the [Docs](#docs).
 
 ## Docs
-😓 Sorry, I didn't do the docs yet. But I'm working on them!
+😓 Sorry, I didn't do the docs yet. But I'm working on them! They are in a sepparate repository to avoid confussions.
 
 ## Contributions
 This is an Open Source project, this means anyone can commit to the application with new features and improvements.
