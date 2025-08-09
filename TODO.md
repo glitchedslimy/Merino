@@ -1,0 +1,5 @@
+- [] Hacer las features de los espacios
+- [] Posibilidad de renombrar notas
+- [] Arreglar los logotipos de la aplicación al instalar
+- [] Ir haciendo documentación (Página web)
+- [] ver si el paquete de windows se puede firmar gratis en tauri

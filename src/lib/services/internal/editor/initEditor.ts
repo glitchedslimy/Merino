@@ -8,6 +8,7 @@ import type { OutputData } from "@editorjs/editorjs";
 import { debounce } from "../../../utils/debounce";
 import { invoke } from "@tauri-apps/api/core";
 import { convertJsonToMarkdown } from "../../../utils/editor-converter";
+import { addToast } from "@stores/toast-store";
 /**
  * Conjuctions of interfaces for realizing the config of EditorJS in
  * a sepparate way from the intialization
@@ -92,7 +93,6 @@ export function initEditor(holderId: string, activeSpaceName: string, noteName: 
                 noteName: noteName,
                 content: contentBytes
             });
-            console.log('Note saved!')
         } catch(e) {
             console.error('Failed to save note:', e)
         }

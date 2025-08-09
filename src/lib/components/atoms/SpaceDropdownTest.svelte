@@ -1,6 +1,6 @@
 <script lang="ts">
     import { listSpaces } from '@services/internal/api/tauri-commands';
-    import { loadPersistentState, spacesStore, activeSpaceName, saveActiveSpaceName } from '@stores/workspace-store';
+    import { loadPersistentState, spacesStore, activeSpaceName, saveActiveSpaceName, openAdminSpaces } from '@stores/workspace-store';
     import { onMount } from 'svelte';
     import { fade, slide } from 'svelte/transition';
     import Button from './Button.svelte';
@@ -34,7 +34,7 @@
     }
 
     function openAdminSpace() {
-        // Your logic here
+        openAdminSpaces.set(true)
     }
 
     // Use an effect to load the spaces once the component is created
