@@ -21,9 +21,15 @@
     "@tailwindcss/vite": "^4.1.11",
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-opener": "^2",
+    "@tauri-apps/plugin-shell": "^2.3.0",
     "@tauri-apps/plugin-store": "^2.3.0",
+    "chalk": "^5.5.0",
     "class-variance-authority": "^0.7.1",
-    "tailwindcss": "^4.1.11"
+    "express": "^5.1.0",
+    "marked": "^16.1.2",
+    "ollama": "^0.5.17",
+    "tailwindcss": "^4.1.11",
+    "winston": "^3.17.0"
   },
   "devDependencies": {
     "@sveltejs/adapter-static": "^3.0.6",

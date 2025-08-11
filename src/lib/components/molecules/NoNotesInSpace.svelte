@@ -7,7 +7,7 @@
 >
     <div class="-mt-24 flex flex-col items-center justify-center space-y-md">
         <img
-            src="./src/assets/WoolyStroke.svg"
+            src="./src/assets/icons/WoolyStroke.svg"
             alt="Wooly Stroke Logo"
             width="250"
         />

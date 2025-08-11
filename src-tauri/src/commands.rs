@@ -207,29 +207,48 @@ pub async fn update_note_content_cmd(
 }
 
 #[tauri::command]
-pub async fn save_note_content(app_handle: AppHandle, space_name: String, note_name: String, content: Vec<u8>) -> Result<(), String> {
+pub async fn save_note_content(
+    app_handle: AppHandle,
+    space_name: String,
+    note_name: String,
+    content: Vec<u8>,
+) -> Result<(), String> {
     let base_path = get_base_path(&app_handle);
     let space_path = base_path.join(space_name);
 
     if !space_path.exists() {
-        return Err(format!("Space directory '{}' does not exists.", space_path.display()))
+        return Err(format!(
+            "Space directory '{}' does not exists.",
+            space_path.display()
+        ));
     }
 
     let note_path = space_path.join(format!("{}.md", note_name));
 
     match fs::write(&note_path, content).await {
         Ok(_) => Ok(()),
-        Err(e) => Err(format!("Failed to save note to {} : {}", note_path.display(), e))
+        Err(e) => Err(format!(
+            "Failed to save note to {} : {}",
+            note_path.display(),
+            e
+        )),
     }
 }
 
 #[tauri::command]
-pub async fn load_note_content(app_handle: AppHandle, space_name: String, note_name: String) -> Result<String, String> {
+pub async fn load_note_content(
+    app_handle: AppHandle,
+    space_name: String,
+    note_name: String,
+) -> Result<String, String> {
     let base_path = get_base_path(&app_handle);
     let space_path = base_path.join(space_name);
 
     if !space_path.exists() {
-        return Err(format!("Space directory '{}' does not exist.", space_path.display()));
+        return Err(format!(
+            "Space directory '{}' does not exist.",
+            space_path.display()
+        ));
     }
 
     let note_path = space_path.join(format!("{}.md", note_name));
@@ -238,13 +257,21 @@ pub async fn load_note_content(app_handle: AppHandle, space_name: String, note_n
         Ok(bytes) => {
             let content = String::from_utf8_lossy(&bytes).to_string();
             Ok(content)
-        },
-        Err(e) => Err(format!("Failed to load note from {} : {}", note_path.display(), e))
+        }
+        Err(e) => Err(format!(
+            "Failed to load note from {} : {}",
+            note_path.display(),
+            e
+        )),
     }
 }
 
 #[tauri::command]
-pub async fn delete_note(app_handle: AppHandle, space_name: String, note_name: String) -> Result<bool, String> {
+pub async fn delete_note(
+    app_handle: AppHandle,
+    space_name: String,
+    note_name: String,
+) -> Result<bool, String> {
     let note_path = get_note_path(&app_handle, &space_name, &note_name);
 
     println!("Attempting to delete note at path: {:?}", note_path);
@@ -260,7 +287,7 @@ pub async fn delete_note(app_handle: AppHandle, space_name: String, note_name: S
         Ok(_) => {
             println!("Successfully deleted note: {:?}", note_path);
             Ok(true) // Indicate success
-        },
+        }
         Err(e) => {
             // Handle various file system errors
             if e.kind() == std::io::ErrorKind::PermissionDenied {
@@ -274,6 +301,6 @@ pub async fn delete_note(app_handle: AppHandle, space_name: String, note_name: S
                     note_name, note_path, e
                 ))
             }
-        },
+        }
     }
 }

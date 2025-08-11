@@ -28,9 +28,9 @@
     * Defined the handleClick to properly pass functions to the button to do
     * certain stuff without the need to do multiple molecules.
    */
-  let { intent = null, children, handleClick= () => {}, class: className = '' } = $props();
+  let { intent = null, children, handleClick= () => {}, class: className = '', disabled = false } = $props();
 </script>
 
-<button class={`${button({ intent })} ${className}`} onclick={() => handleClick()}>
+<button class={`${button({ intent })} ${className}`} onclick={() => handleClick()} disabled={disabled}>
     {@render children()}
 </button>

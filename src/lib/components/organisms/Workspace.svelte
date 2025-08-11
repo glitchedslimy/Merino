@@ -20,6 +20,7 @@
   import { Menu } from "@tauri-apps/api/menu";
   import { listen, type UnlistenFn } from "@tauri-apps/api/event";
   import ContextualMenu from "@components/atoms/ContextualMenu.svelte";
+    import { openAiChat } from "@stores/ai-store";
 
   let notes: Note[] = $state([]);
   let loadingNotes = $state(false);
@@ -163,6 +164,10 @@
     customMenuVisible = false;
     currentRightClickedNote = null;
   }
+
+  function openChat() {
+    openAiChat.set(!$openAiChat);
+  }
 </script>
 
 {#if $showWorkspace}
@@ -184,12 +189,14 @@
     <div>
       <ul>
         <li class="text-black-400 flex space-x-xs items-center">
-          <Icon iconName="ai" width="20" />
-          <p>Ask Wooly</p>
+          <Button intent="icon" class="flex space-x-sm" handleClick={openChat}>
+            <Icon iconName="WoolyStroke" width="20" />
+            <span>Ask Wooly</span>
+          </Button>
         </li>
         <li class="text-black-400 flex space-x-xs items-center">
           <Icon iconName="templates" width="20" />
-          <p>Templates</p>
+          <p>Templates (disabled)</p>
         </li>
       </ul>
     </div>

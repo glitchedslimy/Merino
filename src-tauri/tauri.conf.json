@@ -20,7 +20,7 @@
       }
     ],
     "security": {
-      "csp": null
+       "csp": "script-src 'self' 'unsafe-inline' data:; connect-src 'self' ws://127.0.0.1:3000 http://127.0.0.1:3000"
     }
   },
   "bundle": {
@@ -35,6 +35,7 @@
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
-    ]
+    ],
+    "externalBin": ["binaries/ollama-bridge"]
   }
 }

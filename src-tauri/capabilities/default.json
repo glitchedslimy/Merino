@@ -13,6 +13,17 @@
     "core:window:allow-close",
     "core:window:allow-unmaximize",
     "core:window:allow-start-dragging",
-    "store:default"
+    "store:default",
+    "shell:allow-open",
+    {
+      "identifier": "shell:allow-spawn",
+      "allow": [
+        {
+          "name": "binaries/ollama-bridge",
+          "sidecar": true,
+          "args": true
+        }
+      ]
+    }
   ]
 }

@@ -1,5 +1,4 @@
-- [] Hacer las features de los espacios
-- [] Posibilidad de renombrar notas
-- [] Arreglar los logotipos de la aplicación al instalar
-- [] Ir haciendo documentación (Página web)
-- [] ver si el paquete de windows se puede firmar gratis en tauri
+- [ ] Arreglar los bugs con la IA (Al llamar las tools no hace bien el display del mensaje)
+- [ ] Ver como implementar los MCP en la IA
+- [ ] Ver como implementar un selector de herramientas para la IA
+- [ ] Ver como podemos implementar la IA en la App

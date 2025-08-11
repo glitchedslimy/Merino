@@ -1,8 +1,12 @@
 <script>
     import { Icon, Button } from "@atoms";
     import { IconNavigationBar } from "@molecules";
+    import { openAiChat } from "@stores/ai-store";
     import { showWorkspace } from "@stores/workspace-store";
     import { fade } from "svelte/transition";
+    function openChat() {
+        openAiChat.set(!$openAiChat);
+    }
 </script>
 
 <!-- Sidebar component -->
@@ -12,7 +16,13 @@
         <Icon iconName="search" width="20" />
         {#if !$showWorkspace}
             <div transition:fade={{ duration: 200 }}>
-                <Icon iconName="ai" />
+                <Button
+                    intent="icon"
+                    class="flex space-x-sm"
+                    handleClick={openChat}
+                >
+                    <Icon iconName="WoolyStroke" width="20" />
+                </Button>
             </div>
             <div transition:fade={{ duration: 200 }}>
                 <Icon iconName="templates" />
