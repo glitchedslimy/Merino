@@ -1,6 +1,6 @@
 <script>
     import { Button, Icon } from "@atoms";
-    import { showWorkspace, activeSpaceName, activeNote } from '@stores/workspace-store'
+    import { showWorkspace, activeSpaceName } from '@stores/workspace-store'
     import { handleOpenMySpace } from '@services/internal/workspace/control-hide-workspace'
 </script>
 
@@ -15,7 +15,7 @@
         <Icon iconName="forward" width="20"/>
     </div>
     <div>
-        <p class="text-sm text-gray-400">{$activeSpaceName}/{$activeNote?.name}</p>
+        <p class="text-sm text-gray-400">{$activeSpaceName}</p>
     </div>
     <div class="flex space-x-sm items-center">
         <Button intent="icon">

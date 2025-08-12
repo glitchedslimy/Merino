@@ -26,31 +26,36 @@ export async function deleteSpace(spaceName: string): Promise<void> {
 
 // Corresponds to `list_notes_in_space_cmd` in Rust
 export async function listNotesInSpace(spaceName: string): Promise<Note[]> {
-    return invoke<Note[]>('list_notes_in_space_cmd', { spaceName });
+    console.log("Rust Spacename", spaceName)
+    let notes = await invoke("list_notes_in_space_cmd", { spaceName });
+    console.log("Notes in Rust", notes)
+    return notes as Note[];
 }
 
 // Corresponds to `Notes_in_space_cmd` in Rust
 export async function createNoteInSpace(spaceName: string, req: CreateNoteRequest): Promise<Note> {
-    return invoke<Note>('create_note_in_space_cmd', { spaceName, req });
+  return await invoke("create_note_in_space_cmd", { spaceName, req });
 }
 
 // Corresponds to `get_note_content_cmd` in Rust
-export async function getNoteContent(spaceName: string, noteName: string): Promise<NoteContentResponse> {
-    return invoke<NoteContentResponse>('get_note_content_cmd', { spaceName, noteName });
+export async function getNoteContent(spaceName: string, noteId: string): Promise<NoteContentResponse> {
+  return await invoke("load_note_content", { spaceName, noteId });
 }
 
 // Corresponds to `update_note_content_cmd` in Rust
-export async function updateNoteContent(spaceName: string, noteName: string, req: UpdateNoteRequest): Promise<void> {
-    return invoke('update_note_content_cmd', { spaceName, noteName, req });
+export async function updateNoteContent(spaceName: string, noteId: string, req: UpdateNoteRequest): Promise<void> {
+    return await invoke("update_note_content_cmd", { spaceName, noteId, req });
 }
 
-export async function saveNoteContent(spaceName: string, noteName: string, content: string): Promise<void> {
-    return invoke('save_note_content', { spaceName, noteName, content });
+export async function saveNoteContent(spaceName: string, noteId: string, noteName: string, content: string): Promise<void> {
+    return invoke('save_note_content', { spaceName, noteId, noteName, content });
 }
 
-export async function deleteNote(spaceName: string, noteName: string): Promise<void> {
-    return invoke('delete_note', {
-        spaceName,
-        noteName
-    });
+export async function deleteNote(spaceName: string, noteId: string): Promise<void> {
+      return await invoke("delete_note", { spaceName, noteId });
+
+}
+
+export async function renameNote(spaceName: string, noteId: string, newName: string) {
+    return await invoke('rename_note', { spaceName, noteId, newName });
 }

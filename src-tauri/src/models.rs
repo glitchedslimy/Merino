@@ -1,6 +1,7 @@
 use std::path::PathBuf;
 
 use serde::{Deserialize, Serialize};
+use uuid::Uuid;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Space {
@@ -13,9 +14,15 @@ pub struct CreateSpaceRequest {
     pub name: String,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
-pub struct Note {
+#[derive(Debug, Serialize, Deserialize)]
+pub struct NoteMetadata {
     pub name: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Note {
+    pub id: Uuid,
+    pub name: String
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -33,4 +40,10 @@ pub struct NoteContentResponse {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct UpdateNoteRequest {
     pub content: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Frontmatter {
+    pub name: String,
+    // Add other frontmatter fields as needed
 }

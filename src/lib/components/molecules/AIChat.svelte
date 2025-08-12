@@ -11,9 +11,48 @@
         getOllamaModels,
     } from "../../utils/ai-chat";
     import { onMount } from "svelte";
+    import { ellipsisTooltip } from "../../utils/ellipsis-detection";
+    import Tooltip from "@components/atoms/Tooltip.svelte";
 
+    let { style } = $props();
     function closeChat() {
         openAiChat.set(false);
+    }
+
+    let timeoutId: number | null = null;
+    const DELAY_MS = 500;
+
+    let showTooltip = $state(false);
+    let tooltipText = $state("");
+    let tooltipX = $state(0);
+    let tooltipY = $state(0);
+
+    function handleShowTooltip(text: string, x: number, y: number) {
+        console.log("test");
+        // Clear any existing timeout to restart the timer
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+        }
+
+        // Start a new timer
+        timeoutId = setTimeout(() => {
+            showTooltip = true;
+            tooltipText = text;
+            tooltipX = x;
+            tooltipY = y - 40;
+        }, DELAY_MS);
+        console.log(tooltipText);
+    }
+
+    function handleHideTooltip() {
+        // Clear the timeout to prevent the tooltip from appearing
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+            timeoutId = null;
+        }
+        // Hide the tooltip immediately
+        showTooltip = false;
+        tooltipText = "";
     }
 
     let message: string = $state("");
@@ -300,8 +339,9 @@
 
 {#if $openAiChat}
     <section
-        class="bg-black rounded-md w-72 px-md py-md flex flex-col justify-between"
+        class="bg-black rounded-md w-72 px-md pt-md flex flex-col justify-between"
         transition:slide={{ duration: 200, axis: "x" }}
+        {style}
     >
         <div class="flex justify-between items-center mb-sm">
             <Button intent="icon" handleClick={closeChat}>
@@ -377,7 +417,7 @@
                 <div class="dropdown-wrapper">
                     <button
                         onclick={() => (showModeDropdown = !showModeDropdown)}
-                        class="flex items-center text-white font-bold p-sm rounded-md"
+                        class="flex items-center text-white font-bold p-sm rounded-md cursor-pointer"
                         title={mode === "chat" ? "Chat Mode" : "Agentic Mode"}
                     >
                         {#if mode === "agentic"}
@@ -385,7 +425,11 @@
                         {:else}
                             <Icon iconName="ai" width="16" />
                         {/if}
-                        <Icon iconName="chevron-down" width="16" />
+                        <div
+                            class={`transition-all duration-200 ${showModeDropdown ? "rotate-180" : "rotate-0"}`}
+                        >
+                            <Icon iconName="chevron-down" width="16" />
+                        </div>
                     </button>
                     {#if showModeDropdown}
                         <div
@@ -393,7 +437,7 @@
                             onmouseleave={() => (showModeDropdown = false)}
                         >
                             <button
-                                class="block w-full text-left px-sm py-xs hover:bg-black-200 rounded-md flex items-center space-x-sm"
+                                class="block w-full text-left px-sm py-xs hover:bg-black-200 rounded-md flex items-center space-x-sm cursor-pointer"
                                 onclick={() => {
                                     mode = "chat";
                                     showModeDropdown = false;
@@ -403,7 +447,7 @@
                                 <span>Chat Mode</span>
                             </button>
                             <button
-                                class="block w-full text-left px-sm py-xs hover:bg-black-200 rounded-md flex items-center space-x-sm"
+                                class="block w-full text-left px-sm py-xs hover:bg-black-200 rounded-md flex items-center space-x-sm cursor-pointer"
                                 onclick={() => {
                                     mode = "agentic";
                                     showModeDropdown = false;
@@ -415,88 +459,28 @@
                         </div>
                     {/if}
                 </div>
-
-                <div class="dropdown-wrapper flex-1 mx-sm">
-                    <button
-                        onclick={() => (showModelDropdown = !showModelDropdown)}
-                        class="flex items-center text-white text-sm font-medium rounded-md space-x-xs justify-between overflow-hidden text-ellipsis whitespace-nowrap"
-                        title={isFetchingModels
-                            ? "Loading..."
-                            : selectedModel || "Select Model"}
-                    >
-                        <img
-                            src="./src/assets/ollama.png"
-                            width="15"
-                            height="15"
-                            alt="Ollama logo"
-                            class="invert-100"
-                        />
-                        <span
-                            class="flex-1 overflow-hidden text-ellipsis whitespace-nowrap"
-                        >
-                            {isFetchingModels
-                                ? "Loading..."
-                                : selectedModel.split("-")[0].split(".")[0] ||
-                                  "Select Model"}
-                        </span>
-                        <Icon iconName="chevron-down" width="16" />
-                    </button>
-                    {#if showModelDropdown && models.length > 0}
-                        <div
-                            class="absolute bottom-full z-10 bg-black-100 rounded-md flex flex-col space-y-sm text-sm"
-                            onmouseleave={() => (showModelDropdown = false)}
-                        >
-                            {#each models as model}
-                                <div
-                                    class="flex items-center rounded-md hover:bg-black-200 space-x-sm px-sm py-sm cursor-pointer"
-                                    onclick={() => {
-                                        selectedModel = model;
-                                        showModelDropdown = false;
-                                    }}
-                                    title={model}
-                                >
-                                    <img
-                                        src="./src/assets/ollama.png"
-                                        width="20"
-                                        height="20"
-                                        alt="Ollama logo"
-                                        class="invert-100"
-                                    />
-                                    <span
-                                        class="flex-1 overflow-hidden text-ellipsis whitespace-nowrap"
-                                    >
-                                        {model}
-                                    </span>
-                                </div>
-                            {/each}
-                        </div>
-                    {/if}
-                </div>
-
-                <div class="dropdown-wrapper">
-                    <button
-                        onclick={() => {
-                            useThinking = !useThinking;
-                            if (
-                                useThinking === false &&
-                                conversation.at(-1)?.isThinking
-                            ) {
-                                clearInterval(thinkingInterval);
-                                thinkingInterval = null;
-                                conversation.at(-1).isThinking = false;
-                            }
-                        }}
-                        class="w-full text-center p-sm rounded-md"
-                        class:bg-brand-primary={useThinking}
-                        class:bg-black-200={!useThinking}
-                    >
-                        <Icon iconName="brain" width="20" />
-                    </button>
-                </div>
+                <button
+                    onclick={() => {
+                        useThinking = !useThinking;
+                        if (
+                            useThinking === false &&
+                            conversation.at(-1)?.isThinking
+                        ) {
+                            clearInterval(thinkingInterval);
+                            thinkingInterval = null;
+                            conversation.at(-1).isThinking = false;
+                        }
+                    }}
+                    class="hover:cursor-pointer hover:text-white duration-200 transition w-fit"
+                    class:text-brand-primary={useThinking}
+                    class:text-black-200={!useThinking}
+                >
+                    <Icon iconName="brain" width="20" />
+                </button>
             </div>
 
             <div class="flex justify-between items-center space-x-sm">
-                <input
+                <textarea
                     type="text"
                     placeholder="Ask a follow-up"
                     class="bg-black-100 px-sm py-sm rounded-md w-full"
@@ -513,8 +497,73 @@
                     </Button>
                 {/if}
             </div>
+            <div class="dropdown-wrapper mb-xs ml-xs w-0">
+                <button
+                    onclick={() => (showModelDropdown = !showModelDropdown)}
+                    class="flex items-center text-white text-sm font-medium rounded-md space-x-xs justify-between cursor-pointer"
+                >
+                    <img
+                        src="./src/assets/ollama.png"
+                        width="15"
+                        height="15"
+                        alt="Ollama logo"
+                        class="invert-100"
+                    />
+                    <span
+                        class="overflow-hidden text-ellipsis whitespace-nowrap"
+                        use:ellipsisTooltip={{
+                            onHide: handleHideTooltip,
+                            onShow: handleShowTooltip,
+                        }}
+                    >
+                        {isFetchingModels ? "Loading..." : selectedModel}
+                    </span>
+                    <div
+                        class={`transition-all duration-200 ${showModelDropdown ? "rotate-180" : "rotate-0"}`}
+                    >
+                        <Icon iconName="chevron-down" width="16" />
+                    </div>
+                </button>
+                {#if showModelDropdown && models.length > 0}
+                    <div
+                        class="absolute bottom-full z-10 bg-black-100 rounded-md flex flex-col space-y-sm text-sm"
+                        onmouseleave={() => (showModelDropdown = false)}
+                    >
+                        {#each models as model}
+                            <div
+                                class="flex items-center rounded-md hover:bg-black-200 space-x-sm px-sm py-sm cursor-pointer"
+                                onclick={() => {
+                                    selectedModel = model;
+                                    showModelDropdown = false;
+                                }}
+                            >
+                                <img
+                                    src="./src/assets/ollama.png"
+                                    width="20"
+                                    height="20"
+                                    alt="Ollama logo"
+                                    class="invert-100"
+                                />
+                                <span
+                                    class="flex-1 overflow-hidden text-ellipsis whitespace-nowrap"
+                                    use:ellipsisTooltip={{
+                                        onHide: handleHideTooltip,
+                                        onShow: handleShowTooltip,
+                                    }}
+                                >
+                                    {model}
+                                </span>
+                            </div>
+                        {/each}
+                    </div>
+                {/if}
+            </div>
         </div>
     </section>
+{/if}
+
+{#if showTooltip}
+    <Tooltip text={tooltipText} x={tooltipX} y={tooltipY} />
 {/if}
 
 <style>

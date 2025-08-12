@@ -1,8 +1,9 @@
 <script lang="ts">
+    import { Icon } from '@atoms';
   import { createEventDispatcher } from 'svelte';
 
   // Props are now defined reactively
-  let { x, y, menuItems, contextId = '' } = $props();
+  let { x, y, menuItems, contextId = '', icon = 'none' } = $props();
 
   let menuElement: HTMLDivElement | undefined = undefined;
   const dispatch = createEventDispatcher();
@@ -95,8 +96,9 @@
   onclick={() => {}}
 >
   {#each menuItems as item}
-    <button onclick={() => handleMenuItemClick(item.action)} class="px-2 py-2 text-left rounded-sm hover:bg-black-200">
-      {item.label}
+    <button onclick={() => handleMenuItemClick(item.action)} class="px-2 py-2 text-left rounded-sm hover:bg-black-200 flex items-center space-x-xs">
+      <Icon iconName={item.icon} width="20"/>
+      <span>{item.label}</span>
     </button>
   {/each}
 </div>

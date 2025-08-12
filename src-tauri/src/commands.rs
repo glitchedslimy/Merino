@@ -1,12 +1,72 @@
+use serde_yaml;
+use std::path::Path;
 use tauri::AppHandle;
 use tokio::fs;
-use tokio::io::AsyncWriteExt; // For writing files asynchronously
+use uuid::Uuid;
 
 // Import models and path helpers from sibling modules
 use super::models::{
-    CreateNoteRequest, CreateSpaceRequest, Note, NoteContentResponse, Space, UpdateNoteRequest,
+    CreateNoteRequest, CreateSpaceRequest, Note, NoteContentResponse, NoteMetadata, Space,
+    UpdateNoteRequest,
+    Frontmatter
 };
 use super::paths::{ensure_app_directories_exists, get_base_path, get_note_path, get_space_path};
+
+// --- Helper Functions for File Operations ---
+
+// Helper to create a new note file with YAML front matter.
+async fn create_note_file(
+    note_path: &std::path::Path,
+    name: &str,
+    content: &str,
+) -> Result<(), String> {
+    let metadata = NoteMetadata {
+        name: name.to_string(),
+    };
+    let yaml_string = serde_yaml::to_string(&metadata)
+        .map_err(|e| format!("Failed to serialize metadata: {}", e))?;
+
+    let full_content = format!("---\n{}---\n{}", yaml_string, content);
+    fs::write(note_path, full_content)
+        .await
+        .map_err(|e| format!("Failed to write note file: {}", e))?;
+
+    Ok(())
+}
+
+// Helper to read a note file and extract metadata and content.
+pub async fn read_note_file(note_path: &Path) -> Result<(NoteMetadata, String), String> {
+    let file_content = fs::read_to_string(note_path)
+        .await
+        .map_err(|e| format!("Failed to read note file: {}", e))?;
+
+    // Manually split the content by "---"
+    let parts: Vec<&str> = file_content.splitn(3, "---").collect();
+
+    // The frontmatter should be the second part
+    if parts.len() < 3 {
+        println!(
+            "Error: Failed to split file into 3 parts by '---'. Parts found: {}",
+            parts.len()
+        );
+        return Err("No valid frontmatter found".to_string());
+    }
+
+    let frontmatter_str = parts[1].trim(); // Trim whitespace from the frontmatter block
+    let content = parts[2].trim_start(); // Trim leading whitespace from the content
+
+    if frontmatter_str.is_empty() {
+        println!("Error: Frontmatter block is empty after splitting.");
+        return Err("Frontmatter block is empty".to_string());
+    }
+
+    let metadata: NoteMetadata = serde_yaml::from_str(frontmatter_str)
+        .map_err(|e| format!("Failed to parse metadata from YAML: {}", e))?;
+
+    Ok((metadata, content.to_string()))
+}
+
+// --- Tauri Commands ---
 
 #[tauri::command]
 pub async fn list_spaces_cmd(app_handle: AppHandle) -> Result<Vec<Space>, String> {
@@ -81,6 +141,7 @@ pub async fn delete_space_cmd(app_handle: AppHandle, space_name: String) -> Resu
     }
 }
 
+// Modified `list_notes_in_space_cmd` to read UUIDs and front matter
 #[tauri::command]
 pub async fn list_notes_in_space_cmd(
     app_handle: AppHandle,
@@ -104,15 +165,40 @@ pub async fn list_notes_in_space_cmd(
     while let Some(entry) = entries.next_entry().await.ok().flatten() {
         let path = entry.path();
         if path.is_file() {
-            if let Some(name) = path.file_name().and_then(|n| n.to_str()) {
-                let note_name = name.trim_end_matches(".md").to_string();
-                notes.push(Note { name: note_name });
+            if let Some(file_name) = path.file_name().and_then(|n| n.to_str()) {
+                println!("Found file: {}", file_name);
+
+                if let Some(id_str) = file_name.strip_suffix(".md") {
+                    println!("  Filename without .md: {}", id_str);
+
+                    match Uuid::parse_str(id_str) {
+                        Ok(note_id) => match read_note_file(&path).await {
+                            Ok((metadata, _)) => {
+                                notes.push(Note {
+                                    id: note_id,
+                                    name: metadata.name.clone(), // Clone the string here
+                                });
+                                println!("  Successfully read note: {}", metadata.name);
+                                // You can now use the original metadata.name here
+                            }
+                            Err(e) => {
+                                println!("  Failed to read note file: {}", e);
+                            }
+                        },
+                        Err(e) => {
+                            println!("  Failed to parse as UUID: {}", e);
+                        }
+                    }
+                } else {
+                    println!("  Does not have a .md suffix, skipping.");
+                }
             }
         }
     }
     Ok(notes)
 }
 
+// Modified `Notes_in_space_cmd` to use UUID for filename and front matter for name
 #[tauri::command]
 pub async fn create_note_in_space_cmd(
     app_handle: AppHandle,
@@ -127,159 +213,152 @@ pub async fn create_note_in_space_cmd(
         ));
     }
 
-    let note_path = get_note_path(&app_handle, &space_name, &req.name);
-    if note_path.exists() {
-        return Err(format!(
-            "Note '{}' already exists in space '{}'",
-            req.name, space_name
-        ));
-    }
+    let note_id = Uuid::new_v4();
+    let note_filename = format!("{}.md", note_id);
+    let note_path = space_path.join(&note_filename);
 
-    match fs::File::create(&note_path).await {
-        Ok(mut file) => match file.write_all(req.content.as_bytes()).await {
-            Ok(_) => Ok(Note { name: req.name }),
-            Err(e) => Err(format!(
-                "Failed to write note content to {}: {}",
-                note_path.display(),
-                e
-            )),
-        },
-        Err(e) => Err(format!(
-            "Failed to create note file {}: {}",
-            note_path.display(),
-            e
-        )),
-    }
+    create_note_file(&note_path, &req.name, &req.content).await?;
+
+    Ok(Note {
+        id: note_id,
+        name: req.name,
+    })
 }
 
+// Modified `get_note_content_cmd` to use UUID and front matter
 #[tauri::command]
 pub async fn get_note_content_cmd(
     app_handle: AppHandle,
     space_name: String,
-    note_name: String,
+    note_id: String, // Accepts the UUID as a string
 ) -> Result<NoteContentResponse, String> {
-    let note_path = get_note_path(&app_handle, &space_name, &note_name);
+    let note_path = get_note_path(&app_handle, &space_name, &note_id);
 
     if !note_path.exists() || !note_path.is_file() {
         return Err(format!(
-            "Note '{}' not found in space '{}'",
-            note_name, space_name
+            "Note with ID '{}' not found in space '{}'",
+            note_id, space_name
         ));
     }
 
-    match fs::read_to_string(&note_path).await {
-        Ok(content) => Ok(NoteContentResponse {
-            name: note_name,
-            content,
-        }),
-        Err(e) => Err(format!(
-            "Failed to read note content from {}: {}",
-            note_path.display(),
-            e
-        )),
-    }
+    let (metadata, content) = read_note_file(&note_path).await?;
+
+    Ok(NoteContentResponse {
+        name: metadata.name,
+        content,
+    })
 }
 
+// Modified `update_note_content_cmd` to use UUID and front matter
 #[tauri::command]
 pub async fn update_note_content_cmd(
     app_handle: AppHandle,
     space_name: String,
-    note_name: String,
+    note_id: String,
     req: UpdateNoteRequest,
 ) -> Result<(), String> {
-    let note_path = get_note_path(&app_handle, &space_name, &note_name);
+    let space_path = get_space_path(&app_handle, &space_name);
+    let file_path = space_path.join(format!("{}.md", note_id));
 
-    if !note_path.exists() || !note_path.is_file() {
-        return Err(format!(
-            "Note '{}' not found in space '{}'",
-            note_name, space_name
-        ));
-    }
+    // Read the existing file content
+    let existing_content = fs::read_to_string(&file_path)
+        .await
+        .map_err(|e| format!("Failed to read existing note file: {}", e))?;
 
-    match fs::write(&note_path, req.content.as_bytes()).await {
-        Ok(_) => Ok(()),
-        Err(e) => Err(format!(
-            "Failed to update note content for {}: {}",
-            note_path.display(),
-            e
-        )),
-    }
+    // Manually split the content to get the frontmatter
+    let mut parts = existing_content.splitn(3, "---");
+
+    let _ = parts.next(); // Discard the empty part before the first "---"
+    let frontmatter = parts
+        .next()
+        .ok_or_else(|| "No frontmatter found in existing file".to_string())?;
+
+    // Construct the new file content with the old frontmatter
+    let full_content_to_save = format!("---\n{}\n---\n{}", frontmatter.trim(), req.content);
+
+    // Save the new full content
+    fs::write(&file_path, full_content_to_save)
+        .await
+        .map_err(|e| format!("Failed to write note file: {}", e))?;
+
+    Ok(())
 }
 
+// Modified `save_note_content` to use UUID
 #[tauri::command]
 pub async fn save_note_content(
     app_handle: AppHandle,
     space_name: String,
-    note_name: String,
+    note_id: String,
     content: Vec<u8>,
 ) -> Result<(), String> {
-    let base_path = get_base_path(&app_handle);
-    let space_path = base_path.join(space_name);
+    let space_path = get_space_path(&app_handle, &space_name);
+    let file_path = space_path.join(format!("{}.md", note_id));
 
-    if !space_path.exists() {
-        return Err(format!(
-            "Space directory '{}' does not exists.",
-            space_path.display()
-        ));
-    }
+    // Convert the incoming byte array to a String
+    let new_content = String::from_utf8(content)
+        .map_err(|e| format!("Invalid UTF-8 sequence in content: {}", e))?;
 
-    let note_path = space_path.join(format!("{}.md", note_name));
+    // Read the existing file content
+    let existing_content = fs::read_to_string(&file_path)
+        .await
+        .map_err(|e| format!("Failed to read existing note file: {}", e))?;
 
-    match fs::write(&note_path, content).await {
-        Ok(_) => Ok(()),
-        Err(e) => Err(format!(
-            "Failed to save note to {} : {}",
-            note_path.display(),
-            e
-        )),
-    }
+    // Manually split the content to get the frontmatter
+    let mut parts = existing_content.splitn(3, "---");
+
+    let _ = parts.next(); // Discard the empty part before the first "---"
+    let frontmatter = parts
+        .next()
+        .ok_or_else(|| "No frontmatter found in existing file".to_string())?;
+
+    // Construct the new file content with the old frontmatter
+    // We trim the frontmatter to remove any extra newlines, and ensure the new content starts on a new line
+    let full_content_to_save = format!("---\n{}\n---\n{}", frontmatter.trim(), new_content);
+
+    // Save the new full content
+    fs::write(&file_path, full_content_to_save)
+        .await
+        .map_err(|e| format!("Failed to write note file: {}", e))?;
+
+    Ok(())
 }
 
+// Modified `load_note_content` to use UUID
 #[tauri::command]
 pub async fn load_note_content(
     app_handle: AppHandle,
     space_name: String,
-    note_name: String,
+    note_id: String, // Accepts the UUID as a string
 ) -> Result<String, String> {
-    let base_path = get_base_path(&app_handle);
-    let space_path = base_path.join(space_name);
+    let note_path = get_note_path(&app_handle, &space_name, &note_id);
 
-    if !space_path.exists() {
+    if !note_path.exists() {
         return Err(format!(
-            "Space directory '{}' does not exist.",
-            space_path.display()
+            "Note with ID '{}' not found in space '{}'",
+            note_id, space_name
         ));
     }
 
-    let note_path = space_path.join(format!("{}.md", note_name));
-
-    match fs::read(&note_path).await {
-        Ok(bytes) => {
-            let content = String::from_utf8_lossy(&bytes).to_string();
-            Ok(content)
-        }
-        Err(e) => Err(format!(
-            "Failed to load note from {} : {}",
-            note_path.display(),
-            e
-        )),
-    }
+    let (_, content) = read_note_file(&note_path).await?;
+    Ok(content)
 }
 
+// Modified `delete_note` to use UUID
 #[tauri::command]
 pub async fn delete_note(
     app_handle: AppHandle,
     space_name: String,
-    note_name: String,
+    note_id: String, // Accepts the UUID as a string
 ) -> Result<bool, String> {
-    let note_path = get_note_path(&app_handle, &space_name, &note_name);
+    let note_path = get_note_path(&app_handle, &space_name, &note_id);
 
     println!("Attempting to delete note at path: {:?}", note_path);
 
     if !note_path.exists() {
         return Err(format!(
-            "Note '{}' not found in space '{}' at path: {:?}",
-            note_name, space_name, note_path
+            "Note with ID '{}' not found in space '{}' at path: {:?}",
+            note_id, space_name, note_path
         ));
     }
 
@@ -292,15 +371,70 @@ pub async fn delete_note(
             // Handle various file system errors
             if e.kind() == std::io::ErrorKind::PermissionDenied {
                 Err(format!(
-                    "Permission denied to delete note '{}' at {:?}: {}",
-                    note_name, note_path, e
+                    "Permission denied to delete note with ID '{}' at {:?}: {}",
+                    note_id, note_path, e
                 ))
             } else {
                 Err(format!(
-                    "Failed to delete note '{}' at {:?}: {}",
-                    note_name, note_path, e
+                    "Failed to delete note with ID '{}' at {:?}: {}",
+                    note_id, note_path, e
                 ))
             }
         }
     }
+}
+
+#[tauri::command]
+pub async fn rename_note(
+    app_handle: AppHandle,
+    space_name: String,
+    note_id: String,
+    new_name: String,
+) -> Result<Note, String> {
+    // 1. Validate the new name
+    if new_name.trim().is_empty() {
+        return Err("New note name cannot be empty.".to_string());
+    }
+
+    // 2. Construct the file path using the helper function
+    let space_path = get_space_path(&app_handle, &space_name);
+    let note_path = space_path.join(format!("{}.md", &note_id));
+
+    // 3. Read the file content asynchronously
+    println!("Note path {}", &note_path.display());
+    let file_content = fs::read_to_string(&note_path)
+        .await
+        .map_err(|e| format!("Failed to read file: {}", e))?;
+
+    // 4. Split the content to isolate frontmatter and body
+    let mut parts = file_content.splitn(3, "---");
+    parts.next(); // Skip the first part before the frontmatter
+    let frontmatter_str = parts.next().ok_or_else(|| "No frontmatter found in file".to_string())?;
+    let body = parts.next().unwrap_or_default(); // The rest of the file is the body
+
+    // 5. Deserialize, modify, and re-serialize the frontmatter
+   let mut frontmatter: Frontmatter = serde_yaml::from_str(frontmatter_str)
+    .map_err(|e| format!("Failed to parse frontmatter YAML: {}", e))?;
+
+    frontmatter.name = new_name.clone();
+
+    let new_frontmatter_str = serde_yaml::to_string(&frontmatter)
+        .map_err(|e| format!("Failed to serialize frontmatter YAML: {}", e))?;
+
+    // 6. Reconstruct the full content
+    let new_file_content = format!("---\n{}---\n{}", new_frontmatter_str.trim(), body);
+
+    // 7. Write the updated content back to the file asynchronously
+    fs::write(&note_path, new_file_content)
+        .await
+        .map_err(|e| format!("Failed to write to file: {}", e))?;
+
+        let note_uuid = Uuid::parse_str(&note_id)
+        .map_err(|e| format!("Invalid note_id format: {}", e))?;
+
+    // 8. Return the updated Note object
+    Ok(Note {
+        id: note_uuid,
+        name: new_name,
+    })
 }

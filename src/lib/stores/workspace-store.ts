@@ -48,4 +48,5 @@ activeSpaceName.subscribe(async (name) => {
     }
 })
 
-export const activeNote = writable<{name: string, content: OutputData | null} | null>(null);
+export const openNotes = writable([]);
+export const activeNoteId = writable<string | null>(null);

@@ -1,36 +1,65 @@
 <script lang="ts">
-  import EditorJS, { type OutputData } from '@editorjs/editorjs';
-  import { initEditor } from '@services/internal/editor/initEditor';
-  import { activeSpaceName } from '@stores/workspace-store';
-  import { onDestroy, onMount } from 'svelte';
-  import { get } from 'svelte/store';
-  
-  let { noteName, initialContent } = $props();
-  let editorInstance: EditorJS | null = null;
-  const editorHolderId = 'editorjs';
+    import EditorJS, { type OutputData } from '@editorjs/editorjs';
+    import { initEditor } from '@services/internal/editor/initEditor';
+    import { activeNoteId, activeSpaceName } from '@stores/workspace-store';
+    import { onDestroy, onMount } from 'svelte';
+    import { get } from 'svelte/store';
+    
+    let { noteName, initialContent, editorHolderId = 'editorjs-container' } = $props();
+    let editorInstance: EditorJS | null = null;
+    let reloadDebounceTimeout: any = null;
 
-  $effect(() => {
-    if (editorInstance && typeof editorInstance.destroy === 'function') {
-      editorInstance.destroy();
-      editorInstance = null;
+    async function reloadEditor() {
+        let currentContent: OutputData | null = null;
+        
+        // 1. Save the current content before destroying the instance
+        if (editorInstance && typeof editorInstance.save === 'function') {
+            try {
+                currentContent = await editorInstance.save();
+            } catch (error) {
+                console.error("Failed to save Editor.js content:", error);
+                // Fallback to initial content if save fails
+                currentContent = initialContent;
+            }
+        }
+        
+        // 2. Destroy the existing instance
+        if (editorInstance && typeof editorInstance.destroy === 'function') {
+            editorInstance.destroy();
+            editorInstance = null;
+        }
+
+        // 3. Re-initialize the editor with the saved content
+        if (noteName && get(activeSpaceName)) {
+            editorInstance = initEditor(
+                editorHolderId,
+                get(activeSpaceName) ?? '',
+                noteName,
+                get(activeNoteId) ?? '',
+                currentContent || initialContent // Use saved content or initial content as fallback
+            );
+        }
     }
 
-    if (noteName && $activeSpaceName) {
-      editorInstance = initEditor(
-        editorHolderId,
-        $activeSpaceName ?? '',
-        noteName,
-        initialContent
-      );
-    }
-  });
+    $effect(() => {
+        reloadEditor();
+    });
 
-  onDestroy(() => {
-    if (editorInstance && typeof editorInstance.destroy === 'function') {
-      editorInstance.destroy();
-    }
-  });
+    onMount(() => {
+        const debouncedReload = () => {
+            clearTimeout(reloadDebounceTimeout);
+            reloadDebounceTimeout = setTimeout(reloadEditor, 200); // 200ms debounce
+        };
+        window.addEventListener('resize', debouncedReload);
+    });
+
+    onDestroy(() => {
+        if (editorInstance && typeof editorInstance.destroy === 'function') {
+            editorInstance.destroy();
+        }
+        window.removeEventListener('resize', reloadEditor);
+    });
 </script>
 
-<div id="{editorHolderId}" class="bg-black overflow-y-auto mt-xs rounded-md flex-1">
+<div id="{editorHolderId}" class="bg-black overflow-y-auto overflow-x-hidden mt-lg rounded-md flex-1">
 </div>

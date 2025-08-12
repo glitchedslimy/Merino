@@ -6,8 +6,12 @@ export interface Space {
     route: string | null, 
 }
 
+export interface NoteMetadata {
+    name: string;
+}
 // Matches the Rust `Note` struct
 export interface Note {
+    id: string;
     name: string;
 }
 

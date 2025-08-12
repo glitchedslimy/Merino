@@ -1,5 +1,5 @@
 // ai-chat.ts
-import ollama, { type ChatResponse } from 'ollama';
+import ollama, { type ChatResponse } from 'ollama/browser';
 
 // Mock function for tool calling
 const availableFunctions = {

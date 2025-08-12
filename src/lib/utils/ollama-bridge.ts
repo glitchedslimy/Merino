@@ -1,7 +1,7 @@
 // src/lib/utils/ollama-bridge.ts
 
 import { Command } from '@tauri-apps/plugin-shell';
-import { Ollama } from 'ollama';
+import { Ollama } from 'ollama/browser';
 
 let ollamaClient: Ollama | null = null;
 

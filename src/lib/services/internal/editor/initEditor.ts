@@ -75,8 +75,7 @@ const editorConfig: EditorJSConfig = {
  * Initializes the editor
  * @param editor - EditorJS Interface
  */
-export function initEditor(holderId: string, activeSpaceName: string, noteName: string, initialContent: OutputData | null) {
-    console.log(activeSpaceName, noteName, initialContent)
+export function initEditor(holderId: string, activeSpaceName: string, noteName: string, noteId: string, initialContent: OutputData | null) {
     const debounceSave = debounce(async (contentData: OutputData | undefined) => {
         if (!activeSpaceName || !noteName) {
             console.error("Active space or note name is not defined, can't save")
@@ -84,13 +83,14 @@ export function initEditor(holderId: string, activeSpaceName: string, noteName: 
         }
 
         try {
-            console.log("debounced content", contentData)
             const markdownString = convertJsonToMarkdown(contentData)
+            
             const encoder = new TextEncoder();
             const contentBytes = Array.from(encoder.encode(markdownString));
             await invoke('save_note_content', {
                 spaceName: activeSpaceName,
                 noteName: noteName,
+                noteId: noteId,
                 content: contentBytes
             });
         } catch(e) {

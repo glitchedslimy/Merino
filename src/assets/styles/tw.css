@@ -280,3 +280,15 @@ h6.ce-header {
 .ce-popover-item-html > input {
     background-color: var(--color-black-100);
 }
+
+/* 2. Target the inner redactor area and remove its max-width */
+
+
+/* 4. Define a readable max-width for the content itself and center it */
+.ce-block__content {
+    max-width: 60%; 
+}
+
+.ce-toolbar__content {
+    max-width: 60%;
+}

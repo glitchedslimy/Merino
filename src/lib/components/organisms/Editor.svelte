@@ -1,61 +1,80 @@
 <script lang="ts">
-    import { Editor, Utilsbar } from "@molecules";
-    import { activeNote, activeSpaceName } from "@stores/workspace-store";
-    import { convertMarkdownToJson } from "../../utils/editor-converter";
-    import { invoke } from "@tauri-apps/api/core";
-    import Logo from "@components/atoms/Logo.svelte";
-    import NoNotesInSpace from "@components/molecules/NoNotesInSpace.svelte";
+  import { Editor as EditorComponent, Utilsbar } from "@molecules";
+  import { activeSpaceName, openNotes, activeNoteId } from "@stores/workspace-store";
+  import { convertMarkdownToJson } from "../../utils/editor-converter";
+  import NoNotesInSpace from "@components/molecules/NoNotesInSpace.svelte";
+  import {
+    getNoteContent,
+    updateNoteContent,
+  } from "@services/internal/api/tauri-commands";
+  import type { OutputData } from "@editorjs/editorjs";
+    import NotesTab from "@components/molecules/NotesTab.svelte";
+
+  let activeNote = $derived($openNotes.find(note => note.id === $activeNoteId));
+  let displayedContent = $state<OutputData | null>(null);
+  let isLoadingContent = $state(false);
+
+  // Function to handle content changes and save the note
+  async function handleContentChange(event: CustomEvent<OutputData>) {
+    const newContent = event.detail;
+    if (!activeNote || !$activeSpaceName) return;
+
+    const newContentString = JSON.stringify(newContent);
     
-    // Use a local state variable for the editor's content
-    let noteContent = $state<OutputData | null>(null);
-    let isLoadingContent = $state(false);
+    try {
+      await updateNoteContent($activeSpaceName, activeNote.id, {
+        content: newContentString,
+      });
+      console.log("Note content saved successfully.");
+    } catch (e) {
+      console.error("Failed to save note content:", e);
+    }
+  }
 
-    // The effect now watches for changes in the active note's NAME
-    // and updates the local state, breaking the reactive loop.
-    $effect(async () => {
-        const currentNote = $activeNote;
-        const currentSpaceName = $activeSpaceName;
+  $effect(async () => {
+    const currentNote = activeNote;
+    const currentSpaceName = $activeSpaceName;
 
-        if (currentNote && currentSpaceName) {
-            // Check to see if the note name has actually changed
-            // This prevents the effect from running if the content is what changed
-            isLoadingContent = true;
-            try {
-                const markdownString = await invoke('load_note_content', {
-                    spaceName: currentSpaceName,
-                    noteName: currentNote.name,
-                });
-                
-                const jsonContent = convertMarkdownToJson(markdownString);
-                
-                // Update the local state variable, not the global store
-                noteContent = jsonContent;
-                
-                console.log("Note content loaded:", jsonContent);
-            } catch (e) {
-                console.error('Failed to load note content:', e);
-                noteContent = null;
-            } finally {
-                isLoadingContent = false;
-            }
-        } else {
-            // Clear the content if no note is active
-            noteContent = null;
-        }
-    });
+    if (currentNote && currentSpaceName) {
+      isLoadingContent = true;
+      try {
+        const markdownString = await getNoteContent(
+          currentSpaceName,
+          currentNote.id,
+        );
+        const jsonContent = convertMarkdownToJson(markdownString);
+        displayedContent = jsonContent;
+      } catch (e) {
+        console.error("Failed to load note content:", e);
+        displayedContent = null;
+      } finally {
+        isLoadingContent = false;
+      }
+    } else {
+      displayedContent = null;
+    }
+  });
 </script>
 
 <section class="">
-    <Utilsbar />
-    {#if isLoadingContent}
-        <div class="flex items-center justify-center h-full">
-            <p class="text-white">Cargando contenido...</p>
-        </div>
-    {:else if $activeNote && noteContent}
-    <div id="editorjsHolder"class="h-screen bg-black overflow-y-auto mt-xs rounded-md">
-            <Editor noteName={$activeNote.name} initialContent={noteContent} />
+   <NotesTab />
+  <Utilsbar />
+  {#if isLoadingContent}
+    <div class="flex items-center justify-center h-full">
+      <p class="text-white">Loading Content...</p>
     </div>
-    {:else}
-        <NoNotesInSpace />
-    {/if}
+  {:else if activeNote}
+    <div
+      id="editorjsHolder"
+      class="h-screen bg-black overflow-y-auto mt-xs rounded-md"
+    >
+      <EditorComponent
+        noteName={activeNote.name}
+        initialContent={displayedContent}
+        on:content-change={handleContentChange}
+      />
+    </div>
+  {:else}
+    <NoNotesInSpace />
+  {/if}
 </section>
