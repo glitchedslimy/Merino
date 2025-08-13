@@ -1,8 +1,16 @@
+use ollama_rs::generation::chat::request::ChatMessageRequest;
+use ollama_rs::generation::chat::ChatMessage;
+use ollama_rs::Ollama;
 use serde_yaml;
+use tokio_util::sync::CancellationToken;
 use std::path::Path;
-use tauri::AppHandle;
+use std::sync::Arc;
+use tauri::{AppHandle, Emitter, State, Window};
 use tokio::fs;
 use uuid::Uuid;
+
+use crate::ai::stream_response_to_frontend;
+use crate::models::{AppState, ModelResponse};
 
 // Import models and path helpers from sibling modules
 use super::models::{
@@ -437,4 +445,82 @@ pub async fn rename_note(
         id: note_uuid,
         name: new_name,
     })
+}
+
+// Ollama Commands for AI implementation
+#[tauri::command]
+pub async fn get_ollama_models_cmd() -> Result<Vec<ModelResponse>, String> {
+    let ollama = Ollama::default();
+    let local_models = ollama.list_local_models().await.map_err(|e| e.to_string())?;
+
+    let mut all_model_info = Vec::new();
+
+    for model in local_models {
+        let model_info = ollama.show_model_info(model.name.clone()).await.map_err(|e| e.to_string())?;
+        let model_capabilities = model_info.capabilities;
+        let model_response = ModelResponse {
+            name: model.name,
+            capabilities: model_capabilities
+        };
+        all_model_info.push(model_response);
+    }
+    
+    Ok(all_model_info)
+}
+
+#[tauri::command]
+pub fn stop_ollama_stream(state: State<'_, Arc<AppState>>) {
+    // Lock the Mutex and call `cancel()` on the current token.
+    let token_guard = state.cancellation_token.lock().unwrap();
+    token_guard.cancel();
+}
+
+#[tauri::command]
+pub async fn send_to_chat_command(
+	window: Window,
+	messages: Vec<ChatMessage>,
+	model: String,
+	use_tools: bool,
+	use_thinking: bool,
+	state: State<'_, Arc<AppState>>,
+) -> Result<(), String> {
+	let ollama = Ollama::default();
+	let mut request = ChatMessageRequest::new(model.clone(), messages);
+
+	if use_thinking {
+		request = request.think(use_thinking);
+	}
+
+	if use_tools {
+		// TODO: Implement tool handling
+	}
+
+	// Create a NEW token for this specific generation task
+	let new_token = CancellationToken::new();
+
+	// 💡 Lock the Mutex to safely access and modify the cancellation token inside the Arc.
+	{
+		let mut cancellation_token_guard = state.cancellation_token.lock().unwrap();
+		cancellation_token_guard.cancel();
+		*cancellation_token_guard = new_token.clone();
+	} // 💡 The Mutex lock is automatically released here when the guard goes out of scope.
+
+	// 💡 Spawn a new task to handle both the API call and the streaming.
+	// This ensures the new token is in place *before* the API call is made.
+	tokio::spawn(async move {
+		let res = ollama.send_chat_messages_stream(request).await;
+
+		match res {
+			Ok(stream) => {
+				// Pass the token to the streaming function
+				let _ = stream_response_to_frontend(window, stream, new_token).await;
+			}
+			Err(e) => {
+				eprintln!("Ollama API error: {:?}", e);
+				let _ = window.emit("ollama-chat-end", {});
+			}
+		}
+	});
+
+	Ok(())
 }

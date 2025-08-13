@@ -35,7 +35,7 @@
     });
 </script>
 
-<div class="flex flex-1 justify-end">
+<div class="flex  justify-end">
         <Button intent='appbar' handleClick={() => getCurrentWindow().minimize()}>
             <Icon iconName='minimize' width=16 />
         </Button>

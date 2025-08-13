@@ -8,7 +8,7 @@
     import { Sidebar, Appbar, Workspace } from "@organisms";
     import { openAdminSpaces } from "@stores/workspace-store";
     import { onMount, onDestroy } from "svelte";
-    import { Ollama } from 'ollama/browser';
+    import { Ollama } from 'ollama';
     import { startOllamaBridge } from "../lib/utils/ollama-bridge";
     import { get } from 'svelte/store';
     import { openAiChat } from "@stores/ai-store";

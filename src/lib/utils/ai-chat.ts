@@ -1,5 +1,5 @@
 // ai-chat.ts
-import ollama, { type ChatResponse } from 'ollama/browser';
+import { invoke } from '@tauri-apps/api/core';
 
 // Mock function for tool calling
 const availableFunctions = {
@@ -33,26 +33,30 @@ const tools = [
 
 export async function getOllamaModels(): Promise<string[]> {
     try {
-        const response = await ollama.list();
-        return response.models.map(model => model.name);
+        // Use Tauri's invoke to call the Rust command
+        const models = await invoke("get_ollama_models_cmd");
+        console.log(models)
+        return models as string[];
     } catch (error) {
         console.error("Failed to fetch Ollama models:", error);
         return [];
     }
 }
 
-// sendToChat function updated to not use AbortController
-export async function sendToChat(messages: any[], useTools: boolean, modelName: string, useThinking: boolean): Promise<AsyncIterable<ChatResponse>> {
-    const params = {
-        model: modelName,
+export async function sendToChat(messages: any[], useTools: boolean, modelName: string, useThinking: boolean): Promise<void> {
+    // Call the Rust command, which will handle the streaming on the backend.
+    // We pass all the necessary parameters to the backend.
+    await invoke("send_to_chat_command", {
         messages,
-        stream: true,
-        ...(useTools && { tools: tools }),
-        ...(useThinking && { think: true }),
-    };
+        model: modelName,
+        useTools,
+        useThinking,
+    });
+}
 
-    const response = await ollama.chat(params);
-    return response;
+// A new function to invoke a backend command to stop the streaming.
+export async function stopStreaming(): Promise<void> {
+    await invoke("stop_ollama_stream");
 }
 
 export { availableFunctions };

@@ -1,4 +1,2 @@
-- [ ] Arreglar los bugs con la IA (Al llamar las tools no hace bien el display del mensaje)
-- [ ] Ver como implementar los MCP en la IA
-- [ ] Ver como implementar un selector de herramientas para la IA
-- [ ] Ver como podemos implementar la IA en la App
+- [ ] Hacer un refactor completo y limpiar lógicas y hacer separación de componentes y lógicas y hacer cosas rehusables
+- [ ] Cuando todo esto esté hecho, hacer la documentación para poner más adelante a los usuarios.

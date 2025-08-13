@@ -8,6 +8,7 @@
     variants: {
         intent: {
             icon: "text-white hover:text-white-300 hover:cursor-pointer",
+            iconStop: "text-brand-primary-light hover:cursor-pointer",
             primary: "text-white hover:bg-brand-primary/60 hover:cursor-pointer bg-brand-primary px-5 py-2 rounded-md font-medium transition duration-200 w-2xl",
             secondary: "text-white hover:bg-brand-secondary-dark px-5 py-2 rounded bg-brand-secondary cursor-pointer font-medium transition duration-200 w-2xl",
             success: "text-white hover:bg-utils-green-dark px-5 py-2 rounded bg-utils-green cursor-pointer font-medium transition duration-200 w-2xl",
