@@ -1,7 +1,7 @@
 <script lang="ts">
     import EditorJS, { type OutputData } from '@editorjs/editorjs';
     import { initEditor } from '@services/internal/editor/initEditor';
-    import { activeNoteId, activeSpaceName } from '@stores/workspace-store';
+    import { activeNoteName, activeSpaceName } from '@stores/workspace-store';
     import { onDestroy, onMount } from 'svelte';
     import { get } from 'svelte/store';
     
@@ -35,7 +35,7 @@
                 editorHolderId,
                 get(activeSpaceName) ?? '',
                 noteName,
-                get(activeNoteId) ?? '',
+                get(activeNoteName) ?? '', // Correctly passing the note name
                 currentContent || initialContent // Use saved content or initial content as fallback
             );
         }

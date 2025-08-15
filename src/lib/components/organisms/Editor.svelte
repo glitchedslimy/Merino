@@ -1,6 +1,10 @@
 <script lang="ts">
   import { Editor as EditorComponent, Utilsbar } from "@molecules";
-  import { activeSpaceName, openNotes, activeNoteId } from "@stores/workspace-store";
+  import {
+    activeSpaceName,
+    openNotes,
+    activeNoteName, // Changed to activeNoteName
+  } from "@stores/workspace-store";
   import { convertMarkdownToJson } from "../../utils/editor-converter";
   import NoNotesInSpace from "@components/molecules/NoNotesInSpace.svelte";
   import {
@@ -8,9 +12,10 @@
     updateNoteContent,
   } from "@services/internal/api/tauri-commands";
   import type { OutputData } from "@editorjs/editorjs";
-    import NotesTab from "@components/molecules/NotesTab.svelte";
+  import NotesTab from "@components/molecules/NotesTab.svelte";
 
-  let activeNote = $derived($openNotes.find(note => note.id === $activeNoteId));
+  // The active note is now derived from the activeNoteName
+  let activeNote = $derived($openNotes.find(note => note.name === $activeNoteName));
   let displayedContent = $state<OutputData | null>(null);
   let isLoadingContent = $state(false);
 
@@ -22,7 +27,8 @@
     const newContentString = JSON.stringify(newContent);
     
     try {
-      await updateNoteContent($activeSpaceName, activeNote.id, {
+      // Pass activeNote.name to the backend
+      await updateNoteContent($activeSpaceName, activeNote.name, {
         content: newContentString,
       });
       console.log("Note content saved successfully.");
@@ -38,9 +44,10 @@
     if (currentNote && currentSpaceName) {
       isLoadingContent = true;
       try {
+        // Pass currentNote.name to the backend
         const markdownString = await getNoteContent(
           currentSpaceName,
-          currentNote.id,
+          currentNote.name,
         );
         const jsonContent = convertMarkdownToJson(markdownString);
         displayedContent = jsonContent;
@@ -57,7 +64,7 @@
 </script>
 
 <section class="">
-   <NotesTab />
+  <NotesTab />
   <Utilsbar />
   {#if isLoadingContent}
     <div class="flex items-center justify-center h-full">

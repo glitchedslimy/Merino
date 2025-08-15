@@ -9,7 +9,7 @@
     activeSpaceName,
     loadPersistentState,
     openNotes,
-    activeNoteId,
+    activeNoteName, // Changed from activeNoteId
   } from "@stores/workspace-store";
   import { closeNote, openNote } from "@services/internal/editor/notes-buffer";
   import {
@@ -18,6 +18,7 @@
     createNoteInSpace,
     renameNote,
   } from "@services/internal/api/tauri-commands";
+  // The Note type is now just a name
   import type { Note } from "@services/internal/api/models/rust-models";
 
   import { Button, Icon, SpaceDropdownTest } from "@atoms";
@@ -34,8 +35,8 @@
   let customMenuX = $state(0);
   let customMenuY = $state(0);
   let currentRightClickedNote: Note | null = $state(null);
-  let renamingNoteId: string | null = $state(null); // New state variable
-  let inputElement: HTMLInputElement | null = null;
+  let renamingNoteName: string | null = $state(null); // Changed from renamingNoteId
+  let inputElement: HTMLInputElement | null = $state(null);
   let timeoutId: number | null = null;
   const DELAY_MS = 500;
 
@@ -45,12 +46,9 @@
   let tooltipY = $state(0);
 
   function handleShowTooltip(text: string, x: number, y: number) {
-    // Clear any existing timeout to restart the timer
     if (timeoutId) {
       clearTimeout(timeoutId);
     }
-
-    // Start a new timer
     timeoutId = setTimeout(() => {
       showTooltip = true;
       tooltipText = text;
@@ -60,12 +58,10 @@
   }
 
   function handleHideTooltip() {
-    // Clear the timeout to prevent the tooltip from appearing
     if (timeoutId) {
       clearTimeout(timeoutId);
       timeoutId = null;
     }
-    // Hide the tooltip immediately
     showTooltip = false;
     tooltipText = "";
   }
@@ -75,12 +71,12 @@
     {
       icon: "trash",
       label: "Delete Note",
-      action: (id: string) => handleNoteAction("delete", id),
+      action: (name: string) => handleNoteAction("delete", name),
     },
     {
       icon: "pencil",
       label: "Rename Note",
-      action: (id: string) => handleNoteAction("rename", id),
+      action: (name: string) => handleNoteAction("rename", name),
     },
   ];
 
@@ -90,7 +86,7 @@
       notes = [];
       loadingNotes = false;
       openNotes.set([]);
-      activeNoteId.set(null);
+      activeNoteName.set(null);
       return;
     }
     loadingNotes = true;
@@ -105,7 +101,7 @@
       console.error("Failed to load notes:", e);
       notes = [];
       openNotes.set([]);
-      activeNoteId.set(null);
+      activeNoteName.set(null);
       addToast(`Error loading notes: ${e}`, "error");
     } finally {
       loadingNotes = false;
@@ -122,7 +118,7 @@
     (async () => {
       unlisten = await listen("tauri://menu", (event) => {
         if (event.payload === "delete-note" && currentRightClickedNote) {
-          handleNoteAction("delete", currentRightClickedNote.id);
+          handleNoteAction("delete", currentRightClickedNote.name);
         }
       });
     })();
@@ -131,37 +127,34 @@
     };
   });
 
-  async function saveRenamedNote(id: string, newName: string) {
-    // Basic validation
+  async function saveRenamedNote(oldName: string, newName: string) {
     if (!newName.trim()) {
       addToast("Note name cannot be empty.", "error");
-      renamingNoteId = null;
+      renamingNoteName = null;
       return;
     }
 
-    if (id && $activeSpaceName) {
+    if (oldName && $activeSpaceName) {
       try {
-        // Call the Tauri command to rename the note on the backend
-        const renamedNote = await renameNote($activeSpaceName, id, newName);
+        const renamedNote = await renameNote($activeSpaceName, oldName, newName);
 
         if (renamedNote) {
           addToast(`Note renamed to "${renamedNote.name}".`, "success");
 
-          // Update the openNotes store with the new name
+          // Update the openNotes store
           openNotes.update((notes) => {
-            const noteIndex = notes.findIndex((n) => n.id === id);
+            const noteIndex = notes.findIndex((n) => n.name === oldName);
             if (noteIndex !== -1) {
               notes[noteIndex] = renamedNote;
             }
             return notes;
           });
 
-          // Update the active note if it's the one being renamed
-          if ($activeNoteId === id) {
+          // Update the active note
+          if ($activeNoteName === oldName) {
             openNote(renamedNote);
           }
 
-          // Reload the notes for the sidebar to ensure consistency
           await loadNotesForSpace($activeSpaceName);
         } else {
           addToast(`Failed to rename note.`, "error");
@@ -170,23 +163,23 @@
         addToast(`Error renaming note: ${error}`, "error");
       }
     }
-    renamingNoteId = null; // Reset the state to show the note name again
+    renamingNoteName = null;
   }
 
-  async function handleNoteAction(actionType: string, noteId: string) {
-    console.log(`[Custom Menu Action] ${actionType} for note ID: ${noteId}`);
+  async function handleNoteAction(actionType: string, noteName: string) {
+    console.log(`[Custom Menu Action] ${actionType} for note name: ${noteName}`);
     switch (actionType) {
       case "delete":
-        if (noteId && $activeSpaceName) {
+        if (noteName && $activeSpaceName) {
           try {
-            const success = await deleteNote($activeSpaceName, noteId);
+            const success = await deleteNote($activeSpaceName, noteName);
             if (success) {
               addToast(`Note deleted successfully.`, "success");
-              closeNote(noteId);
+              closeNote(noteName);
               await loadNotesForSpace($activeSpaceName);
             } else {
               addToast(`Failed to delete note.`, "error");
-              console.warn(`[Action] Failed to delete note ID '${noteId}'.`);
+              console.warn(`[Action] Failed to delete note name '${noteName}'.`);
             }
           } catch (error) {
             addToast(`Error deleting note: ${error}`, "error");
@@ -195,8 +188,8 @@
         }
         break;
       case "rename":
-        renamingNoteId = noteId; // Set the ID to trigger the input field
-        await tick(); // Wait for the DOM to update
+        renamingNoteName = noteName;
+        await tick();
         if (inputElement) {
           inputElement.focus();
         }
@@ -212,17 +205,13 @@
   }
 
   async function createNote(spaceName: string) {
-    const finalNoteName = "Sin titulo";
     try {
-      const newNote = await createNoteInSpace(spaceName, {
-        name: finalNoteName,
-        content: "",
-      });
+      // Correctly call the backend command which now generates the name
+      const newNote = await createNoteInSpace(spaceName);
       openNote(newNote);
-      let notes = await loadNotesForSpace(spaceName);
-      console.log(notes);
+      await loadNotesForSpace(spaceName); // Correctly await the load function
     } catch (e) {
-      addToast(e, "error");
+      addToast(`Failed to create note: ${e}`, "error");
       console.error("Failed to create note:", e);
     }
   }
@@ -246,7 +235,7 @@
   }
 
   let activeNote = $derived(
-    $openNotes.find((note) => note.id === $activeNoteId),
+    $openNotes.find((note) => note.name === $activeNoteName),
   );
 </script>
 
@@ -294,7 +283,7 @@
         </Button>
       </IconNavigationBar>
       <div class="mt-md pr-4 overflow-y-auto h-[75%] no-scroll">
-        {#each notes as note (note.id)}
+        {#each notes as note (note.name)}
           <li
             class="list-none"
             oncontextmenu={(e) => showNoteContextMenu(e, note)}
@@ -302,23 +291,22 @@
             <Button
               intent="notes"
               handleClick={() => selectNote(note)}
-              class={`${activeNote?.id === note.id ? "text-brand-primary-light bg-black-200" : ""} ${currentRightClickedNote?.id === note.id ? "border-[1.5px] border-brand-primary-dark" : ""}`}
+              class={`${activeNote?.name === note.name ? "text-brand-primary-light bg-black-200" : ""} ${currentRightClickedNote?.name === note.name ? "border-[1.5px] border-brand-primary-dark" : ""}`}
             >
-              {#if renamingNoteId === note.id}
+              {#if renamingNoteName === note.name}
                 <input
                   bind:this={inputElement}
                   type="text"
                   class="w-full h-full p-1 bg-black-300 text-brand-primary-light rounded-sm"
-                  value={note.name.replace(/\.[^/.]+$/, "")}
+                  value={note.name}
                   onkeydown={(e) => {
                     if (e.key === "Enter") {
-                      saveRenamedNote(note.id, e.currentTarget.value);
+                      saveRenamedNote(note.name, e.currentTarget.value);
                     } else if (e.key === "Escape") {
-                      renamingNoteId = null;
+                      renamingNoteName = null;
                     }
                   }}
-                  onblur={(e) =>
-                    saveRenamedNote(note.id, e.currentTarget.value)}
+                  onblur={(e) => saveRenamedNote(note.name, e.currentTarget.value)}
                 />
               {:else}
                 <Icon iconName="note" width="20" />
@@ -351,7 +339,7 @@
     x={customMenuX}
     y={customMenuY}
     menuItems={noteContextMenuItems}
-    contextId={currentRightClickedNote.id}
+    contextId={currentRightClickedNote.name}
     on:close={closeCustomContextMenu}
   />
 {/if}

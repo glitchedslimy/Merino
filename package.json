@@ -10,7 +10,8 @@
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "tauri": "tauri",
-    "tauri:debug": "tauri build --debug"
+    "tauri:debug:build": "tauri build --debug",
+    "tauri:debug:run": "RUST_LOG=debug npm run tauri dev"
   },
   "license": "MIT",
   "dependencies": {

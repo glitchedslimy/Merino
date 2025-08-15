@@ -11,7 +11,7 @@ import type {
 
 // Corresponds to `list_spaces_cmd` in Rust
 export async function listSpaces(): Promise<Space[]> {
-    return invoke<Space[]>('list_spaces_cmd');
+    return invoke<Space[]>('get_spaces_cmd');
 }
 
 // Corresponds to `create_space_cmd` in Rust
@@ -26,15 +26,14 @@ export async function deleteSpace(spaceName: string): Promise<void> {
 
 // Corresponds to `list_notes_in_space_cmd` in Rust
 export async function listNotesInSpace(spaceName: string): Promise<Note[]> {
-    console.log("Rust Spacename", spaceName)
-    let notes = await invoke("list_notes_in_space_cmd", { spaceName });
+    let notes = await invoke("get_notes_in_space_cmd", { spaceName });
     console.log("Notes in Rust", notes)
     return notes as Note[];
 }
 
 // Corresponds to `Notes_in_space_cmd` in Rust
-export async function createNoteInSpace(spaceName: string, req: CreateNoteRequest): Promise<Note> {
-  return await invoke("create_note_in_space_cmd", { spaceName, req });
+export async function createNoteInSpace(spaceName: string): Promise<Note> {
+  return await invoke("create_note_in_space_cmd", { spaceName });
 }
 
 // Corresponds to `get_note_content_cmd` in Rust

@@ -1,7 +1,6 @@
-import type { Space } from "@services/internal/api/models/rust-models";
+import type { Note, Space } from "@services/internal/api/models/rust-models";
 import { writable } from "svelte/store";
 import { load } from "@tauri-apps/plugin-store";
-import type { OutputData } from "@editorjs/editorjs";
 
 export const showWorkspace = writable<boolean>(true);
 let isInitialLoadComplete = false;
@@ -48,5 +47,5 @@ activeSpaceName.subscribe(async (name) => {
     }
 })
 
-export const openNotes = writable([]);
-export const activeNoteId = writable<string | null>(null);
+export const openNotes = writable<Note[]>([]);
+export const activeNoteName = writable<string | null>(null);

@@ -1,29 +1,33 @@
-import { activeNoteId, openNotes } from "@stores/workspace-store";
+import { activeNoteName, openNotes } from "@stores/workspace-store";
 import { get } from "svelte/store";
 import type { Note } from "../api/models/rust-models";
 
-export function openNote(note) {
+export function openNote(note: Note) {
     const currentNotes = get(openNotes);
-    const isNoteAlreadyOpen = currentNotes.some(n => n.id === note.id);
+    // Check if the note is already open by its name
+    const isNoteAlreadyOpen = currentNotes.some(n => n.name === note.name);
 
     if (!isNoteAlreadyOpen) {
         openNotes.update(notes => [...notes, note]);
         console.log("Adding new note to buffer:", note.name);
     }
     
-    activeNoteId.set(note.id);
-    console.log("Setting active note ID:", note.id);
+    // Set the active note name
+    activeNoteName.set(note.name);
+    console.log("Setting active note name:", note.name);
     console.log("Current open notes in store:", get(openNotes));
 }
-export function closeNote(noteId) {
+
+export function closeNote(noteName: string) {
     const currentOpenNotes = get(openNotes);
-    const newOpenNotes = currentOpenNotes.filter(note => note.id !== noteId);
+    // Filter out the note by its name
+    const newOpenNotes = currentOpenNotes.filter(note => note.name !== noteName);
 
     openNotes.set(newOpenNotes);
 
     // If the closed note was the active one, select the last remaining one
-    if (get(activeNoteId) === noteId) {
+    if (get(activeNoteName) === noteName) {
         const lastNote = newOpenNotes[newOpenNotes.length - 1];
-        activeNoteId.set(lastNote ? lastNote.id : null);
+        activeNoteName.set(lastNote ? lastNote.name : null);
     }
 }

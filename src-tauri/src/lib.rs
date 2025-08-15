@@ -1,42 +1,48 @@
-use std::sync::{Arc, Mutex};
+use log::LevelFilter;
+use tauri::Manager;
+use crate::features::space::infrastructure::filesystem_repo::FileSystemSpaceRepository;
+use crate::{features::notes::infrastructure::filesystem_repository::FileSystemNoteRepository, shared::logger::logger::MerinoLogger};
 
-use tokio_util::sync::CancellationToken;
+// Declare modules
+pub mod features;
+pub mod shared;
 
-use crate::models::AppState;
+// Implement functions from infrastructure
+use features::notes::infrastructure::tauri_commands::get_notes_in_space_cmd;
+use features::space::infrastructure::tauri_commands::get_spaces_cmd;
+use features::notes::infrastructure::tauri_commands::create_note_in_space_cmd;
 
-// Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-mod commands;
-mod models;
-mod paths;
-mod ai;
-
+/// Static setup for the logger
+static LOGGER: MerinoLogger = MerinoLogger;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    let state = Arc::new(AppState {
-        cancellation_token: Mutex::new(CancellationToken::new())
-    });
+    // Logger setup
+    log::set_logger(&LOGGER).map(|()| log::set_max_level(LevelFilter::Info)).expect("Failed to setup logger");
 
+    // Tauri Setup
     tauri::Builder::default()
-        .manage(state)
+        .setup(|app| {
+           let app_handle = app.handle();
+
+           // Create generic filesystem repo
+           let filesystem_repo = shared::repositories::filesystem_repository::FileSystemRepository::new(app_handle.clone());
+           // Create specific repo implementations using the generic ones
+           let notes_repo = FileSystemNoteRepository::new(filesystem_repo.clone());
+           let spaces_repo = FileSystemSpaceRepository::new(filesystem_repo.clone());
+
+           // Manage both repos
+           app.manage(notes_repo);
+           app.manage(spaces_repo);
+           Ok(())
+        })
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
-            commands::list_spaces_cmd,
-            commands::create_space_cmd,
-            commands::delete_space_cmd,
-            commands::list_notes_in_space_cmd,
-            commands::create_note_in_space_cmd,
-            commands::get_note_content_cmd,
-            commands::update_note_content_cmd,
-            commands::save_note_content,
-            commands::load_note_content,
-            commands::delete_note,
-            commands::rename_note,
-            commands::get_ollama_models_cmd,
-            commands::send_to_chat_command,
-            commands::stop_ollama_stream
+            get_notes_in_space_cmd,
+            get_spaces_cmd,
+            create_note_in_space_cmd
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
