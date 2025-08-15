@@ -34,6 +34,7 @@
 - [ ] Hacer un sistema de plugins y una tienda para ello
 - [ ] Hacer posible que el usuario sincronice las notas entre dispositivos (a futuro)
 - [ ] Hacer posible la creación de carpetas para organizar las notas
+- [ ] Hacer la documentación (Web)
 
 ***
 
