@@ -1,8 +1,8 @@
-use std::path::PathBuf;
+use std::{io::ErrorKind, path::PathBuf};
 
 use log::{debug, error};
 use tauri::{AppHandle, Manager};
-use tokio::fs::create_dir_all;
+use tokio::fs::{self};
 
 use crate::shared::errors::app_errors::AppError;
 /// Constant for defining the BASE DIR of the app
@@ -44,10 +44,11 @@ impl FileSystemRepository {
 
     /// _[PUBLIC]_ Ensure a directory exists, creating it if necessary.
     pub async fn ensure_directory_exists(&self, path: &PathBuf) -> Result<(), AppError> {
-        if !path.exists() {
-            create_dir_all(path).await?
+        match fs::create_dir_all(path).await {
+            Ok(_) => Ok(()),
+            Err(e) if e.kind() == ErrorKind::AlreadyExists => Ok(()),
+            Err(e) => Err(AppError::Io(e))
         }
-        Ok(())
     }
 }
 

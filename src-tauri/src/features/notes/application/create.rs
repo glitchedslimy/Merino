@@ -1,4 +1,4 @@
-use crate::features::notes::domain::{errors::NoteError, note::Note, repository::NoteRepository};
+use crate::features::{notes::domain::{errors::NoteError, note::Note, repository::NoteRepository}};
 
 /// # Create Note Use Case
 /// 
@@ -14,10 +14,12 @@ use crate::features::notes::domain::{errors::NoteError, note::Note, repository::
 #[doc(alias = "create_note")]
 pub async fn create_note_use_case<T: NoteRepository>(repo: &T, space_name: &str) -> Result<Note, NoteError> {
     let mut note_number = 1;
+    // Used an "Optimistic Creation" to avoid having to scan the whole space for
+    // all the notes inside it, handles it in memory.
     loop {
         let note_name = format!("Untitled {}", note_number);
         match repo.create_note(space_name, &note_name).await {
-            Ok(_) => return Ok(Note { name: note_name}),
+            Ok(_) => return Ok(Note { name: note_name, content: None}),
             Err(e) if matches!(e, NoteError::Io(_)) => {
                 note_number += 1;
                 continue;

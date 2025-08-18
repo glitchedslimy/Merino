@@ -1,4 +1,4 @@
-use merino_lib::features::notes::{application::get::list_notes_use_case, domain::{errors::NoteError, note::Note}};
+use merino_lib::features::notes::{application::get::{get_notes_use_case, list_notes_use_case}, domain::{errors::NoteError, note::Note}};
 
 mod mocks;
 use mocks::notes_mock::MockNoteRepository;
@@ -18,7 +18,7 @@ async fn list_notes_returns_correct_number_of_notes() {
         should_error: false
     };
     let space_name = "test_space";
-    let result = list_notes_use_case(&mock_repo, space_name).await;
+    let result = get_notes_use_case(&mock_repo, space_name).await;
 
     assert!(result.is_ok());
     let notes = result.unwrap();

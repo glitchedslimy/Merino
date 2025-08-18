@@ -1,6 +1,8 @@
+use std::io::ErrorKind;
+
 use async_trait::async_trait;
 use log::info;
-use tokio::fs::read_dir;
+use tokio::fs::{self, read_dir};
 
 use crate::{features::space::{domain::{errors::SpaceError, repository::SpaceRepository, space::Space}}, shared::repositories::filesystem_repository::FileSystemRepository};
 
@@ -18,8 +20,18 @@ impl FileSystemSpaceRepository {
 }
 
 #[async_trait]
+/// # Space Repository
+/// _Implementation for FileSystemSpaceRepository_
+/// 
+/// Implements all the methods for treating spaces.
 impl SpaceRepository for FileSystemSpaceRepository {
-    async fn list_spaces(&self) -> Result<Vec<Space>, SpaceError> {
+    /// # [GET] Spaces
+    /// Gets all the space in the default route (for now)
+    /// ## Fields
+    /// * `&self`: Contains the repo.
+    /// ## Result
+    /// A `Vec` of `Space` if succeded, `SpaceError` if not.
+    async fn get_spaces(&self) -> Result<Vec<Space>, SpaceError> {
         info!("Listing spaces in route.");
         let base_path = self.filesystem_repo.get_base_path()?;
         self.filesystem_repo.ensure_directory_exists(&base_path).await?;
@@ -40,5 +52,34 @@ impl SpaceRepository for FileSystemSpaceRepository {
         }
 
         Ok(spaces)
+    }
+
+    /// # [CREATE] Space
+    /// Creates a space with the specified name.
+    /// ## Params
+    /// * `space_name`: Name of the space to be created.
+    /// ## Result
+    /// A `Space` if succeded, a `SpaceError` if not.
+    async fn create_space(&self, space_name: &str) -> Result<Space, SpaceError> {
+        let space_path = self.filesystem_repo.get_space_path(space_name)?;
+        self.filesystem_repo.ensure_directory_exists(&space_path).await.map_err(|e| SpaceError::AppError(e))?;
+
+        Ok(Space { name: space_name.to_string(), route: Some(space_path) })
+    }
+
+    /// # [DELETE] Space
+    /// Deletes a space with the specified name.
+    /// ## Params
+    /// * `space_name`: Name of the space to be deleted.
+    /// ## Result
+    /// A `String` if succeded, a `SpaceError` if not.
+    async fn delete_space(&self, space_name: &str) -> Result<String, SpaceError> {
+        let space_path = self.filesystem_repo.get_space_path(&space_name)?;
+        
+        match fs::remove_dir_all(&space_path).await {
+            Ok(_) => Ok(format!("Removed '{}' space.", space_name)),
+            Err(e) if e.kind() == ErrorKind::NotFound => Err(SpaceError::NotFound(e.to_string())),
+            Err(e) => Err(SpaceError::Io(e))
+        }
     }
 }

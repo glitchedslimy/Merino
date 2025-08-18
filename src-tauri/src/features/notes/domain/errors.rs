@@ -1,6 +1,6 @@
 //! # Errors
 //! Defines all error that could ocurr inside the notes part of the application.
-use std::io;
+use std::{io, string::FromUtf8Error};
 
 use thiserror::Error;
 
@@ -22,9 +22,9 @@ pub enum NoteError {
     #[error("Invalid ID format for note IDs: {0}")]
     InvalidId(String),
 
-    #[error("Failed to parse FrontMatter (YAML): {0}")]
-    FrontmatterParsing(#[from] serde_yaml::Error),
-
+    #[error("Failed to convert to markdown: {0}")]
+    MarkdownConversion(#[from] FromUtf8Error),
+    
     #[error("Note name cannot be empty.")]
     EmptyName,
 
