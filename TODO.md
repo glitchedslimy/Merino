@@ -3,18 +3,18 @@
 ### Backend
 
 #### Notas
-- [ ] Implementar el método "read_note_file"
-- [ ] Implementar el método "load_note_content"
-- [ ] Implementar el método "update_note_content"
-- [ ] Implementar el método "delete_note"
-- [ ] Implementar el método "rename_note"
+~~Implementar el método "read_note_file"~~ Innecesario
+- [x] Implementar el método "load_note_content"
+- [x] Implementar el método "update_note_content"
+- [x] Implementar el método "delete_note"
+- [x] Implementar el método "rename_note"
 - [ ] Implementar la funcionalidad de "Notas Rápidas"
-
+- [ ] Bug en las notas, cuando haces un rename de la nota le cambia el nombre pero lanza un IO error, seguramente por no controlar bien las cosas en el FE.
 ---
 
 #### Espacios
-- [ ] Implementar el método "create_space"
-- [ ] Implementar el método "delete_space"
+- [x] Implementar el método "create_space"
+- [x] Implementar el método "delete_space"
 - [ ] Hacer posible el uso de diferentes "Espacios" en diferentes rutas del sistema, no solo la predeterminada
 
 ---
@@ -28,13 +28,14 @@
 ---
 
 #### Misceláneo
-- [ ] Optimizar el backend siguiendo el patrón hexagonal + DDD + **Featured based**
+- [x] Optimizar el backend siguiendo el patrón hexagonal + DDD + **Featured based**
 - [ ] Implementar la funcionalidad de ajustes guardando el archivo en formato JSON o YAML
 - [ ] Ver cómo poner colores en los logs y hacer un mejor uso del registro y manejo de errores
 - [ ] Hacer un sistema de plugins y una tienda para ello
 - [ ] Hacer posible que el usuario sincronice las notas entre dispositivos (a futuro)
 - [ ] Hacer posible la creación de carpetas para organizar las notas
 - [ ] Hacer la documentación (Web)
+- [ ] Testing de componentes y backend
 
 ***
 
