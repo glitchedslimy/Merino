@@ -7,6 +7,13 @@ export default class CustomParagraphTool extends Paragraph implements BlockTool 
 
         this.render = this.render.bind(this);
     }
+    
+    static get conversionConfig(): ConversionConfig {
+        return {
+            export: (data) => data.text,
+            import: (string) => ({ text: string })
+        };
+    }
 
     render(): HTMLElement {
         const element = super.render();

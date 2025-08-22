@@ -30,10 +30,11 @@
     import Tooltip from "@components/atoms/Tooltip.svelte";
     import { contextMenuVisible } from "../../lib/stores/contextmenu/contextmenu-store";
     import { listen, type UnlistenFn } from "@tauri-apps/api/event";
-    import NotePreview from "@components/atoms/NotePreview.svelte";
-    import { getNoteContent } from "../../lib/api/tauri/get/notes-api-get";
+    import { loadFoldersInSpace } from "../../lib/actions/workspace/folders";
+    import { folders } from "../../lib/stores/workspace/folders-store";
 
     $effect(() => {
+        loadFoldersInSpace($activeSpace)
         loadNotesInSpace($activeSpace);
         let unlisten: UnlistenFn | undefined;
         (async () => {
@@ -57,9 +58,43 @@
     let activeNote = $derived(
         $opennedNotes.find((note) => note.name === $activeNoteName),
     );
+
+    function handleDragStart(e: DragEvent, note: string) {
+        console.log("HandleDragstart")
+        e.dataTransfer?.setData('text/plain', note)
+    }
+
+    function handleDragOver(event: DragEvent) {
+        console.log("Dragover folder")
+        event.preventDefault();
+    }
+
+    async function handleDrop(event: DragEvent, folder: string) {
+        console.log("DROP in folder")
+        event.preventDefault();
+        // Get the note's name from the drag event's dataTransfer
+        const draggedNoteName = event.dataTransfer?.getData('text/plain');
+
+        if (draggedNoteName && folder) {
+            console.log(`Attempting to move note '${draggedNoteName}' into folder '${folder}'`);
+            
+            // Call the action to move the note on the backend
+            // await moveNoteToFolder(draggedNoteName, folder);
+        }
+    }
 </script>
 
 <section class="px-xs">
+    {#each $folders as folderName (folderName)}
+        <ul>
+            <li>
+                <Button intent="notes" class={`flex items-center gap-x-xs`} ondragover={handleDragOver} ondrop={(e: any) => handleDrop(e, folderName.name)}>
+                    <Icon iconName="folder" />
+                    {folderName.name}
+                </Button>
+            </li>
+        </ul>
+    {/each}
     {#each $notes as note (note.name)}
         <ul>
             <li oncontextmenu={(e) => showNoteContextmenu(e, note)}>
@@ -67,6 +102,8 @@
                     intent="notes"
                     onClick={() => selectNote(note)}
                     class={`${activeNote?.name === note.name ? "text-brand-primary-light bg-black-200" : ""} ${$currentRightClickedNote?.name === note.name ? "border-[1.5px] border-brand-primary-dark" : ""} flex items-center gap-x-xs`}
+                    draggable={true}
+                    ondragstart={(e: any) => handleDragStart(e, note.name)}
                 >
                     <Icon iconName="note" width="20" />
                     {#if $renamedNoteName === note.name}

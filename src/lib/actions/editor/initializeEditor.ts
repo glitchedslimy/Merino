@@ -12,6 +12,11 @@ interface EditorJSConfig extends ConversionConfig, I18nConfig, ToolConfig, Edito
 const editorConfig: EditorJSConfig = {
     placeholder: "Hey! What are we going to do today?",
     tools: {
+        paragraph: {
+            // @ts-ignore due to certain incompatibility although it works
+            class: CustomParagraphTool,
+            inlineToolbar: true
+        },
         header: {
             // @ts-ignore due to certain incompatibility although it works
             class: Header,
