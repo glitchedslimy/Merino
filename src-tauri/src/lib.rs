@@ -10,10 +10,10 @@ pub mod features;
 pub mod shared;
 
 // Implement functions from infrastructure
-use features::notes::infrastructure::tauri_commands::{get_notes_in_space_cmd, create_note_in_space_cmd, get_note_content_cmd, update_note_content_cmd, delete_note_cmd, update_note_name_cmd};
+use features::notes::infrastructure::tauri_commands::{get_notes_in_space_cmd, create_note_in_space_cmd, get_note_content_cmd, update_note_content_cmd, delete_note_cmd, update_note_name_cmd, update_note_route_cmd};
 use features::space::infrastructure::tauri_commands::{get_spaces_cmd, create_space_cmd, delete_space_cmd};
 use features::ai::infrastructure::tauri_commands::get_ai_models_cmd;
-use features::folders::infrastructure::tauri_commands::get_folders_in_space_cmd;
+use features::folders::infrastructure::tauri_commands::{get_folders_in_space_cmd, update_folder_route_cmd, create_folder_cmd, delete_folder_cmd, update_folder_name_cmd};
 /// Static setup for the logger
 static LOGGER: MerinoLogger = MerinoLogger;
 
@@ -55,7 +55,12 @@ pub fn run() {
             delete_note_cmd,
             update_note_name_cmd,
             get_ai_models_cmd,
-            get_folders_in_space_cmd
+            get_folders_in_space_cmd,
+            update_note_route_cmd,
+            update_folder_route_cmd,
+            create_folder_cmd,
+            delete_folder_cmd,
+            update_folder_name_cmd
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

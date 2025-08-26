@@ -30,7 +30,7 @@ const editorConfig: EditorJSConfig = {
     }
 }
 
-export function initializeEditor(holderId: string, activeSpaceName: string, noteName: string, noteId: string, initialContent: string | null) {
+export function initializeEditor(holderId: string, activeSpaceName: string, noteName: string, noteId: string, initialContent: string | null, noteFolder: string | null = null) {
     const debounceSave = debounce(async (contentData: OutputData | undefined) => {
         if(!activeSpaceName || !noteName) {
             return;
@@ -41,7 +41,7 @@ export function initializeEditor(holderId: string, activeSpaceName: string, note
             const encoder = new TextEncoder();
              const contentBytes = Array.from(encoder.encode(markdownString));
 
-            await updateNoteContent(activeSpaceName, noteName, contentBytes)
+            await updateNoteContent(activeSpaceName, noteName, contentBytes, noteFolder)
         } catch(e) {
             console.error("Failed to save note: ", e)
         }

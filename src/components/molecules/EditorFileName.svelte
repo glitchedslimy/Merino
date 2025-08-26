@@ -1,5 +1,5 @@
 <script>
-    import { activeNoteName } from "../../lib/stores/workspace/notes-store";
+    import { activeNoteFolder, activeNoteName } from "../../lib/stores/workspace/notes-store";
     import { activeSpace } from "../../lib/stores/workspace/spaces-store";
 </script>
 
@@ -10,6 +10,10 @@
     >
         <span class="text-black-300">{$activeSpace}</span>
         <span class="text-black-300">/</span>
+        {#if $activeNoteFolder}
+        <span class="text-black-300">{$activeNoteFolder}</span>
+        <span class="text-black-300">/</span>
+        {/if}
         <span class="text-ellipsis whitespace-nowrap overflow-hidden">{$activeNoteName}</span>
     </p>
     {:else}

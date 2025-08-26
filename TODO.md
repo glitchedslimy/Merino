@@ -8,7 +8,6 @@
 - [x] Implement the "update_note_content" method
 - [x] Implement the "delete_note" method
 - [x] Implement the "rename_note" method
-- [ ] Implement the "Quick Notes" functionality
 - [x] Fix the bug in notes: when a note is renamed, the name changes but it throws an I/O error, probably due to improper handling on the FE.
 
 ---
@@ -29,8 +28,12 @@
 ---
 
 #### Folders
-- [ ] Implement drag-and-drop to put notes in a folder; a new function must be implemented to change the note's path to where the folder is dropped.
-- [ ] Implement "open and close" functionality for folders to get the notes inside or hide them when not needed.
+- [x] Implement drag-and-drop to put notes in a folder; a new function must be implemented to change the note's path to where the folder is dropped.
+- [x] Implement "open and close" functionality for folders to get the notes inside or hide them when not needed.
+- [x] Fix the update_note_route function for some reason even if I do the drag-and-drop doesn't change the note's route, also doesn't have into consideration the current note route, we need to have that into consideration because folders can have other folders inside it as well and we can move stuff inside there.
+- [x] Changed all the app logic to include folders and nested folders, from note creation to renaming them.
+- [x] Do the drag and drop functionality inside the folders as well, same as the notes.
+- [ ] Bug with the notes, the notes can't be dragged and dropped into the folders for some reason, it gives an empty note name.
 
 #### Miscellaneous
 - [x] Optimize the backend following the Hexagonal + DDD + **Featured based** pattern.
@@ -40,8 +43,7 @@
 - [x] Make it possible to create folders to organize notes.
 - [ ] Create the documentation (Web).
 - [ ] Test components and backend.
-
-***
+- [ ] Implement the "Quick Notes" functionality
 
 ### Frontend
 
@@ -59,5 +61,3 @@
 - [ ] Implement read-only mode.
 - [ ] Implement more editor and **Markdown** functionalities.
 - [x] Create a drag-and-drop mechanism to order notes in folders and whatever else.
-
-***

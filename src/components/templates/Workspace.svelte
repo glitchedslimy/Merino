@@ -6,7 +6,7 @@
 
 </script>
 {#if !$hideWorkspace}
-<div class="bg-black rounded-md p-lg flex flex-col gap-y-lg mr-xs w-[17rem]"
+<div class="bg-black rounded-md p-lg flex flex-col gap-y-lg mr-xs w-[17rem] overflow-hidden"
 transition:slide={{ duration: 200, axis: "x"}}>
     <WorkspaceSpace />
     <NotesSpace />

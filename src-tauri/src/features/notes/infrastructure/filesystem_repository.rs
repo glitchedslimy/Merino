@@ -1,18 +1,14 @@
 //! # FileSystem Repository
 //! External implementation (for decoupling) all the FileSystem interactions
 //! from the app _(Notes)_.
-use std::{io::ErrorKind};
+use std::{collections::VecDeque, io::ErrorKind, path::{Path, PathBuf}};
 
 use async_trait::async_trait;
 use log::{error, info};
 use tokio::fs::{self, read_dir, read_to_string, File};
 
 use crate::{
-    features::{notes::domain::{
-        errors::NoteError,
-        note::Note,
-        repository::NoteRepository,
-    }},
+    features::notes::domain::{errors::NoteError, note::Note, repository::NoteRepository},
     shared::repositories::filesystem_repository::FileSystemRepository,
 };
 
@@ -41,39 +37,78 @@ impl NoteRepository for FileSystemNoteRepository {
     /// ## Result
     /// A `Vec` of `Note` if succeded, a `NoteError` if not.
     async fn get_notes(&self, space_name: &str) -> Result<Vec<Note>, NoteError> {
-        info!("Started to list the notes in space.");
+        info!("Started to list all notes in space: '{}'", space_name);
         let space_path = self.filesystem_repo.get_space_path(space_name)?;
 
-        info!("Space path {}", space_path.display());
         if !space_path.exists() || !space_path.is_dir() {
             let err_msg = format!("Space '{}' not found or is not a directory", space_name);
             error!("{}", err_msg);
             return Err(NoteError::NotFound(err_msg));
         }
-        
+
         let mut notes: Vec<Note> = Vec::new();
-        let mut entries = read_dir(&space_path).await.map_err(|_| NoteError::NotFound("Failed to find space directory.".to_string()))?;
-        
+        let mut directories_to_visit: VecDeque<PathBuf> = VecDeque::new();
+        directories_to_visit.push_back(space_path.clone());
 
-        while let Some(entry) = entries.next_entry().await.map_err(|_| NoteError::NotFound("Failed to get directory".to_string()))? {
-            let path = entry.path();
-
-            if !path.is_file() {
-                continue;
-            }
-
-            let file_name = match path.file_name().and_then(|n| n.to_str()) {
-                Some(name) => name,
-                None => continue,
+        while let Some(current_dir) = directories_to_visit.pop_front() {
+            let mut entries = match read_dir(&current_dir).await {
+                Ok(dir) => dir,
+                Err(e) => {
+                    error!(
+                        "Failed to read directory '{}': {}",
+                        current_dir.display(),
+                        e
+                    );
+                    return Err(NoteError::NotFound(format!(
+                        "Failed to read directory: {}",
+                        e
+                    )));
+                }
             };
 
-            if let Some(note_name) = file_name.strip_suffix(".md") {
-                notes.push(Note { name: note_name.to_string(), content: None });
+            while let Some(entry) = entries.next_entry().await.unwrap_or(None) {
+                let path = entry.path();
+
+                if path.is_file() {
+                    if let Some(file_name) = path.file_name().and_then(|n| n.to_str()) {
+                        if let Some(note_name) = file_name.strip_suffix(".md") {
+                            // Calculate the relative path of the note's folder from the space root.
+                            // This is the key part that needs to be correct.
+                            let parent_path = path.parent().ok_or(NoteError::NotFound(
+                                "Failed to get parent directory".to_string(),
+                            ))?;
+
+                            let relative_path =
+                                parent_path.strip_prefix(&space_path).map_err(|e| {
+                                    NoteError::NotFound(format!("Couldn't perform strip: {}", e))
+                                })?;
+                            info!("Relative path: {:?}", relative_path);
+                            let folder = if relative_path.as_os_str().is_empty() {
+                                None
+                            } else {
+                                Some(relative_path.to_str().unwrap().to_string())
+                            };
+                            info!("Folder: {:?}", folder);
+                            notes.push(Note {
+                                name: note_name.to_string(),
+                                content: None,
+                                folder,
+                            });
+                        }
+                    }
+                } else if path.is_dir() {
+                    if let Some(dir_name) = path.file_name().and_then(|n| n.to_str()) {
+                        if !dir_name.starts_with('.') {
+                            directories_to_visit.push_back(path);
+                        }
+                    }
+                }
             }
         }
-        info!("Found notes in space {}", notes.len());
-        Ok(notes)
 
+        info!("Found {} notes in space '{}'", notes.len(), space_name);
+        info!("{:?}", notes);
+        Ok(notes)
     }
 
     /// # [CREATE] Note (method)
@@ -85,16 +120,28 @@ impl NoteRepository for FileSystemNoteRepository {
     /// ## Return
     /// Creates a new note if succeded returning `()`, if not `NoteError` is
     /// returned.
-    async fn create_note(&self, space_name: &str, note_name: &str) -> Result<(), NoteError> {
+    async fn create_note(
+        &self,
+        space_name: &str,
+        note_name: &str,
+        folder_path: Option<&str>,
+    ) -> Result<Note, NoteError> {
         let space_path = self.filesystem_repo.get_space_path(space_name)?;
-        let note_path = space_path.join(format!("{}.md", note_name));
+        let mut note_path = space_path;
+        let folder_name = folder_path.map(|s| s.to_string());
+        if let Some(folder) = folder_name.clone() {
+            note_path.push(folder);
+        }
+        note_path.push(format!("{}.md", note_name));
 
         match File::create_new(&note_path).await {
-            Ok(_) => Ok(()),
-            Err(e) if e.kind() == ErrorKind::AlreadyExists => {
-                Err(NoteError::Io(e))
-            },
-            Err(e) => Err(NoteError::Io(e))
+            Ok(_) => Ok(Note {
+                name: note_name.to_string(),
+                content: None,
+                folder: folder_name,
+            }),
+            Err(e) if e.kind() == ErrorKind::AlreadyExists => Err(NoteError::Io(e)),
+            Err(e) => Err(NoteError::Io(e)),
         }
     }
 
@@ -105,18 +152,48 @@ impl NoteRepository for FileSystemNoteRepository {
     /// * `note_name`: The name of the note to pick the content from.
     /// ## Result
     /// Returns a `Note` if successful, if not a `NoteError` is returned.
-    async fn get_note_content(&self, space_name: &str, note_name: &str) -> Result<Note, NoteError> {
+    async fn get_note_content(
+        &self,
+        space_name: &str,
+        note_name: &str,
+        folder_path: Option<&str>,
+    ) -> Result<Note, NoteError> {
         let space_path = self.filesystem_repo.get_space_path(space_name)?;
-        let note_path = space_path.join(format!("{}.md", note_name));
 
-        if !note_path.exists() {
-            let error_message = format!("Note with name '{}' not found in space '{}'", note_name, space_name);
-            error!("{}", error_message);
-            return Err(NoteError::NotFound(error_message))
+        // Start with the space path
+        let mut note_path = space_path.clone();
+
+        // If a folder path is provided, append it segment by segment
+        if let Some(folder) = folder_path {
+            let folder_segments = PathBuf::from(folder);
+            for segment in folder_segments.iter() {
+                note_path.push(segment);
+            }
         }
 
-        let file_content = read_to_string(&note_path).await.map_err(|e| NoteError::Io(e))?;
-        Ok(Note { name: note_name.to_string(), content: Some(file_content.to_string()) })
+        // Append the note's filename
+        note_path.push(format!("{}.md", note_name));
+
+        if !note_path.exists() {
+            let error_message = format!(
+                "Note with name '{}' not found in space '{}' at path '{}'",
+                note_name,
+                space_name,
+                note_path.display()
+            );
+            error!("{}", error_message);
+            return Err(NoteError::NotFound(error_message));
+        }
+
+        let file_content = read_to_string(&note_path)
+            .await
+            .map_err(|e| NoteError::Io(e))?;
+
+        Ok(Note {
+            name: note_name.to_string(),
+            content: Some(file_content.to_string()),
+            folder: folder_path.map(|s| s.to_string()),
+        })
     }
 
     /// # [UPDATE] Note content (method)
@@ -128,16 +205,32 @@ impl NoteRepository for FileSystemNoteRepository {
     /// updated.
     /// ## Result
     /// A `String` with a successful message, or a `NoteError` if not.
-    async fn update_note_content(&self, space_name: &str, note_name: &str, content: Vec<u8>) -> Result<String, NoteError> {
+    async fn update_note_content(
+        &self,
+        space_name: &str,
+        note_name: &str,
+        content: Vec<u8>,
+        folder_path: Option<&str>,
+    ) -> Result<String, NoteError> {
         let space_path = self.filesystem_repo.get_space_path(space_name)?;
-        let note_path = space_path.join(format!("{}.md", note_name));
+        let mut note_path = space_path.clone();
+
+        if let Some(folder) = folder_path {
+            note_path.push(folder);
+        }
+        note_path.push(format!("{}.md", note_name));
 
         // Convert the incoming byte array into a Markdown String
-        let markdown_conversion = String::from_utf8(content).map_err(|e| NoteError::MarkdownConversion(e))?;
-       
+        let markdown_conversion =
+            String::from_utf8(content).map_err(|e| NoteError::MarkdownConversion(e))?;
 
-        fs::write(&note_path, markdown_conversion).await.map_err(|e| NoteError::Io(e))?;
-        Ok(format!("File '{}' successfully saved or updated.", note_name))
+        fs::write(&note_path, markdown_conversion)
+            .await
+            .map_err(|e| NoteError::Io(e))?;
+        Ok(format!(
+            "File '{}' successfully saved or updated.",
+            note_name
+        ))
     }
 
     /// # [DELETE] Note
@@ -148,14 +241,26 @@ impl NoteRepository for FileSystemNoteRepository {
     /// * `note_name`: The name of the note to be deleted.
     /// ## Result
     /// A `String` if sucessful, A `NoteError` if not.
-    async fn delete_note(&self, space_name: &str, note_name: &str) -> Result<String, NoteError> {
+    async fn delete_note(
+        &self,
+        space_name: &str,
+        note_name: &str,
+        folder_path: Option<&str>,
+    ) -> Result<String, NoteError> {
         let space_path = self.filesystem_repo.get_space_path(space_name)?;
-        let note_path = space_path.join(format!("{}.md", note_name));
+        let mut note_path = space_path.clone();
+
+        if let Some(folder) = folder_path {
+            note_path.push(Path::new(folder));
+        }
+
+        note_path.push(format!("{}.md", note_name));
+
         info!("The note path is: {}", note_path.display());
         match fs::remove_file(&note_path).await {
             Ok(_) => Ok(format!("Removed '{}' from '{}'.", note_name, space_name)),
             Err(e) if e.kind() == ErrorKind::NotFound => Err(NoteError::NotFound(e.to_string())),
-            Err(e) => Err(NoteError::Io(e))
+            Err(e) => Err(NoteError::Io(e)),
         }
     }
 
@@ -167,20 +272,82 @@ impl NoteRepository for FileSystemNoteRepository {
     /// * `new_note_name`: The new name for the note specified by the user.
     /// ## Result
     /// A `String` with a message, if not successfull a `NoteError`
-    async fn update_note_name(&self, space_name: &str, note_name: &str, new_note_name: &str) -> Result<Note, NoteError> {
+    async fn update_note_name(
+        &self,
+        space_name: &str,
+        note_name: &str,
+        new_note_name: &str,
+        folder_path: Option<&str>,
+    ) -> Result<Note, NoteError> {
         if new_note_name.trim().is_empty() {
             return Err(NoteError::EmptyName);
         }
 
         let space_path = self.filesystem_repo.get_space_path(space_name)?;
-        let old_path = space_path.join(format!("{}.md", note_name));
-        let new_path = space_path.join(format!("{}.md", new_note_name));
+        let mut old_path = space_path.clone();
+        let mut new_path = space_path.clone();
 
-        fs::rename(&old_path, &new_path).await.map_err(|e| NoteError::Io(e))?;
+        if let Some(folder) = folder_path {
+            old_path.push(folder);
+            new_path.push(folder);
+        }
+
+        old_path.push(format!("{}.md", note_name));
+        new_path.push(format!("{}.md", new_note_name));
+
+        fs::rename(&old_path, &new_path)
+            .await
+            .map_err(|e| NoteError::Io(e))?;
 
         Ok(Note {
             name: new_note_name.to_string(),
-            content: None
+            content: None,
+            folder: folder_path.map(|s| s.to_string()),
         })
+    }
+
+    async fn update_note_route(
+        &self,
+        space_name: &str,
+        note_name: &str,
+        old_folder: Option<&str>,
+        new_folder: Option<&str>,
+    ) -> Result<(), NoteError> {
+        let space_path = self.filesystem_repo.get_space_path(space_name)?;
+
+        let mut old_path = space_path.clone();
+        if let Some(folder) = old_folder {
+            old_path.push(folder);
+        }
+        old_path.push(format!("{}.md", note_name));
+        
+        let mut new_path = space_path.clone();
+        if let Some(folder) = new_folder {
+            let folder_path = space_path.join(folder);
+            if !folder_path.is_dir() {
+                return Err(NoteError::NotFound(format!(
+                    "Destination folder '{}' not found.",
+                    folder_path.display()
+                )));
+            }
+            new_path.push(folder);
+        }
+        
+        new_path.push(format!("{}.md", note_name));
+        
+        info!("Paths, Old: '{}', New: '{}', Note Name: '{}'", old_path.display(), new_path.display(), note_name);
+        info!(
+            "{}",
+            format!("New path: {:?}, old_path: {:?}", new_path, old_path)
+        );
+        if new_path.exists() && new_path != old_path {
+            return Err(NoteError::EmptyName);
+        }
+
+        fs::rename(&old_path, &new_path)
+            .await
+            .map_err(|e| NoteError::Io(e))?;
+
+        Ok(())
     }
 }

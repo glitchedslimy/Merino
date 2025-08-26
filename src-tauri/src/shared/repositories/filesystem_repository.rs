@@ -1,10 +1,13 @@
-use std::{io::ErrorKind, path::PathBuf};
+use std::{
+    io::ErrorKind,
+    path::{PathBuf},
+};
 
 use log::{debug, error};
 use tauri::{AppHandle, Manager};
 use tokio::fs::{self};
 
-use crate::shared::errors::app_errors::AppError;
+use crate::{shared::errors::app_errors::AppError};
 /// Constant for defining the BASE DIR of the app
 
 const BASE_DIR_NAME: &str = "merino";
@@ -19,7 +22,7 @@ pub struct FileSystemRepository {
 /// Implementation for the generic repository.
 impl FileSystemRepository {
     pub fn new(app_handle: AppHandle) -> Self {
-        Self { app_handle}
+        Self { app_handle }
     }
     /// _[PUBLIC]_ Get the base path of the application.
     pub fn get_base_path(&self) -> Result<PathBuf, AppError> {
@@ -47,8 +50,7 @@ impl FileSystemRepository {
         match fs::create_dir_all(path).await {
             Ok(_) => Ok(()),
             Err(e) if e.kind() == ErrorKind::AlreadyExists => Ok(()),
-            Err(e) => Err(AppError::Io(e))
+            Err(e) => Err(AppError::Io(e)),
         }
     }
 }
-

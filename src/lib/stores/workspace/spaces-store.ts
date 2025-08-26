@@ -1,6 +1,7 @@
 import { writable } from "svelte/store";
 import type { Space } from "../../api/tauri/interfaces/spaces-interface";
-import { load } from '@tauri-apps/plugin-store'
+import { load } from '@tauri-apps/plugin-store';
+
 export const spacesStore = writable<{ spaces?: Space[]}>({
     spaces: []
 });
@@ -10,23 +11,23 @@ export const spacesStore = writable<{ spaces?: Space[]}>({
  */
 let isInitialLoadComplete = false;
 
-export const activeSpace = writable<string | null>(null)
+export const activeSpace = writable<string | null>(null);
 
 /**
  * Do the loadPersistent state to load the space that the user has chosen.
  */
 const store = load('merino-persistent-state.json', { autoSave: true });
-const STORE_KEY = 'activeNameSpace'
+const STORE_KEY = 'activeNameSpace';
 export async function loadPersistentSpaceNameState() {
     try {
-        const getSpaceName: string | undefined = await (await store).get(STORE_KEY)
+        const getSpaceName: string | undefined = await (await store).get(STORE_KEY);
         if (getSpaceName) {
-            activeSpace.set(getSpaceName)
+            activeSpace.set(getSpaceName);
         }
     } catch(e) {
         console.error("Failed to load persisten store.", e);
     } finally {
-        isInitialLoadComplete = true
+        isInitialLoadComplete = true;
     }
 }
 
@@ -35,11 +36,11 @@ export async function loadPersistentSpaceNameState() {
  */
 export async function saveActiveNameSpace(name: string | null) {
     if(name) {
-        (await store).set(STORE_KEY, name); 
+        (await store).set(STORE_KEY, name);
     } else {
-        (await store).delete(STORE_KEY)
+        (await store).delete(STORE_KEY);
     }
-    (await store).save()
+    (await store).save();
 }
 
 activeSpace.subscribe(async (name) => {

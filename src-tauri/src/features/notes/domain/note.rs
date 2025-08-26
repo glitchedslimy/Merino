@@ -11,5 +11,6 @@ use serde::{Serialize, Deserialize};
 /// * `content`: The note content itself
 pub struct Note {
     pub name: String,
-    pub content: Option<String>
+    pub content: Option<String>,
+    pub folder: Option<String>
 }

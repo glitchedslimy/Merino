@@ -1,12 +1,18 @@
 <script lang="ts">
   import { slide } from "svelte/transition";
   import { onDestroy, onMount } from "svelte";
-    import { activeNoteName, opennedNotes } from "../../lib/stores/workspace/notes-store";
-    import { closeNote } from "../../lib/actions/editor/notes-buffer";
-    import { useHorizontalScroll } from "../../lib/useHooks/horizontal-scroll";
-
-  let draggedNoteName: string | null = $state(null); // Changed from draggedNoteId
-  let dropTargetNoteName: string | null = $state(null); // Changed from dropTargetNoteId
+  import {
+    activeNoteName,
+    opennedNotes,
+    activeNoteFolder,
+  } from "../../lib/stores/workspace/notes-store";
+  import { closeNote } from "../../lib/actions/editor/notes-buffer";
+  import { useHorizontalScroll } from "../../lib/useHooks/horizontal-scroll";
+  
+  let draggedNote: { name: string; folder: string | null } | null =
+    $state(null);
+  let dropTargetNote: { name: string; folder: string | null } | null =
+    $state(null);
   let isDragging = $state(false);
   let tabContainer: HTMLDivElement;
 
@@ -18,70 +24,81 @@
     updateFadeEffects();
   });
 
-  function selectTab(noteName: string) {
-    // Pass noteName to the store
-    activeNoteName.set(noteName);
+  // MODIFIED: Use the note object to select the note
+  function selectTab(note: { name: string; folder: string | null }) {
+    activeNoteName.set(note.name);
+    activeNoteFolder.set(note.folder);
   }
 
-  function handleMouseDown(event: MouseEvent, noteName: string) {
+  function handleMouseDown(
+    event: MouseEvent,
+    note: { name: string; folder: string | null },
+  ) {
     if (event.button === 0) {
-      draggedNoteName = noteName;
+      draggedNote = note;
     } else if (event.button === 1) {
       event.preventDefault();
-      closeNote(noteName);
+      closeNote(note.name, note.folder);
     }
   }
 
-  function handleDragStart(event: DragEvent, noteName: string) {
+  function handleDragStart(
+    event: DragEvent,
+    note: { name: string; folder: string | null },
+  ) {
     if (event.dataTransfer) {
-      event.dataTransfer.setData("text/plain", noteName);
+      event.dataTransfer.setData("text/plain", `${note.name}:${note.folder}`);
     }
-    draggedNoteName = noteName;
+    draggedNote = note;
     isDragging = true;
-    console.log(isDragging);
   }
 
-  function handleDragEnter(noteName: string) {
-    if (noteName !== draggedNoteName) {
-      dropTargetNoteName = noteName;
+  function handleDragEnter(note: { name: string; folder: string | null }) {
+    if (
+      note.name !== draggedNote?.name ||
+      note.folder !== draggedNote?.folder
+    ) {
+      dropTargetNote = note;
     }
   }
 
-  function handleDragLeave(noteName: string) {
-    if (noteName === dropTargetNoteName) {
-      dropTargetNoteName = null;
+  function handleDragLeave(note: { name: string; folder: string | null }) {
+    if (
+      note.name === dropTargetNote?.name &&
+      note.folder === dropTargetNote?.folder
+    ) {
+      dropTargetNote = null;
     }
   }
 
   function handleDragEnd() {
-    if (
-      draggedNoteName &&
-      dropTargetNoteName &&
-      draggedNoteName !== dropTargetNoteName
-    ) {
+    if (draggedNote && dropTargetNote) {
       opennedNotes.update((currentNotes) => {
         const draggedIndex = currentNotes.findIndex(
-          (n) => n.name === draggedNoteName,
+          (n) =>
+            n.name === draggedNote?.name && n.folder === draggedNote?.folder,
         );
         const dropIndex = currentNotes.findIndex(
-          (n) => n.name === dropTargetNoteName,
+          (n) =>
+            n.name === dropTargetNote?.name &&
+            n.folder === dropTargetNote?.folder,
         );
 
         if (draggedIndex !== -1 && dropIndex !== -1) {
-          const draggedNote = currentNotes.splice(draggedIndex, 1)[0];
-          currentNotes.splice(dropIndex, 0, draggedNote);
+          const draggedNoteObject = currentNotes.splice(draggedIndex, 1)[0];
+          currentNotes.splice(dropIndex, 0, draggedNoteObject);
         }
 
         return currentNotes;
       });
     }
-    draggedNoteName = null;
-    dropTargetNoteName = null;
+    draggedNote = null;
+    dropTargetNote = null;
     isDragging = false;
   }
 
   function handleMouseUp() {
-    draggedNoteName = null;
+    draggedNote = null;
   }
 
   function updateFadeEffects() {
@@ -96,7 +113,9 @@
       const isAtBeginning = tabContainer.scrollLeft <= 0;
       const isAtEnd =
         Math.abs(
-          tabContainer.scrollLeft + tabContainer.clientWidth - tabContainer.scrollWidth,
+          tabContainer.scrollLeft +
+            tabContainer.clientWidth -
+            tabContainer.scrollWidth,
         ) <= 1;
 
       showLeftFade = !isAtBeginning;
@@ -126,27 +145,31 @@
     use:useHorizontalScroll
     bind:this={tabContainer}
   >
-    {#each $opennedNotes as note (note.name)}
+    {#each $opennedNotes as note (note.name + note.folder)}
       <div
-        class:text-brand-primary={$activeNoteName === note.name}
-        class:bg-black-200={$activeNoteName === note.name}
-        onclick={() => selectTab(note.name)}
-        onmousedown={(event) => handleMouseDown(event, note.name)}
-        ondragstart={(event) => handleDragStart(event, note.name)}
-        ondragenter={() => handleDragEnter(note.name)}
-        ondragleave={() => handleDragLeave(note.name)}
+        class:text-brand-primary={$activeNoteName === note.name &&
+          $activeNoteFolder === note.folder}
+        class:bg-black-200={$activeNoteName === note.name &&
+          $activeNoteFolder === note.folder}
+        onclick={() => selectTab(note)}
+        onmousedown={(event) => handleMouseDown(event, note)}
+        ondragstart={(event) => handleDragStart(event, note)}
+        ondragenter={() => handleDragEnter(note)}
+        ondragleave={() => handleDragLeave(note)}
         ondragover={(e) => e.preventDefault()}
         onmouseup={handleMouseUp}
         draggable="true"
         class="flex flex-1 flex-shrink-0 min-w-[12rem] ml-xs bg-black px-sm py-xs rounded-md justify-between relative"
-        class:dragging={note.name === draggedNoteName}
-        class:is-drag-over={note.name === dropTargetNoteName}
+        class:dragging={note.name === draggedNote?.name &&
+          note.folder === draggedNote?.folder}
+        class:is-drag-over={note.name === dropTargetNote?.name &&
+          note.folder === dropTargetNote?.folder}
         transition:slide={{ duration: 50, axis: "x" }}
       >
         <p class="truncate pointer-events-none">{note.name}</p>
         <button
           class="pointer-events-none"
-          onclick={() => closeNote(note.name)}
+          onclick={() => closeNote(note.name, note.folder)}
           class:pointer-events-none={isDragging}
         >
           <svg
