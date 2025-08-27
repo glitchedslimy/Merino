@@ -42,7 +42,7 @@
     inputRenameFolderElement,
     renamedFolder,
   } from "../../lib/stores/workspace/folders-store";
-    import { slide } from "svelte/transition";
+  import { slide } from "svelte/transition";
 
   let { content, name, path = "" } = $props();
 
@@ -51,8 +51,8 @@
   const isDraggedOver = $derived(dragCount > 0);
 
   function toggleFolder() {
-    console.log($renamedFolder)
-    if($renamedFolder) {
+    console.log($renamedFolder);
+    if ($renamedFolder) {
       return false;
     }
     isFolderOpen = !isFolderOpen;
@@ -72,10 +72,7 @@
   }
 
   function handleFolderDragStart(e: DragEvent) {
-    if (
-      $renamedNote?.name === name ||
-      $renamedFolder?.name === name
-    ) {
+    if ($renamedNote?.name === name || $renamedFolder?.name === name) {
       e.preventDefault();
       return;
     }
@@ -141,7 +138,7 @@
           get(activeSpace) &&
           oldFolderValue !== newFolder
         ) {
-          console.log(draggedNoteName, oldFolderValue, newFolder)
+          console.log(draggedNoteName, oldFolderValue, newFolder);
           await moveNoteToFolder(
             get(activeSpace),
             draggedNoteName,
@@ -197,7 +194,13 @@
               }}
             />
           {:else}
-            <span class="text-ellipsis whitespace-nowrap overflow-hidden">
+            <span
+              use:ellipsisTooltip={{
+                onShow: handleShowTooltip,
+                onHide: handleHideTooltip,
+              }}
+              class="text-ellipsis whitespace-nowrap overflow-hidden max-w-2xl"
+            >
               {name}
             </span>
           {/if}
@@ -210,7 +213,7 @@
       </Button>
     </div>
     {#if isFolderOpen}
-      <div class="ml-sm" transition:slide={{ duration: 50, axis: "y"}}>
+      <div class="ml-sm" transition:slide={{ duration: 50, axis: "y" }}>
         {#if content && content.folders}
           {#each Object.entries(content.folders) as [folderName, folderContent]}
             <NoteTree

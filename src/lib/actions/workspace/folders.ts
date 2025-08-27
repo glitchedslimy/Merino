@@ -12,7 +12,7 @@ import { tick } from "svelte";
 
 let loadingFolders = false;
 export async function loadFoldersInSpace(spaceName: string | null) {
-    if(!spaceName) {
+    if (!spaceName) {
         folders.set([]);
         loadingFolders = false;
     }
@@ -21,7 +21,7 @@ export async function loadFoldersInSpace(spaceName: string | null) {
         const loadedFolders = await listFolders(spaceName);
         folders.set(loadedFolders);
         console.log(loadedFolders);
-    } catch(e) {
+    } catch (e) {
         console.error("Folders not found: ", e);
     } finally {
         loadingFolders = false;
@@ -30,7 +30,8 @@ export async function loadFoldersInSpace(spaceName: string | null) {
 
 export async function moveNoteToFolder(spaceName: string | null, noteName: string, oldFolder: string | null | undefined, newFolder: string | null) {
     const oldFolderValue = (oldFolder === undefined || oldFolder === '') ? null : oldFolder;
-    await invoke('update_note_route_cmd', { spaceName, noteName, oldFolder: oldFolderValue, newFolder});
+    
+    await invoke('update_note_route_cmd', { spaceName, noteName, oldFolder: oldFolderValue, newFolder });
 }
 
 export async function moveFolderToFolder(spaceName: string | null, folderName: string, oldRoute: string, newRoute: string | null) {
@@ -77,23 +78,23 @@ export async function handleFolderActionContextMenu(actionType: string): Promise
             break;
         case "create_folder":
             await createFolder(get(activeSpace) ?? '', get(folderRightClicked)?.path ?? '')
-             toasts.add(`Created folder in folder "${get(folderRightClicked)?.path}" in space.`, "success")
+            toasts.add(`Created folder in folder "${get(folderRightClicked)?.path}" in space.`, "success")
             break;
     }
 }
 
 export function showFolderContextmenu(
-  event: MouseEvent,
-  folderName: string,
-  folderPath: string,
+    event: MouseEvent,
+    folderName: string,
+    folderPath: string,
 ) {
-  event.preventDefault();
-  contextMenuVisible.set(false);
-  folderRightClicked.set({ name: folderName, path: folderPath });
-  folderContextMenuX.set(event.clientX);
-  folderContextMenuY.set(event.clientY);
-  folderContextMenuVisible.set(true);
-  console.log(get(folderContextMenuVisible))
+    event.preventDefault();
+    contextMenuVisible.set(false);
+    folderRightClicked.set({ name: folderName, path: folderPath });
+    folderContextMenuX.set(event.clientX);
+    folderContextMenuY.set(event.clientY);
+    folderContextMenuVisible.set(true);
+    console.log(get(folderContextMenuVisible))
 }
 
 export function closeFolderContextMenu() {
@@ -105,7 +106,7 @@ export async function createFolder(spaceName: string, folderPath: string | null)
     if (!spaceName) {
         return;
     }
-    
+
     try {
         await createFolderInSpace(spaceName, folderPath);
         loadNotesInSpace(spaceName);

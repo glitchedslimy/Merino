@@ -1,7 +1,11 @@
 //! # FileSystem Repository
 //! External implementation (for decoupling) all the FileSystem interactions
 //! from the app _(Notes)_.
-use std::{collections::VecDeque, io::ErrorKind, path::{Path, PathBuf}};
+use std::{
+    collections::VecDeque,
+    io::ErrorKind,
+    path::{Path, PathBuf},
+};
 
 use async_trait::async_trait;
 use log::{error, info};
@@ -315,12 +319,16 @@ impl NoteRepository for FileSystemNoteRepository {
     ) -> Result<(), NoteError> {
         let space_path = self.filesystem_repo.get_space_path(space_name)?;
 
+        if note_name.trim().is_empty() {
+            return Err(NoteError::EmptyName);
+        }
+
         let mut old_path = space_path.clone();
         if let Some(folder) = old_folder {
             old_path.push(folder);
         }
         old_path.push(format!("{}.md", note_name));
-        
+
         let mut new_path = space_path.clone();
         if let Some(folder) = new_folder {
             let folder_path = space_path.join(folder);
@@ -332,15 +340,10 @@ impl NoteRepository for FileSystemNoteRepository {
             }
             new_path.push(folder);
         }
-        
+
         new_path.push(format!("{}.md", note_name));
-        
-        info!("Paths, Old: '{}', New: '{}', Note Name: '{}'", old_path.display(), new_path.display(), note_name);
-        info!(
-            "{}",
-            format!("New path: {:?}, old_path: {:?}", new_path, old_path)
-        );
-        if new_path.exists() && new_path != old_path {
+    
+        if !new_path.exists() && new_path == old_path {
             return Err(NoteError::EmptyName);
         }
 
