@@ -8,6 +8,8 @@
   } from "../../lib/stores/workspace/notes-store";
   import { closeNote } from "../../lib/actions/editor/notes-buffer";
   import { useHorizontalScroll } from "../../lib/useHooks/horizontal-scroll";
+    import Button from "@components/atoms/Button.svelte";
+    import Icon from "@components/atoms/Icon.svelte";
   
   let draggedNote: { name: string; folder: string | null } | null =
     $state(null);
@@ -144,6 +146,7 @@
     onscroll={updateFadeEffects}
     use:useHorizontalScroll
     bind:this={tabContainer}
+    role="list"
   >
     {#each $opennedNotes as note (note.name + note.folder)}
       <div
@@ -167,26 +170,13 @@
         transition:slide={{ duration: 50, axis: "x" }}
       >
         <p class="truncate pointer-events-none">{note.name}</p>
-        <button
-          class="pointer-events-none"
-          onclick={() => closeNote(note.name, note.folder)}
-          class:pointer-events-none={isDragging}
+        <Button
+          intent="icon"
+          class={`${isDragging ? 'pointer-events-none' : ""}`}
+          onClick={() => closeNote(note.name, note.folder)}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
+          <Icon iconName="close" />
+        </Button>
       </div>
     {/each}
   </div>

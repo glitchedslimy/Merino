@@ -23,7 +23,8 @@
 - [ ] Implement all "AI" functionalities of Ollama and try to modify them to also include external models.
 - [ ] Implement Internet access for local models (Ollama).
 - [ ] See how to implement the sidecar to use MCPs (Multi-modal Command Processing) with AI.
-- [ ] Implement a better cancellation mechanism for the AI chat.
+- [X] Implement a better cancellation mechanism for the AI chat.
+- [X] Change all genai for ollama-rs only.
 
 ---
 
@@ -33,7 +34,7 @@
 - [x] Fix the update_note_route function for some reason even if I do the drag-and-drop doesn't change the note's route, also doesn't have into consideration the current note route, we need to have that into consideration because folders can have other folders inside it as well and we can move stuff inside there.
 - [x] Changed all the app logic to include folders and nested folders, from note creation to renaming them.
 - [x] Do the drag and drop functionality inside the folders as well, same as the notes.
-- [ ] Bug with the notes, the notes can't be dragged and dropped into the folders for some reason, it gives an empty note name.
+- [X] Bug with the notes, the notes can't be dragged and dropped into the folders for some reason, it gives an empty note name.
 
 #### Miscellaneous
 - [x] Optimize the backend following the Hexagonal + DDD + **Featured based** pattern.
@@ -53,7 +54,8 @@
 - [ ] Optimize the frontend.
 - [ ] Add the settings panel.
 - [ ] Implement "web search" functionality.
-- [ ] Implement the command panel.
+- [X] Implement the command panel.
+- [ ] Add functionality to the command panel, it will be a search panel as well at the same time.
 - [ ] Implement the search panel.
 - [ ] Create a plugin store for **plug-and-play** plugins.
 - [x] Create a notification system instead of just toasts. If a toast appears and the user doesn't close it, create a notification container for them to remain there (Hybrid System).

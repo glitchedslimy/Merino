@@ -2,13 +2,14 @@
     import Button from "@components/atoms/Button.svelte";
     import Icon from "@components/atoms/Icon.svelte";
     import NavigationBar from "@components/molecules/NavigationBar.svelte";
+    import { showCommandPalette } from "../../lib/stores/commandpalette/commandpalette";
 
     // TODO Functionalities
 </script>
 
 <div class="h-full flex justify-between flex-col items-center px-md">
     <NavigationBar intent="vertical" spacing="v-md" justify="center" class="pt-md">
-        <Button intent="icon">
+        <Button intent="icon" onClick={() => $showCommandPalette = !$showCommandPalette}>
             <Icon iconName="terminal" width="20" />
         </Button>
         <Button intent="icon">

@@ -33,5 +33,7 @@ log = "0.4.27"
 chrono = "0.4.41"
 rand = "0.9.2"
 agentai = "0.1.5"
-genai = "0.3.5"
+tokio-stream = "0.1.17"
+tokio-util = "0.7.16"
+ollama-rs = {version = "0.3.2", features = ["stream"] }
 
