@@ -2,7 +2,7 @@ use std::{fs, path::Path};
 
 use log::info;
 use tantivy::{
-    collector::TopDocs, doc, query::QueryParser, schema::{Schema, Value, STORED, TEXT, INDEXED}, Index, IndexWriter, TantivyDocument
+    collector::TopDocs, doc, query::QueryParser, schema::{Schema, Value, STORED, TEXT}, Index, IndexWriter, TantivyDocument
 };
 
 use crate::features::search::domain::{error::SearchError, search::Searchable};
