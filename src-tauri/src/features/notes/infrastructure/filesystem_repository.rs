@@ -18,6 +18,7 @@ use crate::{
 
 /// # FilesystemNoteRepository
 /// Implementation of the NoteRepository trait.
+#[derive(Clone)]
 pub struct FileSystemNoteRepository {
     filesystem_repo: FileSystemRepository,
 }
@@ -169,10 +170,7 @@ impl NoteRepository for FileSystemNoteRepository {
 
         // If a folder path is provided, append it segment by segment
         if let Some(folder) = folder_path {
-            let folder_segments = PathBuf::from(folder);
-            for segment in folder_segments.iter() {
-                note_path.push(segment);
-            }
+            note_path.push(PathBuf::from(folder));
         }
 
         // Append the note's filename
@@ -215,12 +213,12 @@ impl NoteRepository for FileSystemNoteRepository {
         note_name: &str,
         content: Vec<u8>,
         folder_path: Option<&str>,
-    ) -> Result<String, NoteError> {
+    ) -> Result<Note, NoteError> {
         let space_path = self.filesystem_repo.get_space_path(space_name)?;
         let mut note_path = space_path.clone();
 
         if let Some(folder) = folder_path {
-            note_path.push(folder);
+            note_path.push(PathBuf::from(folder));
         }
         note_path.push(format!("{}.md", note_name));
 
@@ -228,13 +226,17 @@ impl NoteRepository for FileSystemNoteRepository {
         let markdown_conversion =
             String::from_utf8(content).map_err(|e| NoteError::MarkdownConversion(e))?;
 
+        let conversion = markdown_conversion.clone();
         fs::write(&note_path, markdown_conversion)
             .await
             .map_err(|e| NoteError::Io(e))?;
-        Ok(format!(
-            "File '{}' successfully saved or updated.",
-            note_name
-        ))
+
+        // CORRECTED: Return a Note with the correct folder and content
+        Ok(Note {
+            name: note_name.to_string(),
+            content: Some(conversion),
+            folder: folder_path.map(|s| s.to_string()),
+        })
     }
 
     /// # [DELETE] Note
@@ -255,7 +257,8 @@ impl NoteRepository for FileSystemNoteRepository {
         let mut note_path = space_path.clone();
 
         if let Some(folder) = folder_path {
-            note_path.push(Path::new(folder));
+            // FIX: Use PathBuf::join with Path for robust path construction.
+            note_path = note_path.join(Path::new(folder));
         }
 
         note_path.push(format!("{}.md", note_name));
@@ -292,8 +295,8 @@ impl NoteRepository for FileSystemNoteRepository {
         let mut new_path = space_path.clone();
 
         if let Some(folder) = folder_path {
-            old_path.push(folder);
-            new_path.push(folder);
+            old_path = old_path.join(Path::new(folder));
+            new_path = new_path.join(Path::new(folder));
         }
 
         old_path.push(format!("{}.md", note_name));
@@ -316,20 +319,23 @@ impl NoteRepository for FileSystemNoteRepository {
         note_name: &str,
         old_folder: Option<&str>,
         new_folder: Option<&str>,
-    ) -> Result<(), NoteError> {
+    ) -> Result<Note, NoteError> {
         let space_path = self.filesystem_repo.get_space_path(space_name)?;
 
         if note_name.trim().is_empty() {
             return Err(NoteError::EmptyName);
         }
 
+        // FIX: Rebuilt old_path to be more robust
         let mut old_path = space_path.clone();
         if let Some(folder) = old_folder {
-            old_path.push(folder);
+            old_path = old_path.join(Path::new(folder));
         }
         old_path.push(format!("{}.md", note_name));
 
+        // FIX: Rebuilt new_path to be more robust and validate new folder
         let mut new_path = space_path.clone();
+        let new_folder_path_string = new_folder.map(|s| s.to_string());
         if let Some(folder) = new_folder {
             let folder_path = space_path.join(folder);
             if !folder_path.is_dir() {
@@ -338,19 +344,22 @@ impl NoteRepository for FileSystemNoteRepository {
                     folder_path.display()
                 )));
             }
-            new_path.push(folder);
+            new_path = new_path.join(Path::new(folder));
         }
-
         new_path.push(format!("{}.md", note_name));
-    
-        if !new_path.exists() && new_path == old_path {
-            return Err(NoteError::EmptyName);
+
+        if old_path == new_path {
+            return Err(NoteError::NotFound("Source and destination paths are the same.".to_string()));
         }
 
         fs::rename(&old_path, &new_path)
             .await
             .map_err(|e| NoteError::Io(e))?;
 
-        Ok(())
+        Ok(Note {
+            name: note_name.to_string(),
+            content: None,
+            folder: new_folder_path_string,
+        })
     }
 }

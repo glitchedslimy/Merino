@@ -3,8 +3,6 @@
     import Icon from "@components/atoms/Icon.svelte";
     import NavigationBar from "@components/molecules/NavigationBar.svelte";
     import { showCommandPalette } from "../../lib/stores/commandpalette/commandpalette";
-
-    // TODO Functionalities
 </script>
 
 <div class="h-full flex justify-between flex-col items-center px-md">
@@ -12,7 +10,7 @@
         <Button intent="icon" onClick={() => $showCommandPalette = !$showCommandPalette}>
             <Icon iconName="terminal" width="20" />
         </Button>
-        <Button intent="icon">
+        <Button intent="icon" onClick={() => $showCommandPalette = !$showCommandPalette}>
             <Icon iconName="search" width="20" />
         </Button>
     </NavigationBar>

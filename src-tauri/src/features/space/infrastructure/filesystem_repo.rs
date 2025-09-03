@@ -9,6 +9,7 @@ use crate::{features::space::{domain::{errors::SpaceError, repository::SpaceRepo
 
 /// # FilesystemSpaceRepository
 /// Implementation of the SpaceRepository trait.
+#[derive(Clone)]
 pub struct FileSystemSpaceRepository {
     filesystem_repo: FileSystemRepository,
 }

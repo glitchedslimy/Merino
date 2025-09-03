@@ -5,6 +5,7 @@ use tokio_util::sync::CancellationToken;
 
 use crate::{features::ai::{application::send_to_front::stream_response_to_frontend, domain::{ai::ModelResponse, repository::AIRepository}}, shared::state::state::AppState};
 
+#[derive(Clone)]
 pub struct GenAIRepository {
     app_handle: AppHandle,
 }

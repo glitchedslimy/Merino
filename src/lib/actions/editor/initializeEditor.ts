@@ -30,8 +30,9 @@ const editorConfig: EditorJSConfig = {
     }
 }
 
-export function initializeEditor(holderId: string, activeSpaceName: string, noteName: string, noteId: string, initialContent: string | null, noteFolder: string | null = null) {
+export function initializeEditor(holderId: string, activeSpaceName: string, noteName: string, initialContent: string | null, noteFolder: string | null = null) {
     const debounceSave = debounce(async (contentData: OutputData | undefined) => {
+        console.log("Note folder from InitializeEditor", noteFolder)
         if(!activeSpaceName || !noteName) {
             return;
         }

@@ -15,7 +15,7 @@ pub async fn update_note_content_use_case<T: NoteRepository>(
     note_name: &str,
     content: Vec<u8>,
     folder_path: Option<&str>,
-) -> Result<String, NoteError> {
+) -> Result<Note, NoteError> {
     repo.update_note_content(space_name, note_name, content, folder_path)
         .await
 }
@@ -54,7 +54,7 @@ pub async fn update_note_route_use_case<T: NoteRepository>(
     note_name: &str,
     old_folder: Option<&str>,
     new_folder: Option<&str>,
-) -> Result<(), NoteError> {
+) -> Result<Note, NoteError> {
     repo.update_note_route(space_name, note_name, old_folder, new_folder)
         .await
 }

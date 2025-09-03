@@ -36,4 +36,5 @@ agentai = "0.1.5"
 tokio-stream = "0.1.17"
 tokio-util = "0.7.16"
 ollama-rs = {version = "0.3.2", features = ["stream"] }
+tantivy = "0.25.0"
 

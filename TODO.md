@@ -9,6 +9,7 @@
 - [x] Implement the "delete_note" method
 - [x] Implement the "rename_note" method
 - [x] Fix the bug in notes: when a note is renamed, the name changes but it throws an I/O error, probably due to improper handling on the FE.
+- [x] Search notes in space
 
 ---
 
@@ -41,6 +42,7 @@
 - [x] Implement the settings functionality by saving the file in JSON or YAML format.
 - [ ] Create a plugin system and a store for it.
 - [ ] Make it possible for the user to sync notes between devices (future).
+- [ ] Make a theming system
 - [x] Make it possible to create folders to organize notes.
 - [ ] Create the documentation (Web).
 - [ ] Test components and backend.
@@ -53,13 +55,13 @@
 - [x] Find a suitable architecture for the frontend for this use case.
 - [ ] Optimize the frontend.
 - [ ] Add the settings panel.
-- [ ] Implement "web search" functionality.
 - [X] Implement the command panel.
-- [ ] Add functionality to the command panel, it will be a search panel as well at the same time.
-- [ ] Implement the search panel.
+- [x] Add functionality to the command panel, it will be a search panel as well at the same time.
+- [x] Implement the search panel.
 - [ ] Create a plugin store for **plug-and-play** plugins.
 - [x] Create a notification system instead of just toasts. If a toast appears and the user doesn't close it, create a notification container for them to remain there (Hybrid System).
 - [ ] Implement templates.
 - [ ] Implement read-only mode.
 - [ ] Implement more editor and **Markdown** functionalities.
+- [ ] Implement editor history to get back and forth.
 - [x] Create a drag-and-drop mechanism to order notes in folders and whatever else.

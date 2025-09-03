@@ -2,7 +2,6 @@
 //! Defines all structs needed for the notes.
 use serde::{Serialize, Deserialize};
 
-
 #[derive(Debug, Serialize, Deserialize, Clone)]
 /// # Note
 /// Struct that represents the note itself.

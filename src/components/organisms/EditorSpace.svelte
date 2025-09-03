@@ -30,7 +30,6 @@
                     noteName,
                     noteFolder,
                 );
-                console.log(noteData);
                 marked.use({ renderer });
                 htmlString = await marked.parse(noteData.content);
                 const cleanedHtmlString = htmlString.replace(/\n/g, "");
@@ -46,14 +45,14 @@
             editorInstance.destroy();
             editorInstance = null;
         }
-        console.log(htmlString);
+        console.log("Note folder from editorSpace", noteFolder)
         if (noteName && get(activeSpace)) {
             editorInstance = initializeEditor(
                 editorHolderId,
                 get(activeSpace) ?? "",
                 noteName,
-                noteFolder,
                 htmlString,
+                noteFolder,
             );
         }
     }

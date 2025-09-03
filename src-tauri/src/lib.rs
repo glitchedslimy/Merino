@@ -1,6 +1,8 @@
 use crate::features::ai::infrastructure::genai_repository::GenAIRepository;
 use crate::features::folders::infrastructure::filesystem_repository::FileSystemFolderRepository;
+use crate::features::search::infrastructure::search_repository::TantivySearchRepository;
 use crate::features::space::infrastructure::filesystem_repo::FileSystemSpaceRepository;
+use crate::shared::repositories::filesystem_repository::FileSystemRepository;
 use crate::shared::state::state::AppState;
 use crate::{
     features::notes::infrastructure::filesystem_repository::FileSystemNoteRepository,
@@ -23,7 +25,7 @@ use features::folders::infrastructure::tauri_commands::{
 };
 use features::notes::infrastructure::tauri_commands::{
     create_note_in_space_cmd, delete_note_cmd, get_note_content_cmd, get_notes_in_space_cmd,
-    update_note_content_cmd, update_note_name_cmd, update_note_route_cmd,
+    search_notes_cmd, update_note_content_cmd, update_note_name_cmd, update_note_route_cmd,
 };
 use features::space::infrastructure::tauri_commands::{
     create_space_cmd, delete_space_cmd, get_spaces_cmd,
@@ -42,23 +44,40 @@ pub fn run() {
     tauri::Builder::default()
         .setup(|app| {
             let app_handle = app.handle();
-            let app_state = AppState::new();
-            app.manage(app_state);
+            let app_data_path = app_handle.path().app_data_dir().unwrap();
+            
+
             // Create generic filesystem repo
-            let filesystem_repo =
-                shared::repositories::filesystem_repository::FileSystemRepository::new(
-                    app_handle.clone(),
-                );
+            let filesystem_repo = FileSystemRepository::new(app_handle.clone());
+
             // Create specific repo implementations using the generic ones
             let notes_repo = FileSystemNoteRepository::new(filesystem_repo.clone());
             let spaces_repo = FileSystemSpaceRepository::new(filesystem_repo.clone());
             let ai_repo = GenAIRepository::new(app_handle.clone());
             let folders_repo = FileSystemFolderRepository::new(filesystem_repo.clone());
-            // Manage both repos
+            let search_repo =
+                TantivySearchRepository::new(&app_data_path.join(".merino/search_index")).unwrap();
+
+            let index_writer = search_repo.get_index_writer().expect("Failed to get IndexWriter");
+
+            // Manage the unified app state object
+            let app_state = AppState::new(
+                notes_repo.clone(),
+                spaces_repo.clone(),
+                folders_repo.clone(),
+                search_repo.clone(),
+                ai_repo.clone(),
+                index_writer
+            );
+            app.manage(app_state);
+
+            // Manage the single repo instances for older commands
             app.manage(notes_repo);
             app.manage(spaces_repo);
-            app.manage(ai_repo);
             app.manage(folders_repo);
+            app.manage(ai_repo);
+            app.manage(search_repo);
+
             Ok(())
         })
         .plugin(tauri_plugin_shell::init())
@@ -82,7 +101,8 @@ pub fn run() {
             delete_folder_cmd,
             update_folder_name_cmd,
             chat_with_ai_cmd,
-            cancel_chat_stream_cmd
+            cancel_chat_stream_cmd,
+            search_notes_cmd
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

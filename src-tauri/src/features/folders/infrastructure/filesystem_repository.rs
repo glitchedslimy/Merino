@@ -11,6 +11,7 @@ use crate::{
     shared::repositories::filesystem_repository::FileSystemRepository,
 };
 
+#[derive(Clone)]
 pub struct FileSystemFolderRepository {
     filesystem_repo: FileSystemRepository,
 }

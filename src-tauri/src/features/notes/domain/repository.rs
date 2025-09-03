@@ -65,7 +65,7 @@ pub trait NoteRepository {
         note_name: &str,
         content: Vec<u8>,
         folder_path: Option<&str>,
-    ) -> Result<String, NoteError>;
+    ) -> Result<Note, NoteError>;
 
     /// # Delete note
     /// Deletes a note from the space specified.
@@ -117,5 +117,5 @@ pub trait NoteRepository {
         note_name: &str,
         old_folder: Option<&str>,
         new_folder: Option<&str>,
-    ) -> Result<(), NoteError>;
+    ) -> Result<Note, NoteError>;
 }
