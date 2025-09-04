@@ -3,3 +3,5 @@ pub mod space;
 pub mod ai;
 pub mod folders;
 pub mod search;
+pub mod settings;
+pub mod theming;

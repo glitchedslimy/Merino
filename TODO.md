@@ -47,6 +47,7 @@
 - [ ] Create the documentation (Web).
 - [ ] Test components and backend.
 - [ ] Implement the "Quick Notes" functionality
+- [ ] Fix theming system not loading the themes for some reason
 
 ### Frontend
 

@@ -4,6 +4,7 @@ use tokio_util::sync::CancellationToken;
 use std::sync::Arc;
 
 use crate::features::notes::infrastructure::filesystem_repository::FileSystemNoteRepository;
+use crate::features::settings::infrastructure::settings_repository::FileSystemSettingsRepository;
 use crate::features::space::infrastructure::filesystem_repo::FileSystemSpaceRepository;
 use crate::features::folders::infrastructure::filesystem_repository::FileSystemFolderRepository;
 use crate::features::search::infrastructure::search_repository::TantivySearchRepository;
@@ -15,6 +16,7 @@ pub struct AppState {
     pub folders_repo: Arc<Mutex<FileSystemFolderRepository>>,
     pub search_repo: Arc<Mutex<TantivySearchRepository>>,
     pub ai_repo: Arc<Mutex<GenAIRepository>>,
+    pub settings_repo: Arc<Mutex<FileSystemSettingsRepository>>,
     pub current_cancellation_token: Arc<Mutex<Option<CancellationToken>>>,
     pub index_writer: Arc<Mutex<IndexWriter>>
 }
@@ -26,6 +28,7 @@ impl AppState {
         folders_repo: FileSystemFolderRepository,
         search_repo: TantivySearchRepository,
         ai_repo: GenAIRepository,
+        settings_repo: FileSystemSettingsRepository,
         index_writer: IndexWriter
     ) -> Self {
         Self {
@@ -34,6 +37,7 @@ impl AppState {
             folders_repo: Arc::new(Mutex::new(folders_repo)),
             search_repo: Arc::new(Mutex::new(search_repo)),
             ai_repo: Arc::new(Mutex::new(ai_repo)),
+            settings_repo: Arc::new(Mutex::new(settings_repo)),
             index_writer: Arc::new(Mutex::new(index_writer)),
             current_cancellation_token: Arc::new(Mutex::new(None)),
         }

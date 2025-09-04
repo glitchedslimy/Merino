@@ -22,6 +22,7 @@
             link: 'text-brand-primary hover:text-brand-primary-light cursor-pointer duration-200 transition',
             dropdown: "w-full flex items-center justify-between space-x-md px-sm py-sm text-left  rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary transition-all duration-300 ease-in-out hover:bg-black-200 group",
             dropdownText: 'text-md text-black-400 px-5 py-2 cursor-pointer transition duration-200 w-2xl hover:bg-black-200 hover:text-white rounded-md',
+            settings: 'hover:bg-black-200 duration-200 transition-all py-sm px-md rounded-md hover:cursor-pointer w-full justify-start flex'
         }
     }
    })

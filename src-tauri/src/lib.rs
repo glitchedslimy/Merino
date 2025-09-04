@@ -1,7 +1,11 @@
 use crate::features::ai::infrastructure::genai_repository::GenAIRepository;
 use crate::features::folders::infrastructure::filesystem_repository::FileSystemFolderRepository;
 use crate::features::search::infrastructure::search_repository::TantivySearchRepository;
+use crate::features::settings::infrastructure::settings_repository::FileSystemSettingsRepository;
+use crate::features::settings::infrastructure::tauri_commands::{create_settings_cmd, get_settings_cmd, update_settings_cmd};
 use crate::features::space::infrastructure::filesystem_repo::FileSystemSpaceRepository;
+use crate::features::theming::infrastructre::tauri_commands::{create_themes_path_cmd, get_theme_content_cmd, get_themes_cmd};
+use crate::features::theming::infrastructre::theming_repository::FileSystemThemingRepository;
 use crate::shared::repositories::filesystem_repository::FileSystemRepository;
 use crate::shared::state::state::AppState;
 use crate::{
@@ -52,12 +56,19 @@ pub fn run() {
 
             // Create specific repo implementations using the generic ones
             let notes_repo = FileSystemNoteRepository::new(filesystem_repo.clone());
+
             let spaces_repo = FileSystemSpaceRepository::new(filesystem_repo.clone());
             let ai_repo = GenAIRepository::new(app_handle.clone());
+
             let folders_repo = FileSystemFolderRepository::new(filesystem_repo.clone());
+
             let search_repo =
                 TantivySearchRepository::new(&app_data_path.join(".merino/search_index")).unwrap();
 
+            let settings_repo = FileSystemSettingsRepository::new(filesystem_repo.clone());
+
+            let theming_repo = FileSystemThemingRepository::new(filesystem_repo.clone());
+            
             let index_writer = search_repo.get_index_writer().expect("Failed to get IndexWriter");
 
             // Manage the unified app state object
@@ -67,6 +78,7 @@ pub fn run() {
                 folders_repo.clone(),
                 search_repo.clone(),
                 ai_repo.clone(),
+                settings_repo.clone(),
                 index_writer
             );
             app.manage(app_state);
@@ -77,6 +89,8 @@ pub fn run() {
             app.manage(folders_repo);
             app.manage(ai_repo);
             app.manage(search_repo);
+            app.manage(settings_repo);
+            app.manage(theming_repo);
 
             Ok(())
         })
@@ -102,7 +116,13 @@ pub fn run() {
             update_folder_name_cmd,
             chat_with_ai_cmd,
             cancel_chat_stream_cmd,
-            search_notes_cmd
+            search_notes_cmd,
+            create_settings_cmd,
+            get_settings_cmd,
+            update_settings_cmd,
+            get_themes_cmd,
+            get_theme_content_cmd,
+            create_themes_path_cmd
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

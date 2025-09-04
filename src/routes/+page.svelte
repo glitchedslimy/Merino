@@ -9,6 +9,9 @@
     import CommandPaletteSpace from "@components/organisms/CommandPaletteSpace.svelte";
     import { onDestroy, onMount } from "svelte";
     import { showCommandPalette } from "../lib/stores/commandpalette/commandpalette";
+    import SettingsSpace from "@components/organisms/SettingsSpace.svelte";
+    import { invoke } from "@tauri-apps/api/core";
+    import { loadSettings } from "../lib/actions/settings/load-settings";
 
     function handleGlobalKeydown(event: KeyboardEvent) {
         // Check for Ctrl/Cmd + K
@@ -24,9 +27,17 @@
         }
     }
 
-    onMount(() => {
+    onMount(async () => {
         // Add the global event listener when the component is mounted
         window.addEventListener("keydown", handleGlobalKeydown);
+        try {
+            await invoke("create_settings_cmd")
+            await invoke("create_themes_path_cmd")
+        } catch(e) {
+            console.error("Error creating settings", e); 
+        }
+
+        await loadSettings();
     });
 
     onDestroy(() => {
@@ -37,6 +48,7 @@
 
 <main class="bg-black-100 text-white h-screen flex flex-col">
     <Appbar />
+    <SettingsSpace />
     <CommandPaletteSpace />
     <section class="flex flex-1 min-h-0">
         <Sidebar />

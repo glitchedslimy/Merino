@@ -4,7 +4,7 @@
 
 </script>
 {#if $showCommandPalette}
-<section class="bg-black/50 absolute top-8 z-50 h-[90%] w-full flex justify-center ">
+<section class="bg-black/50 absolute top-8 z-50 h-[95%] w-full flex justify-center ">
     <CommandPalette />
 </section>
 {/if}
