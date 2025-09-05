@@ -1,0 +1,125 @@
+<script lang="ts">
+  import { fade } from "svelte/transition";
+  import { spacesStore } from "../../lib/stores/workspace/spaces-store";
+  import Button from "@components/atoms/Button.svelte";
+  import { invoke } from "@tauri-apps/api/core";
+  import { loadSpaces } from "../../lib/actions/workspace/spaces";
+  import { handleClickOutside } from "../../lib/useHooks/click-outside";
+  import Icon from "@components/atoms/Icon.svelte";
+  import NewSpaceCreation from "./NewSpaceCreation.svelte";
+  import { showSpaceCreation } from "../../lib/stores/settings/settings";
+    import { toasts } from "../../lib/stores/notifications/toast-store";
+
+  let activeSpaceName = $state<string | null>(null);
+  let parentRect = $state<DOMRect | null>(null);
+
+  function toggleMenu(event: MouseEvent, spaceName: string) {
+    if (activeSpaceName === spaceName) {
+      activeSpaceName = null;
+      parentRect = null;
+    } else {
+      activeSpaceName = spaceName;
+      parentRect =
+        (event.currentTarget as HTMLElement)
+          .closest("div")
+          ?.getBoundingClientRect() ?? null;
+    }
+  }
+
+  async function handleDelete(spaceName: string) {
+    try {
+      await invoke("delete_space_cmd", { spaceName });
+      await loadSpaces();
+      toasts.add(`Deleted space ${spaceName}`, "success")
+    } catch (e) {
+      console.error(e);
+    }
+    activeSpaceName = null;
+    parentRect = null;
+  }
+
+  let showDropdown = $derived(activeSpaceName !== null && parentRect !== null);
+</script>
+
+<div class="flex flex-col w-full">
+  {#if $showSpaceCreation}
+    <NewSpaceCreation />
+  {:else}
+    <div class="flex flex-col items-center w-full overflow-y-auto">
+      {#if $spacesStore.spaces && $spacesStore.spaces.length > 0}
+        <ul class="w-full rounded-lg bg-black-100">
+          {#each $spacesStore.spaces as space}
+            <li>
+              <div
+                class="flex items-center justify-between p-4 cursor-pointer hover:bg-black-200
+                     transition-colors duration-200 border-b border-black-200
+                     last:border-b-0 rounded-md"
+              >
+                <span class="text-white font-medium truncate">
+                  {space.name}
+                </span>
+
+                <button
+                  onclick={(e) => toggleMenu(e, space.name)}
+                  class="relative z-10 py-1 px-1.5 rounded-full text-white hover:bg-black-300 transition-colors duration-200"
+                >
+                  <Icon iconName="dotsvertical" width="20" />
+                </button>
+              </div>
+            </li>
+          {/each}
+        </ul>
+      {:else}
+        <p class="text-black-400 mb-sm">No spaces found.</p>
+      {/if}
+    </div>
+    <div class="flex justify-end w-full items-end">
+      <Button
+        intent="primary"
+        onClick={() => ($showSpaceCreation = !$showSpaceCreation)}
+      >
+        Create new space
+      </Button>
+    </div>
+  {/if}
+</div>
+
+<!-- This dropdown is now completely outside the overflow container -->
+{#if showDropdown}
+  <div
+    use:handleClickOutside
+    onclick_outside={() => {
+      activeSpaceName = null;
+      parentRect = null;
+    }}
+    transition:fade={{ duration: 150 }}
+    class="absolute z-50 w-48 rounded-md shadow-lg
+           bg-black-100 focus:outline-none"
+    style="top: {parentRect.bottom - 150}px; right: {window.innerWidth -
+      parentRect.right -
+      192}px;"
+  >
+    <div class="py-1">
+      <button
+        onclick={() => handleDelete(activeSpaceName ?? "")}
+        class="flex items-center w-full text-left px-4 py-2 text-sm text-utils-red hover:bg-black-200"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-4 w-4 mr-2"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M3 6h18" />
+          <path d="M19 6v14c0 1.105-.895 2-2 2H7c-1.105 0-2-.895-2-2V6" />
+          <path d="M8 6V4c0-1.105.895-2 2-2h4c1.105 0 2 .895 2 2v2" />
+        </svg>
+        Delete
+      </button>
+    </div>
+  </div>
+{/if}

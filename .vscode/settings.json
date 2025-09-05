@@ -1,3 +1,23 @@
 {
-  "svelte.enable-ts-plugin": true
+  "svelte.enable-ts-plugin": true,
+  "workbench.colorCustomizations": {
+    "activityBar.activeBackground": "#553786",
+    "activityBar.background": "#553786",
+    "activityBar.foreground": "#e7e7e7",
+    "activityBar.inactiveForeground": "#e7e7e799",
+    "activityBarBadge.background": "#170e09",
+    "activityBarBadge.foreground": "#e7e7e7",
+    "commandCenter.border": "#e7e7e799",
+    "sash.hoverBorder": "#553786",
+    "statusBar.background": "#3e2862",
+    "statusBar.foreground": "#e7e7e7",
+    "statusBarItem.hoverBackground": "#553786",
+    "statusBarItem.remoteBackground": "#3e2862",
+    "statusBarItem.remoteForeground": "#e7e7e7",
+    "titleBar.activeBackground": "#3e2862",
+    "titleBar.activeForeground": "#e7e7e7",
+    "titleBar.inactiveBackground": "#3e286299",
+    "titleBar.inactiveForeground": "#e7e7e799"
+  },
+  "peacock.color": "#3e2862"
 }
