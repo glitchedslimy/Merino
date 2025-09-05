@@ -11,13 +11,7 @@
     "strict": true,
     "moduleResolution": "bundler",
     "paths": {
-      "@atoms": ["./src/lib/components/atoms/index.ts"],
-      "@molecules": ["./src/lib/components/molecules/index.ts"],
-      "@organisms": ["./src/lib/components/organisms/index.ts"],
-      "@components/*": ["./src/lib/components/*"],
-      "@stores/*": ["./src/lib/stores/*"],
-      "@services/external/*": ["./src/lib/services/external/*"],
-      "@services/internal/*": ["./src/lib/services/internal/*"],
+      "@components/*": ["./src/components/*"],
     }
   }
   // Path aliases are handled by https://kit.svelte.dev/docs/configuration#alias

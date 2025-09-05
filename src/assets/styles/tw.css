@@ -1,7 +1,8 @@
 @import "tailwindcss";
 
-html, body {
-  height: 100%;
+html,
+body {
+    height: 100%;
 }
 
 @custom-variant catppucin (&:where([data-theme="catppucin"], [data-theme="catppucin"] *));
@@ -24,9 +25,9 @@ html, body {
 @theme {
     --font-mona: Mona Sans;
     /* Primary */
-    --color-brand-primary-light: #F4781A;
+    --color-brand-primary-light: color-mix(in srgb, var(--color-brand-primary), white 20%);
+    --color-brand-primary-dark: color-mix(in srgb, var(--color-brand-primary), black 20%);
     --color-brand-primary: #D1600A;
-    --color-brand-primary-dark: #A14A08;
 
     /* Secondary */
     --color-brand-secondary-light: #FF619B;
@@ -61,56 +62,56 @@ html, body {
     --color-utils-orange-dark: #A42805;
     --color-utils-orange-light: #FA6F48;
     --color-utils-orange-lightest: #FB9679;
-   
+
     /* Red */
     --color-utils-red-bright: #F7181C;
     --color-utils-red: #E22C2F;
     --color-utils-red-dark: #941416;
     --color-utils-red-light: #E8595B;
     --color-utils-red-lightest: #EF8687;
-    
+
     /* Pink */
     --color-utils-pink-bright: #FF08C2;
     --color-utils-pink: #E929BA;
     --color-utils-pink-dark: #B2158B;
     --color-utils-pink-light: #F99DE2;
     --color-utils-pink-lightest: #FFDAF6;
-    
+
     /* Purple */
     --color-utils-purple-bright: #8B46FF;
     --color-utils-purple: #7C39ED;
     --color-utils-purple-dark: #6B1CB0;
     --color-utils-purple-light: #CDB0FF;
     --color-utils-purple-lightest: #EDE3FE;
-    
+
     /* Blue */
     --color-utils-blue-bright: #2D7FF9;
     --color-utils-blue: #1283DA;
     --color-utils-blue-dark: #2750AE;
     --color-utils-blue-light: #9CC7FF;
     --color-utils-blue-lightest: #CFDFFF;
-    
+
     /* Cyan */
     --color-utils-cyan-bright: #01C5DB;
     --color-utils-cyan: #18F3FF;
     --color-utils-cyan-dark: #0197A8;
     --color-utils-cyan-light: #A9F6FF;
     --color-utils-cyan-lightest: #DBFBFF;
-    
+
     /* Teal */
     --color-utils-teal-bright: #20D9D2;
     --color-utils-teal: #02AAA4;
     --color-utils-teal-dark: #06A09B;
     --color-utils-teal-light: #72DDC3;
     --color-utils-teal-lightest: #C2F5E9;
-    
+
     /* Green */
     --color-utils-green-bright: #20C933;
     --color-utils-green: #11AF22;
     --color-utils-green-dark: #338A17;
     --color-utils-green-light: #93E088;
     --color-utils-green-lightest: #D1F7C4;
-    
+
     --spacing-none: 0;
     --spacing-xs: 4px;
     --spacing-sm: 8px;
@@ -119,38 +120,6 @@ html, body {
     --spacing-xl: 64px;
     --spacing-2xl: 128px;
     --spacing-3xl: 512px;
-}
-
-@layer base {
-    [data-theme="Catppucin"] {
-        --color-brand-primary: #fab387;
-        --color-brand-secondary: #cba6f7;
-        --color-black: #1e1e2e;
-        --color-black-100: #313244;
-        --color-black-200: #45475a;
-        --color-black-300: #585b70;
-        --color-black-400: #6c7086;
-        --color-white: #cdd6f4;
-        --color-white-100: #bac2de;
-        --color-white-200: #a6adc8;
-        --color-white-300: #9399b2;
-        --color-white-400: #949494;
-    }
-}
-
-:root[data-theme="Catpputin"] {
-    --color-brand-primary: #fab387;
-    --color-brand-secondary: #cba6f7;
-    --color-black: #1e1e2e;
-    --color-black-100: #313244;
-    --color-black-200: #45475a;
-    --color-black-300: #585b70;
-    --color-black-400: #6c7086;
-    --color-white: #cdd6f4;
-    --color-white-100: #bac2de;
-    --color-white-200: #a6adc8;
-    --color-white-300: #9399b2;
-    --color-white-400: #949494;
 }
 
 .ce-inline-tool {
@@ -215,56 +184,64 @@ html, body {
 }
 
 ::-webkit-scrollbar {
-  width: 6px;
+    width: 6px;
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: var(--color-black);
+    background: var(--color-black);
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: var(--color-black-200);
-  border-radius: 10px;
+    background: var(--color-black-200);
+    border-radius: 10px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-black-300);
+    background: var(--color-black-300);
 }
 
-.ce-block__content > div{
+.ce-block__content>div {
     overflow-wrap: break-word !important;
 }
 
 /* Styling for H1 elements */
+h1,
 h1.ce-header {
-    @apply text-5xl font-extrabold; /* Example Tailwind classes */
+    @apply text-5xl font-extrabold;
+    /* Example Tailwind classes */
     /* You can customize these to match your design system */
 }
 
 /* Styling for H2 elements */
-h2.ce-header{
-    @apply text-4xl font-bold; /* Example Tailwind classes */
+h2,
+h2.ce-header {
+    @apply text-4xl font-bold;
+    /* Example Tailwind classes */
 }
 
 /* Styling for H3 elements */
-h3.ce-header{
+h3,
+h3.ce-header {
     @apply text-3xl font-semibold;
 }
 
 /* Styling for H4 elements */
+h4,
 h4.ce-header {
     @apply text-2xl font-medium;
 }
 
 /* Styling for H5 elements */
-h5.ce-header{
+h5,
+h5.ce-header {
     @apply text-xl font-medium;
 }
 
 /* Styling for H6 elements */
+h6,
 h6.ce-header {
     @apply text-lg font-medium;
 }
@@ -277,7 +254,7 @@ h6.ce-header {
     --color-background-icon-active: color-mix(in srgb, var(--color-brand-primary-dark) 20%, transparent);
 }
 
-.ce-popover-item-html > input {
+.ce-popover-item-html>input {
     background-color: var(--color-black-100);
 }
 
@@ -286,9 +263,13 @@ h6.ce-header {
 
 /* 4. Define a readable max-width for the content itself and center it */
 .ce-block__content {
-    max-width: 60%; 
+    max-width: 60%;
 }
 
 .ce-toolbar__content {
     max-width: 60%;
+}
+
+.ce-paragraph>a {
+    color: var(--color-brand-primary)
 }

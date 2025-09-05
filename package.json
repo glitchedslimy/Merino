@@ -10,7 +10,8 @@
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "tauri": "tauri",
-    "tauri:debug": "tauri build --debug"
+    "tauri:debug:build": "tauri build --debug",
+    "tauri:debug:run": "RUST_LOG=debug npm run tauri dev"
   },
   "license": "MIT",
   "dependencies": {
@@ -26,10 +27,12 @@
     "@tauri-apps/plugin-store": "^2.3.0",
     "chalk": "^5.5.0",
     "class-variance-authority": "^0.7.1",
+    "editorjs-html": "^4.0.5",
     "express": "^5.1.0",
     "marked": "^16.1.2",
     "ollama": "^0.5.17",
     "tailwindcss": "^4.1.11",
+    "turndown": "^7.2.1",
     "winston": "^3.17.0"
   },
   "devDependencies": {

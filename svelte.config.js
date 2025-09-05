@@ -10,13 +10,7 @@ const config = {
   kit: {
     adapter: adapter(),
     alias: {
-      '@atoms': './src/lib/components/atoms/index.ts',
-      '@molecules': './src/lib/components/molecules/index.ts',
-      '@organisms': './src/lib/components/organisms/index.ts',
-      '@components/*': './src/lib/components/*',
-      '@stores/*': './src/lib/stores/*',
-      '@services/internal/*': './src/lib/services/internal/*',
-      '@services/external/*': './src/lib/services/external/*'
+      '@components/*': './src/components/*',
     }
   },
 };
