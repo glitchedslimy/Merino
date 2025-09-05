@@ -45,7 +45,14 @@ jobs:
         run: pnpm install
 
       - name: Build Tauri app
-        run: pnpm build
+        run: pnpm tauri build
+
+      - name: Create and push a Git tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag "v${{ github.run_number }}"
+          git push origin "v${{ github.run_number }}"
 
       - name: Create GitHub Release
         id: create_release
@@ -57,3 +64,4 @@ jobs:
             src-tauri/target/release/bundle/msi/*.msi
             src-tauri/target/release/bundle/deb/*.deb
           generate_release_notes: true
+          tag_name: "v${{ github.run_number }}"
