@@ -1,10 +1,10 @@
 ![Merino Logo](assets/banner.png)
-<center>Where privacy and markdown are a standard.</center>
+
 
 ## What is Merino?
-_Merino_ is a note taking app (yes, another one 😅) designed to be private & easy-to use with markdown support first.
-
 **The _first_ note taking app where block style editing meets markdown.**
+
+_Merino_ is a note taking app designed to be private & easy-to use with markdown support first.
 
 ### First where block style meets markdown?
 _You might have that question_, and yes, it's true that Notion exists, and also Obsidian, both wonderfull note taking apps.
@@ -12,10 +12,10 @@ _You might have that question_, and yes, it's true that Notion exists, and also 
 But Merino is different, because we have the block style of Notion, the markdown of Obsidian and differently to Notion, we save the notes as _markdown files_, making it compatible with anything that uses markdown.
 
 > [!WARNING]
-> There will be dragons, the app is on alpha and there are bugs and missing features, be patience while you use this in alpha state.
+> There will be dragons, the app is on beta and there are bugs and missing features, be patience while you use this in beta state.
 
 ## Features
-- **MarkDown Support**: Merino supports markdown syntax to create rich text content with all its benefits.
+- **Markdown Support**: Merino supports markdown syntax to create rich text content with all its benefits.
 - Easy to use and private, we don't store anything on the cloud, only locally for you, we will give you the option to sync your notes across devices or server if needed (coming soon).
 - **Block Style Editor**: You can edit text in a block style way.
 - **Customizable 😎**, you like themes and customization? We got you covered.
