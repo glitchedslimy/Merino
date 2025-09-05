@@ -33,7 +33,6 @@ impl SpaceRepository for FileSystemSpaceRepository {
     /// ## Result
     /// A `Vec` of `Space` if succeded, `SpaceError` if not.
     async fn get_spaces(&self) -> Result<Vec<Space>, SpaceError> {
-        info!("Listing spaces in route.");
         let base_path = self.filesystem_repo.get_base_path()?;
         self.filesystem_repo.ensure_directory_exists(&base_path).await?;
 

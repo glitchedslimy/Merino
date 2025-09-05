@@ -2,7 +2,6 @@
     import Markdown from "./Markdown.svelte";
 
     let { text, x, y, onmouseenter, onmouseleave } = $props();
-    console.log(text);
 </script>
 
 <div

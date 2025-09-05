@@ -18,9 +18,7 @@ export async function loadFoldersInSpace(spaceName: string | null) {
     }
     loadingFolders = true;
     try {
-        const loadedFolders = await listFolders(spaceName);
-        folders.set(loadedFolders);
-        console.log(loadedFolders);
+        await listFolders(spaceName);
     } catch (e) {
         console.error("Folders not found: ", e);
     } finally {
@@ -72,7 +70,6 @@ export async function handleFolderActionContextMenu(actionType: string): Promise
             })
             break;
         case "create_note":
-            console.log(get(folderRightClicked)?.path)
             await createNote(get(activeSpace) ?? '', get(folderRightClicked)?.path ?? '')
             toasts.add(`Created note in folder "${get(folderRightClicked)?.path}" in space.`, "success")
             break;
@@ -94,7 +91,6 @@ export function showFolderContextmenu(
     folderContextMenuX.set(event.clientX);
     folderContextMenuY.set(event.clientY);
     folderContextMenuVisible.set(true);
-    console.log(get(folderContextMenuVisible))
 }
 
 export function closeFolderContextMenu() {

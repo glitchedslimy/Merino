@@ -3,7 +3,6 @@ import { isMaximized } from "../../stores/window/window";
 import { get } from "svelte/store";
 
 export async function updateMaxState() {
-    console.log("Triggerred update")
     isMaximized.set(await getCurrentWindow().isMaximized())
 }
 

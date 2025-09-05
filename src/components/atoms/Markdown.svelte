@@ -7,7 +7,6 @@
         htmlContent = await marked.parse(text);
       }
     })
-    console.log(text)
 </script>
 
 

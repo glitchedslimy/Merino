@@ -30,7 +30,6 @@ export async function loadNotesInSpace(spaceName: string | null) {
 
         // FIX: Pass both the notes and folders arrays to the buildNoteTree function
         const notesTree = buildNoteTree(loadedNotes, loadedFolders);
-        console.log(notesTree);
         notes.set(notesTree);
         if (loadedNotes.length > 0 && get(opennedNotes).length === 0) {
             
@@ -47,7 +46,6 @@ export async function loadNotesInSpace(spaceName: string | null) {
 }
 
 async function deleteNote(spaceName: string | null, noteName: string, folderPath: string | null) {
-    console.log(spaceName, noteName, folderPath)
     return await invoke("delete_note_cmd", { spaceName, noteName, folderPath });
 }
 
@@ -158,12 +156,10 @@ let timeoutId: number | null = null;
 const DELAY_MS = 0;
 
 export function handleShowTooltip(text: string, x: number, y: number) {
-    console.log("Showing tooltip");
     if (timeoutId) {
         clearTimeout(timeoutId);
     }
     timeoutId = setTimeout(() => {
-        console.log("showing tooltip");
         showTooltip.set(true);
         tooltipText.set(text);
         tooltipX.set(x);
@@ -181,7 +177,6 @@ export function handleHideTooltip() {
 }
 
 export function selectNote(note: Note) {
-    console.log(note)
     openNote(note);
 }
 

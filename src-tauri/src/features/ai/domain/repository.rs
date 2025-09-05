@@ -11,7 +11,7 @@ pub trait AIRepository {
     async fn chat_with_ai(&self, window: Window, prompt: Vec<ChatMessage>, model_name: String, use_tools: bool, use_thinking: bool, state: State<'_, AppState>) -> Result<(), String>;
     async fn cancel_stream(&self, state: State<'_, AppState>) -> Result<(), String>;
     async fn check_ollama_status(&self) -> Result<bool, String>;
-    // async fn delete_ollama_model(&self, model_name: String) -> Result<(), String>;
+    async fn delete_ollama_model(&self, model_name: String) -> Result<(), String>;
     async fn create_ollama_model(&self, model_name: String) -> Result<(), String>;
     async fn get_web_models(&self) -> Result<Vec<OllamaWebResponse>, String>;
 }

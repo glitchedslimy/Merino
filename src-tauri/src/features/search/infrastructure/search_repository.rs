@@ -103,7 +103,6 @@ impl TantivySearchRepository {
 
             results.push(route);
         }
-        info!("{:?}", results);
         Ok(results)
     }
 }

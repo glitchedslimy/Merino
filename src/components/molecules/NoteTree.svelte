@@ -51,7 +51,6 @@
   const isDraggedOver = $derived(dragCount > 0);
 
   function toggleFolder() {
-    console.log($renamedFolder);
     if ($renamedFolder) {
       return false;
     }
@@ -138,7 +137,6 @@
           get(activeSpace) &&
           oldFolderValue !== newFolder
         ) {
-          console.log(draggedNoteName, oldFolderValue, newFolder);
           await moveNoteToFolder(
             get(activeSpace),
             draggedNoteName,

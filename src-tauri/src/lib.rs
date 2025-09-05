@@ -1,4 +1,5 @@
 use crate::features::ai::infrastructure::genai_repository::GenAIRepository;
+use crate::features::ai::infrastructure::tauri_commands::{create_ollama_model_cmd, delete_ollama_model_cmd};
 use crate::features::folders::infrastructure::filesystem_repository::FileSystemFolderRepository;
 use crate::features::search::infrastructure::search_repository::TantivySearchRepository;
 use crate::features::settings::infrastructure::settings_repository::FileSystemSettingsRepository;
@@ -71,7 +72,6 @@ pub fn run() {
             
             let index_writer = search_repo.get_index_writer().expect("Failed to get IndexWriter");
 
-            // Manage the unified app state object
             let app_state = AppState::new(
                 notes_repo.clone(),
                 spaces_repo.clone(),
@@ -83,7 +83,6 @@ pub fn run() {
             );
             app.manage(app_state);
 
-            // Manage the single repo instances for older commands
             app.manage(notes_repo);
             app.manage(spaces_repo);
             app.manage(folders_repo);
@@ -124,7 +123,9 @@ pub fn run() {
             get_theme_content_cmd,
             create_themes_path_cmd,
             check_ollama_status_cmd,
-            get_web_models_cmd
+            get_web_models_cmd,
+            create_ollama_model_cmd,
+            delete_ollama_model_cmd
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

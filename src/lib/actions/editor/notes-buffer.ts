@@ -9,14 +9,11 @@ export function openNote(note: Note) {
 
     if (!isNoteAlreadyOpen) {
         opennedNotes.update(notes => [...notes, note]);
-        console.log("Adding new note to buffer:", note.name);
     }
 
     // Set the active note name and folder
     activeNoteName.set(note.name);
     activeNoteFolder.set(note.folder);
-    console.log("Setting active note:", note.name, "in folder:", note.folder);
-    console.log("Current open notes in store:", get(opennedNotes));
 }
 
 export function closeNote(noteName: string, noteFolder: string | null) {

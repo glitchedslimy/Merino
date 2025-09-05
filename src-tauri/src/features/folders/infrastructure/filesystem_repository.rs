@@ -85,8 +85,6 @@ impl FolderRepository for FileSystemFolderRepository {
             }
         }
 
-        info!("Found {} folders in space '{}'", folders.len(), space_name);
-        info!("Folders: {:?}", folders);
         Ok(folders)
     }
 
@@ -170,8 +168,6 @@ impl FolderRepository for FileSystemFolderRepository {
             final_path.push(parent_path);
         }
 
-        info!("Deleting folder: {}", final_path.display());
-
         match fs::remove_dir_all(&final_path).await {
             Ok(_) => Ok(format!("Removed '{}' from '{}'.", folder_name, space_name)),
             Err(e) if e.kind() == ErrorKind::NotFound => Err(FolderError::NotFound(e.to_string())),
@@ -203,8 +199,6 @@ impl FolderRepository for FileSystemFolderRepository {
         // Append the old and new folder names to the respective paths
         old_path.push(folder_name);
         new_path.push(new_folder_name);
-
-        info!("Rename folder, new_path: '{}' old_path: '{}'", new_path.display(), old_path.display());
 
         // Perform the rename operation
         fs::rename(&old_path, &new_path)

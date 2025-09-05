@@ -150,8 +150,10 @@ impl AIRepository for GenAIRepository {
     }
 
     async fn get_web_models(&self) -> Result<Vec<OllamaWebResponse>, String> {
+        // The URL for the Ollama library page.
         let url = "https://ollama.com/library";
 
+        // Make an asynchronous HTTP GET request to the URL.
         let response = reqwest::get(url)
             .await
             .map_err(|e| format!("Failed to fetch URL: {}", e))?
@@ -159,22 +161,24 @@ impl AIRepository for GenAIRepository {
             .await
             .map_err(|e| format!("Failed to get response text: {}", e))?;
 
+        // Parse the HTML content.
         let document = Html::parse_document(&response);
 
+        // Use a CSS selector to find all model entries.
         let model_selector = Selector::parse("a[href^='/library/']")
             .map_err(|_| "Failed to parse model selector".to_string())?;
 
         let mut models_data = Vec::new();
 
+        // Iterate over each model entry found.
         for element in document.select(&model_selector) {
             // Selectors for individual fields within each model entry.
             let name_selector = Selector::parse("h2").unwrap();
             let description_selector = Selector::parse("p.max-w-lg.text-neutral-800").unwrap();
-            let info_selector =
-                Selector::parse("div.flex.gap-2.text-sm.text-neutral-500 span.truncate").unwrap();
-            let pulls_selector =
-                Selector::parse("span.truncate.text-sm.text-neutral-500 svg.mr-1").unwrap();
-            let date_selector = Selector::parse("span.text-xs.truncate.text-neutral-500").unwrap();
+            let capabilities_selector = Selector::parse("span[x-test-capability]").unwrap();
+            let sizes_selector = Selector::parse("span[x-test-size]").unwrap();
+            let pulls_selector = Selector::parse("span[x-test-pull-count]").unwrap();
+            let date_selector = Selector::parse("span[x-test-updated]").unwrap();
 
             // Extract data for each field, handling cases where the element might not be found.
             let model_name = element
@@ -192,41 +196,20 @@ impl AIRepository for GenAIRepository {
                 });
 
             let sizes: Vec<String> = element
-                .select(&info_selector)
-                .filter_map(|e| {
-                    let text = e.text().collect::<Vec<_>>().join("").trim().to_string();
-                    if text.ends_with("b") {
-                        Some(text)
-                    } else {
-                        None
-                    }
-                })
+                .select(&sizes_selector)
+                .map(|e| e.text().collect::<Vec<_>>().join("").trim().to_string())
                 .collect();
 
             let capabilities: Vec<String> = element
-                .select(&info_selector)
-                .filter_map(|e| {
-                    let text = e.text().collect::<Vec<_>>().join("").trim().to_string();
-                    if !text.ends_with("b") {
-                        Some(text)
-                    } else {
-                        None
-                    }
-                })
+                .select(&capabilities_selector)
+                .map(|e| e.text().collect::<Vec<_>>().join("").trim().to_string())
                 .collect();
 
             let pulls = element
                 .select(&pulls_selector)
                 .next()
                 .map_or("".to_string(), |e| {
-                    let parent_text = ElementRef::wrap(e.parent().unwrap())
-                        .unwrap()
-                        .text()
-                        .collect::<Vec<_>>()
-                        .join("")
-                        .trim()
-                        .to_string();
-                    parent_text.trim_start_matches("M Pulls").trim().to_string()
+                    e.text().collect::<Vec<_>>().join("").trim().to_string()
                 });
 
             let date = element
@@ -248,5 +231,15 @@ impl AIRepository for GenAIRepository {
         }
 
         Ok(models_data)
+    }
+
+    async fn delete_ollama_model(&self, model_name: String) -> Result<(), String> {
+         let ollama_client = Ollama::default();
+        let model = ollama_client.delete_model(model_name).await;
+
+        match model {
+            Ok(_model_response) => Ok(()),
+            Err(_) => Err("Error deleting Ollama Model".to_string()),
+        }
     }
 }

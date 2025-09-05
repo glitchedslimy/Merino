@@ -42,7 +42,6 @@ impl NoteRepository for FileSystemNoteRepository {
     /// ## Result
     /// A `Vec` of `Note` if succeded, a `NoteError` if not.
     async fn get_notes(&self, space_name: &str) -> Result<Vec<Note>, NoteError> {
-        info!("Started to list all notes in space: '{}'", space_name);
         let space_path = self.filesystem_repo.get_space_path(space_name)?;
 
         if !space_path.exists() || !space_path.is_dir() {
@@ -87,13 +86,11 @@ impl NoteRepository for FileSystemNoteRepository {
                                 parent_path.strip_prefix(&space_path).map_err(|e| {
                                     NoteError::NotFound(format!("Couldn't perform strip: {}", e))
                                 })?;
-                            info!("Relative path: {:?}", relative_path);
                             let folder = if relative_path.as_os_str().is_empty() {
                                 None
                             } else {
                                 Some(relative_path.to_str().unwrap().to_string())
                             };
-                            info!("Folder: {:?}", folder);
                             notes.push(Note {
                                 name: note_name.to_string(),
                                 content: None,
@@ -110,9 +107,6 @@ impl NoteRepository for FileSystemNoteRepository {
                 }
             }
         }
-
-        info!("Found {} notes in space '{}'", notes.len(), space_name);
-        info!("{:?}", notes);
         Ok(notes)
     }
 
@@ -263,7 +257,6 @@ impl NoteRepository for FileSystemNoteRepository {
 
         note_path.push(format!("{}.md", note_name));
 
-        info!("The note path is: {}", note_path.display());
         match fs::remove_file(&note_path).await {
             Ok(_) => Ok(format!("Removed '{}' from '{}'.", note_name, space_name)),
             Err(e) if e.kind() == ErrorKind::NotFound => Err(NoteError::NotFound(e.to_string())),

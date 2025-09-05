@@ -8,7 +8,6 @@ export async function loadSettings() {
     document.head.appendChild(styleElement);
     try {
         const settingsStr: string = await invoke("get_settings_cmd");
-        console.log(settingsStr)
         if (settingsStr) {
             const settings = JSON.parse(settingsStr);
             if (settings.primaryColor) {

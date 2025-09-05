@@ -46,7 +46,6 @@
         isSearching = true;
         try {
             const results = await invoke("search_notes_cmd", { query });
-            console.log(results)
             searchResults = results.map((note) => ({
                 name: note.name,
                 action: () => {

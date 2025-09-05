@@ -41,10 +41,8 @@ impl ThemingRepository for FileSystemThemingRepository {
             let mut entries = read_dir(themes_path).await.map_err(|e| format!("Failed to read themes directory: {}", e))?;
 
             while let Some(entry) = entries.next_entry().await.map_err(|e| format!("Failed to read directory entry: {}", e))? {
-                 info!("Entered themes while {:?}", entry);
                 let path = entry.path();
                 if path.is_dir() {
-                     info!("Is Dir {:?}", path);
                     if let Some(theme_name) = path.file_name().and_then(|n| n.to_str()) {
                         themes.push(Theme {
                             name: theme_name.to_string()
@@ -53,7 +51,6 @@ impl ThemingRepository for FileSystemThemingRepository {
                 }
             }
         }
-        info!("Theming function {:?}", themes);
         Ok(themes)
     }
 

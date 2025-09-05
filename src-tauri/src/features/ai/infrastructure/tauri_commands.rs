@@ -1,7 +1,7 @@
 use ollama_rs::generation::chat::ChatMessage;
 use tauri::{State, Window};
 
-use crate::features::ai::application::{chat, get};
+use crate::features::ai::application::{chat, create, delete, get};
 use crate::features::ai::domain::ai::OllamaWebResponse;
 use crate::features::ai::{
     domain::ai::ModelResponse, infrastructure::genai_repository::GenAIRepository,
@@ -70,4 +70,14 @@ pub async fn check_ollama_status_cmd(repo: State<'_, GenAIRepository>) -> Result
 #[tauri::command]
 pub async fn get_web_models_cmd(repo: State<'_, GenAIRepository>) -> Result<Vec<OllamaWebResponse>, String> {
     get::get_web_models(&*repo).await
+}
+
+#[tauri::command]
+pub async fn create_ollama_model_cmd(repo: State<'_, GenAIRepository>, model_name: String) -> Result<(), String> {
+    create::create_ollama_model_use_case(&*repo, model_name).await
+}
+
+#[tauri::command]
+pub async fn delete_ollama_model_cmd(repo: State<'_, GenAIRepository>, model_name: String) -> Result<(), String> {
+    delete::delete_ollama_model_use_case(&*repo, model_name).await
 }

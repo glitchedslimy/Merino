@@ -5,6 +5,5 @@ export async function renameNoteInSpace(spaceName: string | null, noteName: stri
 }
 
 export async function updateNoteContent(spaceName: string, noteName: string, content: number[], folderPath: string | null): Promise<void> {
-    console.log("Folder: ", folderPath)
     return await invoke("update_note_content_cmd", { spaceName, noteName, content, folderPath });
 }

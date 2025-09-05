@@ -45,7 +45,6 @@
             editorInstance.destroy();
             editorInstance = null;
         }
-        console.log("Note folder from editorSpace", noteFolder)
         if (noteName && get(activeSpace)) {
             editorInstance = initializeEditor(
                 editorHolderId,

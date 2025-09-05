@@ -27,7 +27,7 @@
                 {#each $notifications as notification (notification.id)}
                     <div class="p-4 border-b border-gray-200">
                         <p class="text-sm font-semibold">{notification.message}</p>
-                        <button onclick={() => notifications.remove(notification.id)} class="text-xs text-blue-500 hover:underline">Dismiss</button>
+                        <button onclick={() => notifications.remove(notification.id)} class="text-xs text-brand-primary hover:underline hover:cursor-pointer">Dismiss</button>
                     </div>
                 {/each}
             {/if}

@@ -35,7 +35,6 @@
         },
         activeNote.folder,
       );
-      console.log("Note content saved successfully.");
     } catch (e) {
       console.error("Failed to save note content:", e);
     }

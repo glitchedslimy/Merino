@@ -14,18 +14,20 @@
     import { onMount } from "svelte";
     import ModelCreation from "./ModelCreation.svelte";
 
-    let activeSpaceName = $state<string | null>(null);
+    let activeModelName = $state<string | null>(null);
     let parentRect = $state<DOMRect | null>(null);
     let models = $state<string[] | null>(null);
+
     async function getModels() {
         models = await getOllamaModels()
     }
-    function toggleMenu(event: MouseEvent, spaceName: string) {
-        if (activeSpaceName === spaceName) {
-            activeSpaceName = null;
+
+    function toggleMenu(event: MouseEvent, modelName: string) {
+        if (activeModelName === modelName) {
+            activeModelName = null;
             parentRect = null;
         } else {
-            activeSpaceName = spaceName;
+            activeModelName = modelName;
             parentRect =
                 (event.currentTarget as HTMLElement)
                     .closest("div")
@@ -33,15 +35,15 @@
         }
     }
 
-    async function handleDelete(spaceName: string) {
+    async function handleDelete(modelName: string) {
         try {
-            await invoke("delete_space_cmd", { spaceName });
-            await loadSpaces();
-            toasts.add(`Deleted space ${spaceName}`, "success");
+            await invoke("delete_ollama_model_cmd", { modelName });
+            toasts.add(`Deleted space ${modelName}`, "success");
+            await getModels()
         } catch (e) {
             console.error(e);
         }
-        activeSpaceName = null;
+        activeModelName = null;
         parentRect = null;
     }
     onMount(async () => {
@@ -49,7 +51,7 @@
     })
 
     let showDropdown = $derived(
-        activeSpaceName !== null && parentRect !== null,
+        activeModelName !== null && parentRect !== null,
     );
 </script>
 
@@ -93,7 +95,7 @@
                 intent="primary"
                 onClick={() => ($showModelCreation = !$showModelCreation)}
             >
-                Get a new model
+                Pull a new model
             </Button>
         </div>
         {/if}
@@ -104,7 +106,7 @@
     <div
         use:handleClickOutside
         onclick_outside={() => {
-            activeSpaceName = null;
+            activeModelName = null;
             parentRect = null;
         }}
         transition:fade={{ duration: 150 }}
@@ -116,7 +118,7 @@
     >
         <div class="py-1">
             <button
-                onclick={() => handleDelete(activeSpaceName ?? "")}
+                onclick={() => handleDelete(activeModelName ?? "")}
                 class="flex items-center w-full text-left px-4 py-2 text-sm text-utils-red hover:bg-black-200"
             >
                 <svg
