@@ -1,9 +1,10 @@
 use std::path::PathBuf;
 
 use async_trait::async_trait;
+use log::info;
 use tokio::fs::{self, read_dir};
 
-use crate::{features::theming::domain::repository::ThemingRepository, shared::repositories::filesystem_repository::FileSystemRepository};
+use crate::{features::theming::domain::{repository::ThemingRepository, theme::Theme}, shared::repositories::filesystem_repository::FileSystemRepository};
 
 #[derive(Clone)]
 pub struct FileSystemThemingRepository {
@@ -32,7 +33,7 @@ impl FileSystemThemingRepository {
 
 #[async_trait]
 impl ThemingRepository for FileSystemThemingRepository {
-    async fn get_themes(&self) -> Result<Vec<String>, String> {
+    async fn get_themes(&self) -> Result<Vec<Theme>, String> {
         let themes_path = self.get_themes_path()?;
         let mut themes = Vec::new();
 
@@ -40,14 +41,19 @@ impl ThemingRepository for FileSystemThemingRepository {
             let mut entries = read_dir(themes_path).await.map_err(|e| format!("Failed to read themes directory: {}", e))?;
 
             while let Some(entry) = entries.next_entry().await.map_err(|e| format!("Failed to read directory entry: {}", e))? {
+                 info!("Entered themes while {:?}", entry);
                 let path = entry.path();
                 if path.is_dir() {
+                     info!("Is Dir {:?}", path);
                     if let Some(theme_name) = path.file_name().and_then(|n| n.to_str()) {
-                        themes.push(theme_name.to_string());
+                        themes.push(Theme {
+                            name: theme_name.to_string()
+                        });
                     }
                 }
             }
         }
+        info!("Theming function {:?}", themes);
         Ok(themes)
     }
 

@@ -26,6 +26,7 @@
 - [ ] See how to implement the sidecar to use MCPs (Multi-modal Command Processing) with AI.
 - [X] Implement a better cancellation mechanism for the AI chat.
 - [X] Change all genai for ollama-rs only.
+- [] Obtain list of models from ollama web.x
 
 ---
 
@@ -47,7 +48,7 @@
 - [ ] Create the documentation (Web).
 - [ ] Test components and backend.
 - [ ] Implement the "Quick Notes" functionality
-- [ ] Fix theming system not loading the themes for some reason
+- [X] Fix theming system not loading the themes for some reason
 
 ### Frontend
 
@@ -55,7 +56,7 @@
 - [x] Fix and modify functions so that calls between FE and BE work correctly.
 - [x] Find a suitable architecture for the frontend for this use case.
 - [ ] Optimize the frontend.
-- [ ] Add the settings panel.
+- [X] Add the settings panel.
 - [X] Implement the command panel.
 - [x] Add functionality to the command panel, it will be a search panel as well at the same time.
 - [x] Implement the search panel.
@@ -66,3 +67,6 @@
 - [ ] Implement more editor and **Markdown** functionalities.
 - [ ] Implement editor history to get back and forth.
 - [x] Create a drag-and-drop mechanism to order notes in folders and whatever else.
+- [ ] Implement AI store from Ollama directly for now.
+
+**I need to accomodate the stuff regarding the TODOS better**.

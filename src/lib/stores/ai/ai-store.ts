@@ -5,3 +5,4 @@ export const selectedModel = writable<string | null>("");
 export const aiMessages = writable<{sender: string, text: string | unknown, thinking?: string, isThinkingDropdownOpen?: boolean}[]>([]);
 export const chatContainer = writable<HTMLDivElement | null>(null);
 export const aiIsLoading = writable<boolean>(false);
+export const isOllamaRunning = writable<boolean>(false);

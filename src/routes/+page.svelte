@@ -12,18 +12,27 @@
     import SettingsSpace from "@components/organisms/SettingsSpace.svelte";
     import { invoke } from "@tauri-apps/api/core";
     import { loadSettings } from "../lib/actions/settings/load-settings";
+    import { openSettings } from "../lib/stores/settings/settings";
+    import { checkOllama } from "../lib/actions/ai/checkOllama";
 
     function handleGlobalKeydown(event: KeyboardEvent) {
         // Check for Ctrl/Cmd + K
-        const isCtrlK = event.key === "k" && event.ctrlKey;
-        const isCmdK = event.key === "k" && event.metaKey;
+        const isCtrlp = event.key === "p" && event.ctrlKey;
+        const isCmdp = event.key === "p" && event.metaKey;
+        const isCtrlComma = event.key === "," && event.ctrlKey;
+        const isCmdComma = event.key === "," && event.metaKey;
 
-        if (isCtrlK || isCmdK) {
+        if (isCtrlp || isCmdp) {
             // Prevent the default browser action for Ctrl/Cmd + K
             event.preventDefault();
 
             // Toggle the showCommandPalette store
             $showCommandPalette = !$showCommandPalette;
+        }
+
+        if(isCtrlComma || isCmdComma) {
+            event.preventDefault();
+            $openSettings = !$openSettings;
         }
     }
 
@@ -38,6 +47,7 @@
         }
 
         await loadSettings();
+        await checkOllama();
     });
 
     onDestroy(() => {

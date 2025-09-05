@@ -1,9 +1,9 @@
 use tauri::State;
 
-use crate::features::theming::{application::{create, get}, infrastructre::theming_repository::FileSystemThemingRepository};
+use crate::features::theming::{application::{create, get}, domain::theme::Theme, infrastructre::theming_repository::FileSystemThemingRepository};
 
 #[tauri::command]
-pub async fn get_themes_cmd(repo: State<'_, FileSystemThemingRepository>) -> Result<Vec<String>, String> {
+pub async fn get_themes_cmd(repo: State<'_, FileSystemThemingRepository>) -> Result<Vec<Theme>, String> {
     get::get_themes(&*repo).await.map_err(|e| e.to_string())
 }
 

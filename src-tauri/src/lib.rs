@@ -21,7 +21,7 @@ pub mod shared;
 
 // Implement functions from infrastructure
 use features::ai::infrastructure::tauri_commands::{
-    cancel_chat_stream_cmd, chat_with_ai_cmd, get_ai_models_cmd,
+    cancel_chat_stream_cmd, chat_with_ai_cmd, get_ai_models_cmd, check_ollama_status_cmd, get_web_models_cmd
 };
 use features::folders::infrastructure::tauri_commands::{
     create_folder_cmd, delete_folder_cmd, get_folders_in_space_cmd, update_folder_name_cmd,
@@ -122,7 +122,9 @@ pub fn run() {
             update_settings_cmd,
             get_themes_cmd,
             get_theme_content_cmd,
-            create_themes_path_cmd
+            create_themes_path_cmd,
+            check_ollama_status_cmd,
+            get_web_models_cmd
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -1,6 +1,6 @@
-use crate::features::theming::domain::repository::ThemingRepository;
+use crate::features::theming::domain::{repository::ThemingRepository, theme::Theme};
 
-pub async fn get_themes<T: ThemingRepository>(repo: &T) -> Result<Vec<String>, String> {
+pub async fn get_themes<T: ThemingRepository>(repo: &T) -> Result<Vec<Theme>, String> {
     repo.get_themes().await
 }
 

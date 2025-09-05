@@ -2,6 +2,7 @@ use ollama_rs::generation::chat::ChatMessage;
 use tauri::{State, Window};
 
 use crate::features::ai::application::{chat, get};
+use crate::features::ai::domain::ai::OllamaWebResponse;
 use crate::features::ai::{
     domain::ai::ModelResponse, infrastructure::genai_repository::GenAIRepository,
 };
@@ -59,4 +60,14 @@ pub async fn cancel_chat_stream_cmd(
     app_state: State<'_, AppState>,
 ) -> Result<(), String> {
     chat::cancel_chat_stream_use_case(&*repo, app_state).await
+}
+
+#[tauri::command]
+pub async fn check_ollama_status_cmd(repo: State<'_, GenAIRepository>) -> Result<bool, String> {
+    get::check_ollama_status_use_case(&*repo).await
+}
+
+#[tauri::command]
+pub async fn get_web_models_cmd(repo: State<'_, GenAIRepository>) -> Result<Vec<OllamaWebResponse>, String> {
+    get::get_web_models(&*repo).await
 }

@@ -4,6 +4,8 @@
     import { invoke } from "@tauri-apps/api/core"; // Corrected import path
     import { showCommandPalette } from "../../lib/stores/commandpalette/commandpalette";
     import { openNote } from "../../lib/actions/editor/notes-buffer";
+    import { createNote } from "../../lib/actions/workspace/notes";
+    import { activeSpace } from "../../lib/stores/workspace/spaces-store";
 
     // Utility function to debounce API calls
     function debounce<T extends (...args: any[]) => void>(func: T, delay: number): (...args: Parameters<T>) => void {
@@ -23,13 +25,7 @@
 
     // Hardcoded commands as before
     const commands = [
-        { name: "New Note", action: () => console.log('New Note') },
-        { name: "Export Notes", action: () => console.log('Export Notes') },
-        { name: "Settings", action: () => console.log('Open Settings') },
-        { name: "Change Theme", action: () => console.log('Change Theme') },
-        { name: "Share Note", action: () => console.log('Share Note') },
-        { name: "Delete Note", action: () => console.log('Delete Note') },
-        { name: "About", action: () => console.log('About App') },
+        { name: "New Note", action: () => createNote($activeSpace ?? "", null) }
     ];
 
     // Derived reactive states using $derived

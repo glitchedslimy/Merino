@@ -5,7 +5,7 @@ import OpenAI from '../../../assets/icons/ai/openai.svg'
 import Qwen from '../../../assets/icons/ai/qwen.svg'
 import Mistral from '../../../assets/icons/ai/mistral.svg'
 import Microsoft from '../../../assets/icons/ai/microsoft.svg'
-import Ollama from '../../../assets/ollama.png';
+import Ollama from '../../../assets/icons/ai/ollama.svg';
 
 export function getModelLogo(modelName: string) {
   const lowerCaseName = modelName.toLowerCase();

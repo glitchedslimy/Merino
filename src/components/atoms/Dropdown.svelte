@@ -9,6 +9,7 @@
         handleShowTooltip,
     } from "../../lib/actions/workspace/notes";
     import { getModelLogo } from "../../lib/actions/ai/getModelLogo";
+    import { handleClickOutside } from "../../lib/useHooks/click-outside";
 
     let {
         options,
@@ -47,7 +48,9 @@
     </Button>
     {#if isOpen}
         <div
-            class="absolute w-full z-10 mt-1 bg-black-100 shadow-lg transition-all duration-300 ease-in-out rounded-bl-md rounded-br-md"
+            use:handleClickOutside
+            onclick_outside={() => isOpen = false}
+            class="absolute w-full z-50 mt-1 bg-black-100 shadow-lg transition-all duration-300 ease-in-out rounded-bl-md rounded-br-md overflow-y-auto max-h-[15rem]" 
             transition:slide={{ duration: 200, axis: "y" }}
         >
             <ul>
