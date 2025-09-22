@@ -9,12 +9,17 @@ import EmbedControl from 'editorjs-embed-control';
 import Quote from "@cychann/editorjs-quote";
 import Delimiter from "@editorjs/delimiter";
 import Attaches from '@editorjs/attaches';
+import ColorPicker from "editorjs-color-picker";
 
 interface EditorJSConfig extends ConversionConfig, I18nConfig, ToolConfig, EditorConfig { }
 
 const editorConfig: EditorJSConfig = {
     placeholder: "Hey! What are we going to do today?",
+
     tools: {
+        ColorPicker: {
+            class: ColorPicker,
+        },
         attaches: {
             class: Attaches,
             inlineToolbar: true
@@ -98,23 +103,20 @@ export function initializeEditor(holderId: string, activeSpaceName: string, note
             debounceSave(data)
         },
         onReady: async () => {
-            new DragDrop(editor)
-            if (initialContent) {
-                try {
-                    // Create a temporary DOM element to parse HTML
-                    const tmp = document.createElement('div');
-                    tmp.innerHTML = initialContent;
+            new DragDrop(editor);
 
-                    // Grab the text content inside the element (<p>…</p>), which is JSON
-                    const jsonText = tmp.textContent ?? tmp.innerText ?? '';
+            if (!initialContent) return;
 
-                    // Parse it as JSON
-                    const editorData: OutputData = JSON.parse(jsonText);
+            try {
+                let jsonString = initialContent;
 
-                    await editor.blocks.render(editorData);
-                } catch (e) {
-                    console.error("Failed to load initial content:", e);
-                }
+                // Now parse JSON safely
+                const editorData: OutputData = JSON.parse(jsonString);
+
+                // Render EditorJS content
+                await editor.blocks.render(editorData);
+            } catch (e) {
+                console.error("Failed to load initial content:", e);
             }
         }
     })

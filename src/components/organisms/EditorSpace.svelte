@@ -30,10 +30,7 @@
                     noteName,
                     noteFolder,
                 );
-                marked.use({ renderer });
-                htmlString = await marked.parse(noteData.content);
-                const cleanedHtmlString = htmlString.replace(/\n/g, "");
-                htmlString = cleanedHtmlString;
+                htmlString = noteData.content;
             } catch (e) {
                 console.error("Failed to load content:", e);
             } finally {

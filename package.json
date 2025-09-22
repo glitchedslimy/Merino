@@ -1,6 +1,6 @@
 {
   "name": "merino",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "",
   "type": "module",
   "scripts": {
@@ -33,6 +33,7 @@
     "chalk": "^5.5.0",
     "class-variance-authority": "^0.7.1",
     "editorjs-collapsible-block": "^1.0.1",
+    "editorjs-color-picker": "^1.0.8",
     "editorjs-embed-control": "^1.0.2",
     "editorjs-html": "^4.0.5",
     "express": "^5.1.0",

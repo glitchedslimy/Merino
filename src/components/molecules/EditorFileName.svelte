@@ -35,8 +35,8 @@
                         <span class="text-black-300">/</span>
                     {/if}
                 {/each}
+                <span class="text-black-300">/</span>
             {/if}
-            <span class="text-black-300">/</span>
             <span
                 use:ellipsisTooltip={{
                     onHide: handleHideTooltip,
