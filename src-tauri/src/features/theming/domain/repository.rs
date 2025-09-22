@@ -2,7 +2,6 @@ use async_trait::async_trait;
 
 use crate::features::theming::domain::theme::Theme;
 
-
 #[async_trait]
 pub trait ThemingRepository {
     async fn get_themes(&self) -> Result<Vec<Theme>, String>;

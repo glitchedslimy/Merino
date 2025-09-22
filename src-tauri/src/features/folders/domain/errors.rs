@@ -1,6 +1,6 @@
 //! # Errors
 //! Defines all error that could ocurr inside the notes part of the application.
-use std::{io};
+use std::io;
 
 use thiserror::Error;
 
@@ -18,7 +18,7 @@ use crate::shared::errors::app_errors::AppError;
 pub enum FolderError {
     #[error("Note not found in space: {0}")]
     NotFound(String),
-    
+
     #[error("Note name cannot be empty.")]
     EmptyName,
 
@@ -26,5 +26,5 @@ pub enum FolderError {
     Io(#[from] io::Error),
 
     #[error(transparent)]
-    AppError(#[from] AppError)
+    AppError(#[from] AppError),
 }

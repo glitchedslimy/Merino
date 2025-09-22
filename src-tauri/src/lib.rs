@@ -1,11 +1,17 @@
 use crate::features::ai::infrastructure::genai_repository::GenAIRepository;
-use crate::features::ai::infrastructure::tauri_commands::{create_ollama_model_cmd, delete_ollama_model_cmd};
+use crate::features::ai::infrastructure::tauri_commands::{
+    create_ollama_model_cmd, delete_ollama_model_cmd,
+};
 use crate::features::folders::infrastructure::filesystem_repository::FileSystemFolderRepository;
 use crate::features::search::infrastructure::search_repository::TantivySearchRepository;
 use crate::features::settings::infrastructure::settings_repository::FileSystemSettingsRepository;
-use crate::features::settings::infrastructure::tauri_commands::{create_settings_cmd, get_settings_cmd, update_settings_cmd};
+use crate::features::settings::infrastructure::tauri_commands::{
+    create_settings_cmd, get_settings_cmd, update_settings_cmd,
+};
 use crate::features::space::infrastructure::filesystem_repo::FileSystemSpaceRepository;
-use crate::features::theming::infrastructre::tauri_commands::{create_themes_path_cmd, get_theme_content_cmd, get_themes_cmd};
+use crate::features::theming::infrastructre::tauri_commands::{
+    create_themes_path_cmd, get_theme_content_cmd, get_themes_cmd,
+};
 use crate::features::theming::infrastructre::theming_repository::FileSystemThemingRepository;
 use crate::shared::repositories::filesystem_repository::FileSystemRepository;
 use crate::shared::state::state::AppState;
@@ -22,7 +28,8 @@ pub mod shared;
 
 // Implement functions from infrastructure
 use features::ai::infrastructure::tauri_commands::{
-    cancel_chat_stream_cmd, chat_with_ai_cmd, get_ai_models_cmd, check_ollama_status_cmd, get_web_models_cmd
+    cancel_chat_stream_cmd, chat_with_ai_cmd, check_ollama_status_cmd, get_ai_models_cmd,
+    get_web_models_cmd,
 };
 use features::folders::infrastructure::tauri_commands::{
     create_folder_cmd, delete_folder_cmd, get_folders_in_space_cmd, update_folder_name_cmd,
@@ -47,10 +54,10 @@ pub fn run() {
 
     // Tauri Setup
     tauri::Builder::default()
+        .plugin(tauri_plugin_updater::Builder::new().build())
         .setup(|app| {
             let app_handle = app.handle();
             let app_data_path = app_handle.path().app_data_dir().unwrap();
-            
 
             // Create generic filesystem repo
             let filesystem_repo = FileSystemRepository::new(app_handle.clone());
@@ -69,8 +76,10 @@ pub fn run() {
             let settings_repo = FileSystemSettingsRepository::new(filesystem_repo.clone());
 
             let theming_repo = FileSystemThemingRepository::new(filesystem_repo.clone());
-            
-            let index_writer = search_repo.get_index_writer().expect("Failed to get IndexWriter");
+
+            let index_writer = search_repo
+                .get_index_writer()
+                .expect("Failed to get IndexWriter");
 
             let app_state = AppState::new(
                 notes_repo.clone(),
@@ -79,7 +88,7 @@ pub fn run() {
                 search_repo.clone(),
                 ai_repo.clone(),
                 settings_repo.clone(),
-                index_writer
+                index_writer,
             );
             app.manage(app_state);
 

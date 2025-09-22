@@ -24,7 +24,7 @@ pub enum NoteError {
 
     #[error("Failed to convert to markdown: {0}")]
     MarkdownConversion(#[from] FromUtf8Error),
-    
+
     #[error("Note name cannot be empty.")]
     EmptyName,
 
@@ -32,5 +32,5 @@ pub enum NoteError {
     Io(#[from] io::Error),
 
     #[error(transparent)]
-    AppError(#[from] AppError)
+    AppError(#[from] AppError),
 }

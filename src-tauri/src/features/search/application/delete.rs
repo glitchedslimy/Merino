@@ -1,6 +1,5 @@
 use crate::features::search::{
-    domain::{error::SearchError},
-    infrastructure::search_repository::TantivySearchRepository,
+    domain::error::SearchError, infrastructure::search_repository::TantivySearchRepository,
 };
 use tantivy::IndexWriter;
 

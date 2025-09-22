@@ -7,6 +7,9 @@ use crate::features::space::domain::{errors::SpaceError, repository::SpaceReposi
 /// ## Result
 /// A `String` with a message, or `SpaceError` if not succeded.
 #[doc(alias = "delete_space")]
-pub async fn delete_space_use_case<T: SpaceRepository>(repo: &T, space_name: &str) -> Result<String, SpaceError> {
+pub async fn delete_space_use_case<T: SpaceRepository>(
+    repo: &T,
+    space_name: &str,
+) -> Result<String, SpaceError> {
     repo.delete_space(space_name).await
 }

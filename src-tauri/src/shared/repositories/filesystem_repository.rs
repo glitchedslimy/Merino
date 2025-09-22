@@ -1,13 +1,10 @@
-use std::{
-    io::ErrorKind,
-    path::{PathBuf},
-};
+use std::{io::ErrorKind, path::PathBuf};
 
 use log::{debug, error};
 use tauri::{AppHandle, Manager};
 use tokio::fs::{self};
 
-use crate::{shared::errors::app_errors::AppError};
+use crate::shared::errors::app_errors::AppError;
 /// Constant for defining the BASE DIR of the app
 
 const BASE_DIR_NAME: &str = "merino";

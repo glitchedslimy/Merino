@@ -24,5 +24,5 @@ pub enum SpaceError {
     Io(#[from] io::Error),
 
     #[error(transparent)]
-    AppError(#[from] AppError)
+    AppError(#[from] AppError),
 }

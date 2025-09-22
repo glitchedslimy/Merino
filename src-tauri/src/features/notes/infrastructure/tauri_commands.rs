@@ -139,7 +139,7 @@ pub async fn update_note_content_cmd(
         &original_note.get_unique_id(space_name),
     )
     .map_err(|e| e.to_string())?;
-    
+
     // Commit the deletion before adding the new document
     index_writer_lock.commit().map_err(|e| e.to_string())?;
 
@@ -180,14 +180,12 @@ pub async fn delete_note_cmd(
         folder: folder_path.map(|s| s.to_string()),
     };
     let unique_id = note_to_delete.get_unique_id(space_name);
-    
+
     // Delete the file from the filesystem first
-    let delete_note = delete::delete_note_use_case(
-        &*fs_repo_lock,
-        space_name,
-        note_name,
-        folder_path
-    ).await.map_err(|e| e.to_string())?;
+    let delete_note =
+        delete::delete_note_use_case(&*fs_repo_lock, space_name, note_name, folder_path)
+            .await
+            .map_err(|e| e.to_string())?;
 
     let search_repo_lock = state.search_repo.lock().await;
     let mut index_writer_lock = state.index_writer.lock().await;
@@ -197,7 +195,8 @@ pub async fn delete_note_cmd(
         &*search_repo_lock,
         &mut *index_writer_lock,
         &unique_id,
-    ).map_err(|e| e.to_string())?;
+    )
+    .map_err(|e| e.to_string())?;
 
     index_writer_lock.commit().map_err(|e| e.to_string())?;
     Ok(delete_note)
@@ -233,7 +232,9 @@ pub async fn update_note_name_cmd(
         note_name,
         new_note_name,
         folder_path,
-    ).await.map_err(|e| e.to_string())?;
+    )
+    .await
+    .map_err(|e| e.to_string())?;
 
     let search_repo_lock = state.search_repo.lock().await;
     let mut index_writer_lock = state.index_writer.lock().await;
@@ -243,8 +244,9 @@ pub async fn update_note_name_cmd(
         &*search_repo_lock,
         &mut *index_writer_lock,
         &old_unique_id,
-    ).map_err(|e| e.to_string())?;
-    
+    )
+    .map_err(|e| e.to_string())?;
+
     // 2. Commit the deletion immediately. This is the crucial change.
     index_writer_lock.commit().map_err(|e| e.to_string())?;
 
@@ -254,11 +256,12 @@ pub async fn update_note_name_cmd(
         &mut *index_writer_lock,
         &updated_note,
         space_name,
-    ).map_err(|e| e.to_string())?;
+    )
+    .map_err(|e| e.to_string())?;
 
     // 4. Commit the new index.
     index_writer_lock.commit().map_err(|e| e.to_string())?;
-    
+
     Ok(updated_note)
 }
 
@@ -339,12 +342,12 @@ pub async fn search_notes_cmd(
     let mut notes = Vec::new();
     for route in routes {
         let parts: Vec<&str> = route.split('/').collect();
-        
+
         // This is a much more reliable way to extract the path and note name
         let space_name = parts.get(0).ok_or("Invalid space name in route")?;
         let note_name_with_ext = parts.last().ok_or("Invalid note name in route")?;
         let note_name = note_name_with_ext.trim_end_matches(".md");
-        
+
         let folder_path_owned = if parts.len() > 2 {
             Some(parts[1..parts.len() - 1].join("/"))
         } else {

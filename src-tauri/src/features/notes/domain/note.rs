@@ -1,6 +1,6 @@
 //! # Notes Domain
 //! Defines all structs needed for the notes.
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 /// # Note
@@ -11,5 +11,5 @@ use serde::{Serialize, Deserialize};
 pub struct Note {
     pub name: String,
     pub content: Option<String>,
-    pub folder: Option<String>
+    pub folder: Option<String>,
 }

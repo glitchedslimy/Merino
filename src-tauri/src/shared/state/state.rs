@@ -1,14 +1,14 @@
-use tantivy::{IndexWriter};
+use std::sync::Arc;
+use tantivy::IndexWriter;
 use tokio::sync::Mutex;
 use tokio_util::sync::CancellationToken;
-use std::sync::Arc;
 
+use crate::features::ai::infrastructure::genai_repository::GenAIRepository;
+use crate::features::folders::infrastructure::filesystem_repository::FileSystemFolderRepository;
 use crate::features::notes::infrastructure::filesystem_repository::FileSystemNoteRepository;
+use crate::features::search::infrastructure::search_repository::TantivySearchRepository;
 use crate::features::settings::infrastructure::settings_repository::FileSystemSettingsRepository;
 use crate::features::space::infrastructure::filesystem_repo::FileSystemSpaceRepository;
-use crate::features::folders::infrastructure::filesystem_repository::FileSystemFolderRepository;
-use crate::features::search::infrastructure::search_repository::TantivySearchRepository;
-use crate::features::ai::infrastructure::genai_repository::GenAIRepository;
 
 pub struct AppState {
     pub filesystem_repo: Arc<Mutex<FileSystemNoteRepository>>,
@@ -18,7 +18,7 @@ pub struct AppState {
     pub ai_repo: Arc<Mutex<GenAIRepository>>,
     pub settings_repo: Arc<Mutex<FileSystemSettingsRepository>>,
     pub current_cancellation_token: Arc<Mutex<Option<CancellationToken>>>,
-    pub index_writer: Arc<Mutex<IndexWriter>>
+    pub index_writer: Arc<Mutex<IndexWriter>>,
 }
 
 impl AppState {
@@ -29,7 +29,7 @@ impl AppState {
         search_repo: TantivySearchRepository,
         ai_repo: GenAIRepository,
         settings_repo: FileSystemSettingsRepository,
-        index_writer: IndexWriter
+        index_writer: IndexWriter,
     ) -> Self {
         Self {
             filesystem_repo: Arc::new(Mutex::new(notes_repo)),

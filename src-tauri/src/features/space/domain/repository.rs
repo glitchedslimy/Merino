@@ -2,17 +2,17 @@
 //! Implementation of the notes in this repository.
 use async_trait::async_trait;
 
-use super::space::Space;
 use super::errors::SpaceError;
+use super::space::Space;
 
-/// # Notes Repository 
+/// # Notes Repository
 /// It implements the `list` of methods to interact with the notes in a space.
 #[async_trait]
 pub trait SpaceRepository {
     /// # [GET] Spaces (Method)
     /// Implements the method to list the notes in the space
     /// ## Fields
-    /// * `&self`: 
+    /// * `&self`:
     /// ## Result
     /// It returns a `Vec` of `Space` if successful, if not returns `SpaceError`
     async fn get_spaces(&self) -> Result<Vec<Space>, SpaceError>;

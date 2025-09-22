@@ -6,5 +6,6 @@ pub async fn delete_folder_use_case<T: FolderRepository>(
     folder_name: &str,
     folder_path: Option<&str>,
 ) -> Result<String, FolderError> {
-    repo.delete_folder(space_name, folder_name, folder_path).await
+    repo.delete_folder(space_name, folder_name, folder_path)
+        .await
 }

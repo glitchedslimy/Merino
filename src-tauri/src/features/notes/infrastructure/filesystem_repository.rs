@@ -75,7 +75,7 @@ impl NoteRepository for FileSystemNoteRepository {
 
                 if path.is_file() {
                     if let Some(file_name) = path.file_name().and_then(|n| n.to_str()) {
-                        if let Some(note_name) = file_name.strip_suffix(".md") {
+                        if let Some(note_name) = file_name.strip_suffix(".json") {
                             // Calculate the relative path of the note's folder from the space root.
                             // This is the key part that needs to be correct.
                             let parent_path = path.parent().ok_or(NoteError::NotFound(
@@ -131,7 +131,7 @@ impl NoteRepository for FileSystemNoteRepository {
         if let Some(folder) = folder_name.clone() {
             note_path.push(folder);
         }
-        note_path.push(format!("{}.md", note_name));
+        note_path.push(format!("{}.json", note_name));
 
         match File::create_new(&note_path).await {
             Ok(_) => Ok(Note {
@@ -168,7 +168,7 @@ impl NoteRepository for FileSystemNoteRepository {
         }
 
         // Append the note's filename
-        note_path.push(format!("{}.md", note_name));
+        note_path.push(format!("{}.json", note_name));
 
         if !note_path.exists() {
             let error_message = format!(
@@ -214,14 +214,14 @@ impl NoteRepository for FileSystemNoteRepository {
         if let Some(folder) = folder_path {
             note_path.push(PathBuf::from(folder));
         }
-        note_path.push(format!("{}.md", note_name));
+        note_path.push(format!("{}.json", note_name));
 
         // Convert the incoming byte array into a Markdown String
-        let markdown_conversion =
+        let json_conversion =
             String::from_utf8(content).map_err(|e| NoteError::MarkdownConversion(e))?;
 
-        let conversion = markdown_conversion.clone();
-        fs::write(&note_path, markdown_conversion)
+        let conversion = json_conversion.clone();
+        fs::write(&note_path, json_conversion)
             .await
             .map_err(|e| NoteError::Io(e))?;
 
@@ -255,7 +255,7 @@ impl NoteRepository for FileSystemNoteRepository {
             note_path = note_path.join(Path::new(folder));
         }
 
-        note_path.push(format!("{}.md", note_name));
+        note_path.push(format!("{}.json", note_name));
 
         match fs::remove_file(&note_path).await {
             Ok(_) => Ok(format!("Removed '{}' from '{}'.", note_name, space_name)),
@@ -292,8 +292,8 @@ impl NoteRepository for FileSystemNoteRepository {
             new_path = new_path.join(Path::new(folder));
         }
 
-        old_path.push(format!("{}.md", note_name));
-        new_path.push(format!("{}.md", new_note_name));
+        old_path.push(format!("{}.json", note_name));
+        new_path.push(format!("{}.json", new_note_name));
 
         fs::rename(&old_path, &new_path)
             .await
@@ -324,7 +324,7 @@ impl NoteRepository for FileSystemNoteRepository {
         if let Some(folder) = old_folder {
             old_path = old_path.join(Path::new(folder));
         }
-        old_path.push(format!("{}.md", note_name));
+        old_path.push(format!("{}.json", note_name));
 
         // FIX: Rebuilt new_path to be more robust and validate new folder
         let mut new_path = space_path.clone();
@@ -339,10 +339,12 @@ impl NoteRepository for FileSystemNoteRepository {
             }
             new_path = new_path.join(Path::new(folder));
         }
-        new_path.push(format!("{}.md", note_name));
+        new_path.push(format!("{}.json", note_name));
 
         if old_path == new_path {
-            return Err(NoteError::NotFound("Source and destination paths are the same.".to_string()));
+            return Err(NoteError::NotFound(
+                "Source and destination paths are the same.".to_string(),
+            ));
         }
 
         fs::rename(&old_path, &new_path)

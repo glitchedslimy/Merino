@@ -10,19 +10,19 @@ pub trait Searchable {
 }
 
 impl Searchable for Note {
-   fn get_unique_id(&self, space_name: &str) -> String {
-    let mut path = PathBuf::new();
-    path.push(space_name);
+    fn get_unique_id(&self, space_name: &str) -> String {
+        let mut path = PathBuf::new();
+        path.push(space_name);
 
-    if let Some(folder) = &self.folder {
-        path.push(folder);
+        if let Some(folder) = &self.folder {
+            path.push(folder);
+        }
+
+        // Crucially, add the .md extension here
+        path.push(format!("{}.md", &self.name));
+
+        path.to_str().unwrap().replace("\\", "/")
     }
-    
-    // Crucially, add the .md extension here
-    path.push(format!("{}.md", &self.name));
-
-    path.to_str().unwrap().replace("\\", "/")
-}
 
     fn get_search_name(&self) -> String {
         self.name.clone()

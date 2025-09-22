@@ -1,2 +1,2 @@
-pub mod tauri_commands;
 pub mod filesystem_repository;
+pub mod tauri_commands;

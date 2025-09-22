@@ -2,7 +2,11 @@ use std::{fs, path::Path};
 
 use log::info;
 use tantivy::{
-    collector::TopDocs, doc, query::QueryParser, schema::{Schema, Value, STORED, TEXT}, Index, IndexWriter, TantivyDocument
+    collector::TopDocs,
+    doc,
+    query::QueryParser,
+    schema::{Schema, Value, STORED, TEXT},
+    Index, IndexWriter, TantivyDocument,
 };
 
 use crate::features::search::domain::{error::SearchError, search::Searchable};
@@ -16,7 +20,7 @@ pub struct TantivySearchRepository {
 impl TantivySearchRepository {
     pub fn new(index_path: &Path) -> Result<Self, SearchError> {
         let mut schema_builder = Schema::builder();
-        
+
         // This is the key fix. We need to add the `INDEXED` flag to the "route" field
         // so that we can search on it, which is required for the delete_query to work.
         schema_builder.add_text_field("route", TEXT | STORED);
@@ -34,7 +38,7 @@ impl TantivySearchRepository {
 
         Ok(Self { index, schema })
     }
-    
+
     pub fn get_index_writer(&self) -> Result<IndexWriter, SearchError> {
         Ok(self.index.writer(50_000_000)?)
     }
@@ -60,21 +64,25 @@ impl TantivySearchRepository {
         index_writer.add_document(new_doc)?;
         Ok(())
     }
-    
+
     // This method is fine as it is, as the `commit` is handled by the caller.
-    pub fn delete_document(&self, index_writer: &mut IndexWriter, document_route: &str) -> Result<(), SearchError> {
+    pub fn delete_document(
+        &self,
+        index_writer: &mut IndexWriter,
+        document_route: &str,
+    ) -> Result<(), SearchError> {
         let route_field = self.schema.get_field("route").unwrap();
-        
+
         // Create a query parser for the "route" field.
         let query_parser = QueryParser::for_index(&self.index, vec![route_field]);
-        
+
         // Create a query that looks for the exact document route.
         let query = query_parser.parse_query(&format!("\"{}\"", document_route))?;
-        
+
         // Use delete_query to delete all documents that match the query.
         // This is more reliable than delete_term because it uses the full query parser logic.
         index_writer.delete_query(Box::new(query))?;
-        
+
         Ok(())
     }
 

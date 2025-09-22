@@ -35,6 +35,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [v0.2.0-beta] - 2025-09-22
+
+### Added
+- Implementation for embeds
+    - Youtube
+    - Codepen
+    - Figma
+    - More to come
+- Added Quotes
+- Added lists
+- Added checkboxes
+- Updater to the application
+
+### Fixed
+
+### Changed
+- Ditched Markdown for JSON as is simpler to control in the app
+- Marked is now only used to output in AI chat
+
+### Removed
+- Various parses that now don't have any use
 
 [unreleased]: https://github.com/glitchedslimy/Merino
 [0.1.0-beta]: https://github.com/glitchedslimy/Merino/releases/tag/v0.1.0-beta
+[0.2.0-beta]: https://github.com/glitchedslimy/Merino/releases/tag/v0.2.0-beta

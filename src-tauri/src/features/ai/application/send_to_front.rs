@@ -1,8 +1,8 @@
 use ollama_rs::generation::completion::GenerationResponse;
 use tauri::{Emitter, Window};
 use tokio_stream::Stream;
-use tokio_util::sync::CancellationToken;
 use tokio_stream::StreamExt;
+use tokio_util::sync::CancellationToken;
 
 pub async fn stream_response_to_frontend<S, E>(
     window: Window,
@@ -26,7 +26,7 @@ where
                     if let Some(thinking_text) = response_chunk.thinking {
                         let _ = window.emit("ollama-chat-thinking", thinking_text);
                     }
-                    
+
                     // Check for response content and emit if it exists
                     if !response_chunk.response.is_empty() {
                         let _ = window.emit("ollama-chat-part", response_chunk.response);

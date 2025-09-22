@@ -7,7 +7,7 @@ export default class CustomParagraphTool extends Paragraph implements BlockTool 
 
         this.render = this.render.bind(this);
     }
-    
+
     static get conversionConfig(): ConversionConfig {
         return {
             export: (data) => data.text,
@@ -17,46 +17,77 @@ export default class CustomParagraphTool extends Paragraph implements BlockTool 
 
     render(): HTMLElement {
         const element = super.render();
-        
+
         element.addEventListener('keydown', async (event: KeyboardEvent) => {
+            // Lógica para todos los atajos de Markdown (ejecutar en el evento de espacio)
             if (event.key === ' ') {
-                const text = element.textContent;
-                
-                // This is the fixed regex to correctly capture all hashtags
-                const levelMatch = text?.match(/^(#{1,6})$/);
-                const matchBold = text?.match(/\*{.*?}\s/g) || []; 
+                const text = element.textContent?.trim();
+                if (!text) return;
 
+                const currentBlock = this.api.blocks.getBlockByIndex(this.api.blocks.getCurrentBlockIndex());
+                if (!currentBlock) return;
 
-                if (levelMatch) {
-                    // The level is now correctly calculated from the captured group
-                    const level = levelMatch[1].length;
-                    const newText = '';
-                    
-                    const currentBlock = this.api.blocks.getBlockByIndex(this.api.blocks.getCurrentBlockIndex());
-
-                    if (!currentBlock) {
-                        return;
-                    }
-
-                    try {
-                        await this.api.blocks.convert(
-                            currentBlock.id,
-                            'header',
-                            {
-                                text: newText,
-                                level: level,
-                            }
-                        );
-                        const newBlockIndex = this.api.blocks.getCurrentBlockIndex();
-                        this.api.caret.setToBlock(newBlockIndex, "start");
-                    } catch (e) {
-                        console.error('Error during block conversion:', e);
-                    }
-
+                // Comprobación más específica: Checklist
+                const checklistMatch = text.match(/^-\[]$/);
+                if (checklistMatch) {
                     event.preventDefault();
+                    try {
+                        await this.api.blocks.convert(currentBlock.id, 'list', {
+                            style: 'checklist',
+                            items: [{
+                                text: '',
+                                checked: false
+                            }]
+                        });
+                        this.api.caret.setToBlock(this.api.blocks.getCurrentBlockIndex(), "start");
+                    } catch (e) {
+                        console.error('Error during block conversion to checklist:', e);
+                    }
+                    return;
+                }
+
+                // Comprobación más general: Unordered list
+                const ulMatch = text.match(/^-$/);
+                if (ulMatch) {
+                    event.preventDefault();
+                    try {
+                        await this.api.blocks.convert(currentBlock.id, 'list', { style: 'unordered', items: [''] });
+                        this.api.caret.setToBlock(this.api.blocks.getCurrentBlockIndex(), "start");
+                    } catch (e) {
+                        console.error('Error during block conversion to list:', e);
+                    }
+                    return;
+                }
+
+                // Lógica para listas ordenadas
+                const olMatch = text.match(/^(\d+\.)$/);
+                if (olMatch) {
+                    event.preventDefault();
+                    try {
+                        await this.api.blocks.convert(currentBlock.id, 'list', { style: 'ordered', items: [''] });
+                        this.api.caret.setToBlock(this.api.blocks.getCurrentBlockIndex(), "start");
+                    } catch (e) {
+                        console.error('Error during block conversion to ordered list:', e);
+                    }
+                    return;
+                }
+
+                // Lógica para Headers
+                const levelMatch = text.match(/^(#{1,6})$/);
+                if (levelMatch) {
+                    event.preventDefault();
+                    const level = levelMatch[1].length;
+                    try {
+                        await this.api.blocks.convert(currentBlock.id, 'header', { text: '', level: level });
+                        this.api.caret.setToBlock(this.api.blocks.getCurrentBlockIndex(), "start");
+                    } catch (e) {
+                        console.error('Error during block conversion to header:', e);
+                    }
+                    return;
                 }
             }
 
+            // Lógica para Bold (negritas)
             if (event.key === '*') {
                 setTimeout(() => {
                     const textNode = element.firstChild;
@@ -69,24 +100,19 @@ export default class CustomParagraphTool extends Paragraph implements BlockTool 
                         const fullMatch = boldMatch[0];
                         const content = boldMatch[1];
                         const matchIndex = textContent.indexOf(fullMatch);
-                        
-                        // Create the new <strong> element
+
                         const strongTag = document.createElement('b');
                         strongTag.textContent = content;
 
-                        // Create a new Range to perform the replacement
                         const range = document.createRange();
                         range.setStart(textNode, matchIndex);
                         range.setEnd(textNode, matchIndex + fullMatch.length);
-
-                        // Delete the old text and insert the new strong tag
                         range.deleteContents();
                         range.insertNode(strongTag);
 
-                        // Position the cursor at the end of the new tag
                         range.setStartAfter(strongTag);
                         range.collapse(true);
-                        
+
                         const selection = window.getSelection();
                         selection?.removeAllRanges();
                         selection?.addRange(range);
@@ -95,7 +121,7 @@ export default class CustomParagraphTool extends Paragraph implements BlockTool 
             }
 
         });
-        
+
         return element;
     }
 }

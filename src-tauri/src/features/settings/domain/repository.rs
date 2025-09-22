@@ -1,6 +1,5 @@
 use async_trait::async_trait;
 
-
 #[async_trait]
 pub trait SettingsRepository {
     async fn get_settings(&self) -> Result<String, String>;

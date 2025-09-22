@@ -68,16 +68,24 @@ pub async fn check_ollama_status_cmd(repo: State<'_, GenAIRepository>) -> Result
 }
 
 #[tauri::command]
-pub async fn get_web_models_cmd(repo: State<'_, GenAIRepository>) -> Result<Vec<OllamaWebResponse>, String> {
+pub async fn get_web_models_cmd(
+    repo: State<'_, GenAIRepository>,
+) -> Result<Vec<OllamaWebResponse>, String> {
     get::get_web_models(&*repo).await
 }
 
 #[tauri::command]
-pub async fn create_ollama_model_cmd(repo: State<'_, GenAIRepository>, model_name: String) -> Result<(), String> {
+pub async fn create_ollama_model_cmd(
+    repo: State<'_, GenAIRepository>,
+    model_name: String,
+) -> Result<(), String> {
     create::create_ollama_model_use_case(&*repo, model_name).await
 }
 
 #[tauri::command]
-pub async fn delete_ollama_model_cmd(repo: State<'_, GenAIRepository>, model_name: String) -> Result<(), String> {
+pub async fn delete_ollama_model_cmd(
+    repo: State<'_, GenAIRepository>,
+    model_name: String,
+) -> Result<(), String> {
     delete::delete_ollama_model_use_case(&*repo, model_name).await
 }

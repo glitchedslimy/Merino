@@ -9,7 +9,7 @@ pub enum SearchError {
     #[error("I/O Error: {0}")]
     IoError(String),
     #[error("Query error: {0}")]
-    Query(String)
+    Query(String),
 }
 
 impl From<tantivy::TantivyError> for SearchError {

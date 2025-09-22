@@ -1,9 +1,7 @@
 use ollama_rs::generation::chat::ChatMessage;
-use tauri::{Window, State};
+use tauri::{State, Window};
 
 use crate::{features::ai::domain::repository::AIRepository, shared::state::state::AppState};
-
-
 
 pub async fn chat_with_ai_use_case<T: AIRepository>(
     repo: &T,
@@ -14,7 +12,15 @@ pub async fn chat_with_ai_use_case<T: AIRepository>(
     use_tools: bool,
     app_state: State<'_, AppState>,
 ) -> Result<(), String> {
-    repo.chat_with_ai(window, prompt, model_name, use_thinking, use_tools, app_state).await
+    repo.chat_with_ai(
+        window,
+        prompt,
+        model_name,
+        use_thinking,
+        use_tools,
+        app_state,
+    )
+    .await
 }
 
 pub async fn cancel_chat_stream_use_case<T: AIRepository>(

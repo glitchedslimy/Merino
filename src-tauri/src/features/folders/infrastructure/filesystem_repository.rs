@@ -111,7 +111,6 @@ impl FolderRepository for FileSystemFolderRepository {
         // Corrected: Append the folder name to the new path
         new_path.push(folder_name);
 
-
         // Check if the old path exists before attempting to move.
         if !old_path.exists() {
             return Err(FolderError::NotFound(format!(

@@ -2,7 +2,7 @@ use thiserror::Error;
 
 /// # AppError
 /// _Controls the general and specific errors in the application._
-/// 
+///
 /// The error types that can be used are:
 /// * `Io`: Io related errors
 /// * `Note`: Note Specific errors
@@ -28,14 +28,14 @@ pub enum AppError {
     /// # Unknown
     /// We don't know where this error comes from neither why it happend.
     #[error("Something happened.")]
-    Unknown
+    Unknown,
 }
 
 /// # From Implementation
 /// This is just to comply with some Rust behaviour when it doesn't
 /// know the error that comes, we default it to Unknown.
 impl From<()> for AppError {
-        fn from(_: ()) -> Self {
-            AppError::Unknown
-        }
+    fn from(_: ()) -> Self {
+        AppError::Unknown
+    }
 }

@@ -234,7 +234,7 @@ impl AIRepository for GenAIRepository {
     }
 
     async fn delete_ollama_model(&self, model_name: String) -> Result<(), String> {
-         let ollama_client = Ollama::default();
+        let ollama_client = Ollama::default();
         let model = ollama_client.delete_model(model_name).await;
 
         match model {
