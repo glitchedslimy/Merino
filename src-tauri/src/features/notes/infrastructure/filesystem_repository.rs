@@ -8,7 +8,7 @@ use std::{
 };
 
 use async_trait::async_trait;
-use log::{error, info};
+use log::{error};
 use tokio::fs::{self, read_dir, read_to_string, File};
 
 use crate::{

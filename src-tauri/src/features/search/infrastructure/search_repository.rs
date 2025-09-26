@@ -1,6 +1,5 @@
 use std::{fs, path::Path};
 
-use log::info;
 use tantivy::{
     collector::TopDocs,
     doc,
