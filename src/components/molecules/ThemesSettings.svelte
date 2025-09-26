@@ -9,7 +9,7 @@
     import { onMount } from "svelte";
     import { loadSettings } from "../../lib/actions/settings/load-settings";
     import { fade } from "svelte/transition";
-    
+
     let themes: any[] | undefined = $state([]);
 
     // Create a new style element to inject custom themes
@@ -17,10 +17,18 @@
     styleElement.id = "dynamic-theme";
     document.head.appendChild(styleElement);
 
-
     // Function to update a setting on the backend
     async function updateSetting(key: string, value: string) {
-        const newSetting = JSON.stringify({ [key]: value });
+        let parsedValue: any;
+
+        try {
+            parsedValue = JSON.parse(value); // try to parse value if it's JSON
+        } catch {
+            parsedValue = value; // otherwise just use it as string
+        }
+
+        const newSetting = JSON.stringify({ [key]: parsedValue });
+        console.log("Setting", newSetting)
         try {
             await invoke("update_settings_cmd", { newSetting });
         } catch (e) {
@@ -106,8 +114,7 @@
         <div>
             <p>Accent color</p>
             <p class="text-sm text-black-400 mb-2">
-                Changes the accent
-                color of the theme used.
+                Changes the accent color of the theme used.
             </p>
         </div>
         <div>

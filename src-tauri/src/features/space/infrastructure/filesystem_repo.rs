@@ -1,7 +1,6 @@
 use std::io::ErrorKind;
 
 use async_trait::async_trait;
-use log::info;
 use tokio::fs::{self, read_dir};
 
 use crate::{

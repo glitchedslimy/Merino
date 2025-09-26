@@ -168,6 +168,9 @@
         class:is-drag-over={note.name === dropTargetNote?.name &&
           note.folder === dropTargetNote?.folder}
         transition:slide={{ duration: 50, axis: "x" }}
+        role="button"
+        tabindex="0"
+        onkeydown={(e) => e.key}
       >
         <p class="truncate pointer-events-none">{note.name}</p>
         <Button

@@ -1,7 +1,7 @@
 use std::{collections::VecDeque, io::ErrorKind, path::PathBuf};
 
 use async_trait::async_trait;
-use log::{error, info};
+use log::{error};
 use tokio::fs::{self, read_dir};
 
 use crate::{

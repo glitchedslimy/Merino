@@ -1,10 +1,9 @@
 use async_trait::async_trait;
-use log::info;
 use ollama_rs::{
     generation::{chat::ChatMessage, completion::request::GenerationRequest},
     Ollama,
 };
-use scraper::{ElementRef, Html, Selector};
+use scraper::{Html, Selector};
 use tauri::{AppHandle, Emitter, State, Window};
 use tokio_util::sync::CancellationToken;
 
@@ -21,6 +20,7 @@ use crate::{
 
 #[derive(Clone)]
 pub struct GenAIRepository {
+    #[allow(dead_code)]
     app_handle: AppHandle,
 }
 

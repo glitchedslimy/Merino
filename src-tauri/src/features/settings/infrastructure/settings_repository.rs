@@ -65,28 +65,37 @@ impl SettingsRepository for FileSystemSettingsRepository {
     async fn update_settings(&self, new_setting: String) -> Result<(), String> {
         let settings_path = self.get_settings_path()?;
 
+        // Read existing settings
         let current_settings_str = self.get_settings().await?;
-
         let mut current_settings: Value =
             serde_json::from_str(&current_settings_str).unwrap_or_else(|_| json!({}));
 
+        // Parse the incoming new setting
         let new_setting_value: Value = serde_json::from_str(&new_setting)
             .map_err(|e| format!("Failed to parse new setting JSON: {}", e))?;
 
-        if let Some(map) = current_settings.as_object_mut() {
-            if let Some(new_map) = new_setting_value.as_object() {
-                for (key, value) in new_map {
-                    map.insert(key.clone(), value.clone());
+        // Merge keys safely
+        match (
+            current_settings.as_object_mut(),
+            new_setting_value.as_object(),
+        ) {
+            (Some(curr_map), Some(new_map)) => {
+                for (k, v) in new_map {
+                    curr_map.insert(k.clone(), v.clone());
                 }
+            }
+            _ => {
+                return Err("Settings must be JSON objects".into());
             }
         }
 
-        let merged_settings_str = serde_json::to_string(&current_settings)
-            .map_err(|e| format!("Failed to serialize merged settings: {}", e))?;
+        // Serialize merged settings once
+        let merged_settings_str =
+            serde_json::to_string(&current_settings).map_err(|e| e.to_string())?;
 
-        fs::write(&settings_path, &merged_settings_str)
+        fs::write(&settings_path, merged_settings_str)
             .await
-            .map_err(|e| format!("Failed to write new settings: {}", e))?;
+            .map_err(|e| e.to_string())?;
 
         Ok(())
     }
