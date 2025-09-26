@@ -1,6 +1,5 @@
----
 name: Bug Report
-about: Report a problem or unexpected behavior in Merino.
+description: Report a problem or unexpected behavior in Merino.
 title: "[BUG]: "
 labels: ["bug"]
 assignees:
