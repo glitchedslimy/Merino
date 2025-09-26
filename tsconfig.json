@@ -10,9 +10,6 @@
     "sourceMap": true,
     "strict": true,
     "moduleResolution": "bundler",
-    "paths": {
-      "@components/*": ["./src/components/*"],
-    },
      "typeRoots": [
       "./node_modules/@types",
       "./src/types"

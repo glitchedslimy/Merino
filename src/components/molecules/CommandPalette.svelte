@@ -8,7 +8,10 @@
     import { activeSpace } from "../../lib/stores/workspace/spaces-store";
 
     // Utility function to debounce API calls
-    function debounce<T extends (...args: any[]) => void>(func: T, delay: number): (...args: Parameters<T>) => void {
+    function debounce<T extends (...args: any[]) => void>(
+        func: T,
+        delay: number,
+    ): (...args: Parameters<T>) => void {
         let timeout: ReturnType<typeof setTimeout>;
         return (...args: Parameters<T>) => {
             clearTimeout(timeout);
@@ -25,12 +28,17 @@
 
     // Hardcoded commands as before
     const commands = [
-        { name: "New Note", action: () => createNote($activeSpace ?? "", null) }
+        {
+            name: "New Note",
+            action: () => createNote($activeSpace ?? "", null),
+        },
     ];
 
     // Derived reactive states using $derived
     let filteredCommands = $derived(
-        commands.filter((cmd) => cmd.name.toLowerCase().includes(searchTerm.toLowerCase()))
+        commands.filter((cmd) =>
+            cmd.name.toLowerCase().includes(searchTerm.toLowerCase()),
+        ),
     );
 
     let displayItems = $derived([...filteredCommands, ...searchResults]);
@@ -50,7 +58,7 @@
                 name: note.name,
                 action: () => {
                     openNote(note);
-                }
+                },
             }));
         } catch (error) {
             console.error("Search failed:", error);
@@ -70,7 +78,8 @@
             closePalette();
         } else if (e.key === "ArrowUp") {
             e.preventDefault();
-            selectedIndex = (selectedIndex - 1 + displayItems.length) % displayItems.length;
+            selectedIndex =
+                (selectedIndex - 1 + displayItems.length) % displayItems.length;
         } else if (e.key === "ArrowDown") {
             e.preventDefault();
             selectedIndex = (selectedIndex + 1) % displayItems.length;
@@ -119,24 +128,30 @@
     <ul class="overflow-y-auto max-h-[450px]">
         {#if displayItems.length > 0}
             {#each displayItems as item, i}
-                <li
-                    class="px-2 py-1 cursor-pointer text-sm"
-                    class:bg-black={i === selectedIndex}
-                    class:text-white={i === selectedIndex}
-                    class:text-black-300={i !== selectedIndex}
-                    onclick={() => {
-                        item.action();
-                        closePalette();
-                    }}
-                    onmouseenter={() => (selectedIndex = i)}
-                >
-                    {item.name}
+                <li>
+                    <button
+                        class="px-2 py-1 cursor-pointer text-sm w-full text-left"
+                        class:bg-black={i === selectedIndex}
+                        class:text-white={i === selectedIndex}
+                        class:text-black-300={i !== selectedIndex}
+                        onclick={() => {
+                            item.action();
+                            closePalette();
+                        }}
+                        onmouseenter={() => (selectedIndex = i)}
+                    >
+                        {item.name}
+                    </button>
                 </li>
             {/each}
         {:else if isSearching}
-            <li class="px-2 py-1 text-black-300 text-sm italic">Searching...</li>
+            <li class="px-2 py-1 text-black-300 text-sm italic">
+                Searching...
+            </li>
         {:else}
-            <li class="px-2 py-1 text-black-300 text-sm italic">No commands or notes found.</li>
+            <li class="px-2 py-1 text-black-300 text-sm italic">
+                No commands or notes found.
+            </li>
         {/if}
     </ul>
 </div>
