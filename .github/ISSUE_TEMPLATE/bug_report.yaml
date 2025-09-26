@@ -1,0 +1,60 @@
+---
+name: Bug Report
+about: Report a problem or unexpected behavior in Merino.
+title: "[BUG]: "
+labels: ["bug"]
+assignees:
+  - glitchedslimy
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: checkboxes
+    id: contacttype
+    attributes:
+      label: Which type of contact should I use if any?
+      description: Specify the username, email... or what you want me to use in the input below this checkboxes.
+      options:
+        - label: Discord
+          required: false
+        - label: Email
+          required: false
+  - type: input
+    id: contact
+    attributes:
+      label: Contact Details
+      description: How can I get in touch with you if I need more info?
+      placeholder: ex. email@example.com, your discord user...
+    validations:
+      required: false
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Also, tell me what did you expect to happend?
+      placeholder: Tell me what you see!
+      value: "A bug happened!"
+    validations:
+      required: true
+  - type: dropdown
+    id: version
+    attributes:
+      label: Version
+      description: What version of the software are you running?
+      options:
+        - v0.2.1-beta (Latest)
+        - v0.2.0-beta (Pre-Latest)
+      default: 0
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Any relevant logs?
+      description: Please copy any relevant log output. This will be automatically formatted into code, so no need for backticks.
+      render: shell
+    validations:
+      required: false
+  
+
