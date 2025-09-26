@@ -8,6 +8,7 @@
     import { onMount } from "svelte";
     import Shortcuts from "./Shortcuts.svelte";
     import AiSettings from "./AISettings.svelte";
+    import { t } from "$lib/i18n";
 
     let selectedOption = $state("about");
     let element: HTMLElement | null = null
@@ -24,41 +25,41 @@
 
 <div class="bg-black-100 flex w-full mx-[15%] my-xl relative" bind:this={element}>
     <div class="bg-black-200/20 px-lg py-md flex flex-col gap-y-sm">
-        <p class="text-black-300 text-sm mb-xs">Options</p>
+        <p class="text-black-300 text-sm mb-xs">{$t("settings.options")}</p>
         <Button
             intent="settings"
             onClick={() => (selectedOption = "about")}
             class={`${selectedOption === "about" ? "bg-brand-primary" : ""}`}
         >
-            About
+            {$t("settings.about.title")}
         </Button>
         <Button
             intent="settings"
             onClick={() => (selectedOption = "spaces")}
             class={`${selectedOption === "spaces" ? "bg-brand-primary" : ""}`}
         >
-            Spaces
+            {$t("settings.spaces.title")}
         </Button>
         <Button
             intent="settings"
             onClick={() => (selectedOption = "appearance")}
             class={`${selectedOption === "appearance" ? "bg-brand-primary" : ""}`}
         >
-            Appearance
+            {$t("settings.appearance.title")}
         </Button>
         <Button
             intent="settings"
             onClick={() => (selectedOption = "shortcuts")}
             class={`${selectedOption === "shortcuts" ? "bg-brand-primary" : ""}`}
         >
-            Shortcuts
+            {$t("settings.shortcuts.title")}
         </Button>
         <Button
             intent="settings"
             onClick={() => (selectedOption = "ai")}
             class={`${selectedOption === "ai" ? "bg-brand-primary" : ""}`}
         >
-            AI
+            {$t("settings.ai.title")}
         </Button>
     </div>
     <div class="flex justify-start lg:mx-xl mx-sm my-xl w-full">

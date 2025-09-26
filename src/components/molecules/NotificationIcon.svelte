@@ -2,6 +2,7 @@
     import Button from "@components/atoms/Button.svelte";
     import { notifications } from "../../lib/stores/notifications/notification-store";
     import { fade, fly } from "svelte/transition";
+    import { t } from "$lib/i18n";
     let showNotifications = $state(false)
     let notificationCount: number = $state(0);
     $effect(() => {
@@ -22,12 +23,12 @@
         <div class="absolute right-0 mt-2 w-72 bg-black-100 rounded-md shadow-lg py-1 z-50 max-h-80 overflow-y-auto bottom-full"
              transition:fly={{ y: -10, duration: 200 }}>
             {#if notificationCount === 0}
-                <div class="text-black-400 text-center py-4">No new notifications.</div>
+                <div class="text-black-400 text-center py-4">{$t("notifications.noNew")}</div>
             {:else}
                 {#each $notifications as notification (notification.id)}
                     <div class="p-4 border-b border-gray-200">
                         <p class="text-sm font-semibold">{notification.message}</p>
-                        <button onclick={() => notifications.remove(notification.id)} class="text-xs text-brand-primary hover:underline hover:cursor-pointer">Dismiss</button>
+                        <button onclick={() => notifications.remove(notification.id)} class="text-xs text-brand-primary hover:underline hover:cursor-pointer">{$t("notifications.dismiss")}</button>
                     </div>
                 {/each}
             {/if}

@@ -13,6 +13,7 @@
     import { getOllamaModels } from "../../lib/api/tauri/get/ai-api-get";
     import { onMount } from "svelte";
     import ModelCreation from "./ModelCreation.svelte";
+    import { t } from "$lib/i18n";
 
     let activeModelName = $state<string | null>(null);
     let parentRect = $state<DOMRect | null>(null);
@@ -87,7 +88,7 @@
                     {/each}
                 </ul>
             {:else}
-                <p class="text-black-400 mb-sm">No spaces found.</p>
+                <p class="text-black-400 mb-sm">{$t('settings.ai.noModel')}</p>
             {/if}
         </div>
         <div class="flex justify-end w-full items-end">
@@ -95,7 +96,7 @@
                 intent="primary"
                 onClick={() => ($showModelCreation = !$showModelCreation)}
             >
-                Pull a new model
+                {$t("settings.ai.pullModelButton")}
             </Button>
         </div>
         {/if}
@@ -137,7 +138,7 @@
                     />
                     <path d="M8 6V4c0-1.105.895-2 2-2h4c1.105 0 2 .895 2 2v2" />
                 </svg>
-                Delete
+                {$t("settings.ai.delete")}
             </button>
         </div>
     </div>

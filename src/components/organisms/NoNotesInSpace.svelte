@@ -4,6 +4,7 @@
     import { activeSpace } from "../../lib/stores/workspace/spaces-store";
     import woolyLogo from "../../assets/icons/WoolyStrokeClear.svg"
     import { showCommandPalette } from "../../lib/stores/commandpalette/commandpalette";
+    import { t } from "$lib/i18n";
 </script>
 
 <div
@@ -15,11 +16,11 @@
             width="250"
         />
         <p class="text-black-400 text-2xl font-semibold">
-            There aren't notes in the space or they are not open.
+            {$t('editor.noNotesOpen')}
         </p>
         <div class="flex flex-col space-y-sm items-center">
-            <Button intent="link" onClick={() => createNote($activeSpace ?? '', null)}>Create a new note (Ctrl + N)</Button>
-            <Button intent="link" onClick={() => $showCommandPalette = !$showCommandPalette}>Search for notes or spaces (Ctrl + K)</Button>
+            <Button intent="link" onClick={() => createNote($activeSpace ?? '', null)}>{$t('editor.quickAccess.createNote')}</Button>
+            <Button intent="link" onClick={() => $showCommandPalette = !$showCommandPalette}>{$t('editor.quickAccess.searchNote')}</Button>
         </div>
     </div>
 </div>

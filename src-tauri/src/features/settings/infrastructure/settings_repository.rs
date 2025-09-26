@@ -6,7 +6,7 @@ use tokio::fs;
 
 use crate::{
     features::settings::domain::repository::SettingsRepository,
-    shared::repositories::filesystem_repository::FileSystemRepository,
+    shared::{repositories::filesystem_repository::FileSystemRepository, utils::{atomic_write::write_atomic, merge_values::merge_values}},
 };
 
 #[derive(Clone)]
@@ -34,10 +34,14 @@ impl SettingsRepository for FileSystemSettingsRepository {
     async fn create_settings(&self) -> Result<(), String> {
         let settings_path = self.get_settings_path()?;
         if !settings_path.exists() {
-            let default_settings = "{\"primaryColor\": \"#D1600A\"}".to_string();
-            fs::write(&settings_path, &default_settings)
-                .await
-                .map_err(|e| format!("Failed to create settings file: {}", e))?;
+            let default_settings = json!({
+                "primaryColor": "#D1600A",
+                "theme": "default",
+                "locale": "en"
+            });
+            let serialized = serde_json::to_string_pretty(&default_settings).map_err(|e| e.to_string())?;
+
+            write_atomic(&settings_path, &serialized).await?;
         }
         Ok(())
     }
@@ -58,7 +62,7 @@ impl SettingsRepository for FileSystemSettingsRepository {
             Ok(content)
         } else {
             // Return an empty string if the file does not exist.
-            Ok("".to_string())
+            Ok("{}".to_string())
         }
     }
 
@@ -75,28 +79,16 @@ impl SettingsRepository for FileSystemSettingsRepository {
             .map_err(|e| format!("Failed to parse new setting JSON: {}", e))?;
 
         // Merge keys safely
-        match (
-            current_settings.as_object_mut(),
-            new_setting_value.as_object(),
-        ) {
-            (Some(curr_map), Some(new_map)) => {
-                for (k, v) in new_map {
-                    curr_map.insert(k.clone(), v.clone());
-                }
-            }
-            _ => {
-                return Err("Settings must be JSON objects".into());
-            }
-        }
+        merge_values(&mut current_settings, &new_setting_value);
 
         // Serialize merged settings once
         let merged_settings_str =
-            serde_json::to_string(&current_settings).map_err(|e| e.to_string())?;
+            serde_json::to_string_pretty(&current_settings).map_err(|e| e.to_string())?;
 
-        fs::write(&settings_path, merged_settings_str)
-            .await
-            .map_err(|e| e.to_string())?;
+        write_atomic(&settings_path, &merged_settings_str).await?;
 
         Ok(())
     }
+
+    
 }

@@ -11,6 +11,7 @@
   import Button from "@components/atoms/Button.svelte";
   import Icon from "@components/atoms/Icon.svelte";
   import { listen, type UnlistenFn } from "@tauri-apps/api/event";
+    import { t } from "$lib/i18n";
   let input = "";
 
   let isGenerating: boolean = false;
@@ -31,7 +32,7 @@
     if (!input.trim()) return;
 
     if (!$selectedModel) {
-      notifications.add("Please select an AI model.", "error");
+      notifications.add($t('ai.selectModel'), "error");
       return;
     }
 
@@ -79,7 +80,7 @@
       notifications.add(`Error: ${error}`, "error");
       aiMessages.update((msgs) => {
         msgs[currentAiMessageIndex].text =
-          "Sorry, I was unable to generate a response at this time.";
+          $t('ai.noResponse');
         msgs[currentAiMessageIndex].thinking = "";
         return [...msgs];
       });
@@ -93,10 +94,10 @@
         useTools: false,
       });
     } catch (e) {
-      notifications.add("Couldn't send message to AI", "error");
+      notifications.add($t("ai.noMsg"), "error");
       aiMessages.update((msgs) => {
         msgs[$aiMessages.length - 1].text =
-          "Sorry, I am unable to generate a response at this time.";
+           $t('ai.noResponse');
         msgs[$aiMessages.length - 1].thinking = "";
         return [...msgs];
       });
@@ -123,7 +124,7 @@
   async function stopGenerating() {
     cleanupListeners();
     aiMessages.update((msgs) => {
-      msgs[$aiMessages.length - 1].text = "Generation stopped by the user.";
+      msgs[$aiMessages.length - 1].text = $t('ai.genStopped');
       msgs[$aiMessages.length - 1].thinking = "";
       return [...msgs];
     });
@@ -153,7 +154,7 @@
   <textarea
     bind:this={textareaElement}
     class="w-full px-sm py-xs rounded-md resize-none focus:border-none focus:outline-none resizable-textarea"
-    placeholder="Ask a follow-up"
+    placeholder={$t('ai.inputPlaceholder')}
     bind:value={input}
     oninput={resizeTextarea}
     onkeypress={(e) => {
@@ -201,7 +202,7 @@
               }}
             >
               <Icon iconName="ai" width="20" />
-              <span>Chat Mode</span>
+              <span>{$t('ai.chatMode')}</span>
             </button>
             <button
               class="block w-full text-left px-sm py-xs hover:bg-black-200 rounded-md flex items-center space-x-sm cursor-pointer"
@@ -211,7 +212,7 @@
               }}
             >
               <Icon iconName="stars" width="20" />
-              <span>Agentic Mode</span>
+              <span>{$t('ai.agenticMode')}</span>
             </button>
           </div>
         {/if}

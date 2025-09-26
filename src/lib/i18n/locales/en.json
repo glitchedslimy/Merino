@@ -1,0 +1,132 @@
+{
+    "settings": {
+        "options": "Options",
+        "about": {
+            "title": "App",
+            "application": {
+                "title": "Application",
+                "version": "Application version: ",
+                "upToDate": "Your app is up to date!",
+                "checking": "Checking...",
+                "checkingUpdates": "Checking for updates...",
+                "updateFound": "Update available: ",
+                "checkFail": "Failed to check updates.",
+                "changelogs": "Read the changelogs",
+                "search": "Search for updates",
+                "install": "Install update"
+            },
+            "language": {
+                "title": "Language",
+                "changeLang": "Change the language to display."
+            }
+        },
+        "spaces": {
+            "title": "Spaces",
+            "createSpace": "Create new space",
+            "create": "Create",
+            "spaceCreation": {
+                "title": "Space Creation",
+                "inputTitle": "Space name",
+                "inputPlaceholder": "My Epic namespace"
+            },
+            "noSpace": "No spaces found.",
+            "deletedSpace": "Deleted Space",
+            "delete": "Delete"
+        },
+        "appearance": {
+            "title": "Appearance",
+            "themes": {
+                "title": "Selected Theme",
+                "description": "The base theme selected on Merino."
+            },
+            "color": {
+                "title": "Accent color",
+                "description": "Change the accent color of the theme used."
+            }
+        },
+        "shortcuts": {
+            "title": "Shortcuts",
+            "disclaimer": "For now is just a display of the shortcuts",
+            "shortcut": {
+                "openSettings": "Open Settings",
+                "commandPalette": "Open command palette / Search Notes"
+            }
+        },
+        "ai": {
+            "title": "AI",
+            "pullModelButton": "Pull a new model",
+            "delete": "Delete",
+            "pulling": "Pulling...",
+            "pulls": "Pulls",
+            "updated": "Updated",
+            "noModels": "No models found",
+            "fetch": {
+                "fetchingModels": "Fetching models from ollama, please wait.",
+                "pullModelButton": "Pull model",
+                "back": "Back"
+            }
+        }
+    },
+    "workspace": {
+        "askWooly": "Ask Wooly",
+        "templates": "Templates",
+        "popUpMenu": {
+            "folder": {
+                "createNote": "Create a new note in the folder",
+                "create": "Create a new folder",
+                "delete": "Delete folder",
+                "rename": "Rename folder"
+            },
+            "note": {
+                "delete": "Delete note",
+                "rename": "Rename note"
+            }
+        }
+    },
+    "editor": {
+        "noNotesOpen": "There aren't notes in the space or are not open.",
+        "openNoteToStart": "Open a note to start",
+        "quickAccess": {
+            "createNote": "Create a new note (Ctrl + N)",
+            "searchNote": "Search for notes in this space (Ctrl + P)"
+        },
+        "editor": {
+            "text": "Text",
+            "attachment": "Attachment",
+            "unordered": "Unordered List",
+            "ordered": "Ordered List",
+            "checklist": "Checklist",
+            "delimiter": "Delimiter",
+            "quote": "Quote",
+            "video": "Video",
+            "heading": "Heading"
+        }
+    },
+    "ai": {
+        "inputPlaceholder": "Ask a follow-up",
+        "thinking": "Show thinking",
+        "selectModel": "Please select an AI model.",
+        "noResponse": "Sorry, I was unable to generate a response at this time.",
+        "noMsg": "Couldn't send message to AI.",
+        "genStopped": "Generation stopped by the user.",
+        "chatMode": "Chat mode",
+        "agenticMode": "Agent mode",
+        "ai": "AI",
+        "aiThinking": "AI is thinking...",
+        "ollama": {
+            "title": "Install or run Ollama to get AI features.",
+            "getOllama": "Get Ollama",
+            "externalModel": "I'll use an external model."
+        }
+    },
+    "commandPalette": {
+        "placeholder": "Search a note or use a command",
+        "createNote": "New note",
+        "searching": "Buscando...",
+        "noNotesOrCommands": "No hay comandos o notas."
+    },
+    "notifications": {
+        "noNew": "No new notificatins.",
+        "dismiss": "Dismiss"
+    }
+}

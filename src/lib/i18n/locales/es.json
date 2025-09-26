@@ -1,0 +1,131 @@
+{
+    "settings": {
+        "options": "Opciones",
+        "about": {
+            "title": "App",
+            "application": {
+                "title": "Aplicación",
+                "version": "Versión de la aplicación: ",
+                "upToDate": "¡Tu app está al día!",
+                "checking": "Comprobando...",
+                "checkingUpdates": "Comprobando actualizaciones...",
+                "updateFound": "Actualización disponible: ",
+                "checkFail": "Fallo al comprobar actualizaciones.",
+                "changelogs": "Lee el changelog",
+                "search": "Buscar actualizaciones",
+                "install": "Instalar actualización"
+            },
+            "language": {
+                "title": "Idioma",
+                "changeLang": "Cambia el idioma que se muestra."
+            }
+        },
+        "spaces": {
+            "title": "Espacios",
+            "createSpace": "Crear un nuevo espacio",
+            "create": "Crear",
+            "spaceCreation": {
+                "title": "Creación de espacio",
+                "inputTitle": "Nombre del espacio",
+                "inputPlaceholder": "Mi espacio épico"
+            },
+            "noSpace": "No se encontraron espacios.",
+            "deletedSpace": "Espacio borrado: ",
+            "delete": "Borrar"
+        },
+        "appearance": {
+            "title": "Apariencia",
+            "themes": {
+                "title": "Tema seleccionado",
+                "description": "El tema base que se aplica a Merino."
+            },
+            "color": {
+                "title": "Color de Acento",
+                "description": "Cambia el color de acento del tema actual."
+            }
+        },
+        "shortcuts": {
+            "title": "Atajos",
+            "disclaimer": "Por ahora es sólo un display de los atajos.",
+            "shortcut": {
+                "openSettings": "Abrir ajustes",
+                "commandPalette": "Abrir paleta de comandos / Buscar Notas"
+            }
+        },
+        "ai": {
+            "title": "IA",
+            "pullModelButton": "Descargar un modelo",
+            "delete": "Borrar",
+            "pulling": "Descargando...",
+            "pulls": "Descargas",
+            "updated": "Actualizado hace",
+            "fetch": {
+                "fetchingModels": "Sacando modelos de ollama, por favor espera.",
+                "pullModelButton": "Descargar modelo",
+                "back": "Atrás"
+            }
+        }
+    },
+    "workspace": {
+        "askWooly": "Pregunta a Wooly",
+        "templates": "Plantillas",
+        "popUpMenu": {
+            "folder": {
+                "createNote": "Crear una nueva nota en la carpeta",
+                "create": "Crear una nueva carpeta",
+                "delete": "Borrar carpeta",
+                "rename": "Renombrar carpeta"
+            },
+            "note": {
+                "delete": "Borrar nota",
+                "rename": "Renombrar nota"
+            }
+        }
+    },
+    "editor": {
+        "noNotesOpen": "No hay notas en este espacio o no tienes abiertas.",
+        "openNoteToStart": "Abre una nota para empezar",
+        "quickAccess": {
+            "createNote": "Crear nueva nota (Ctrl + N)",
+            "searchNote": "Buscar notas en este espacio (Ctrl + P)"
+        },
+        "editor": {
+            "text": "Texto",
+            "attachment": "Archivo adjunto",
+            "unordered": "Lista Desordenada",
+            "ordered": "Lista Ordenada",
+            "checklist": "Checklist",
+            "delimiter": "Delimitador",
+            "quote": "Cita",
+            "video": "Video",
+            "heading": "Cabecera"
+        }
+    },
+    "ai": {
+        "inputPlaceholder": "Pregunta algo",
+        "thinking": "Mostrar pensamiento",
+        "selectModel": "Por favor selecciona un modelo.",
+        "noResponse": "Lo siento, no he podido generar una respuesta ahora mismo.",
+        "noMsg": "No se pudo enviar el mensaje a la IA.",
+        "genStopped": "Generación detenida por el usuario.",
+        "chatMode": "Modo conversación",
+        "agenticMode": "Modo agente",
+        "ai": "IA",
+        "aiThinking": "La IA está pensando...",
+        "ollama": {
+            "title": "Instala o obtén Ollama para las carácteristicas IA.",
+            "getOllama": "Obtén Ollama",
+            "externalModel": "Usaré un modelo externo"
+        }
+    },
+    "commandPalette": {
+        "placeholder": "Busca una nota o usa un comando",
+        "createNote": "Nueva nota",
+        "searching": "Buscando...",
+        "noNotesOrCommands": "No hay comandos o notas."
+    },
+    "notifications": {
+        "noNew": "No hay notificaciones.",
+        "dismiss": "Eliminar"
+    }
+}

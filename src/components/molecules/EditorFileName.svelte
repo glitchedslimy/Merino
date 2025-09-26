@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { t } from "$lib/i18n";
     import {
         handleHideTooltip,
         handleShowTooltip,
@@ -47,6 +48,6 @@
             >
         </p>
     {:else}
-        <p class="items-center justify-center flex">Open a note to start</p>
+        <p class="items-center justify-center flex">{$t("editor.openNoteToStart")}</p>
     {/if}
 </div>

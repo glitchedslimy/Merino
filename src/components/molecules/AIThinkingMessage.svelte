@@ -2,6 +2,7 @@
     import Icon from "@components/atoms/Icon.svelte";
     import { aiMessages } from "../../lib/stores/ai/ai-store";
     import Markdown from "@components/atoms/Markdown.svelte";
+    import { t } from "$lib/i18n";
 
     let { message, index } = $props();
 </script>
@@ -18,7 +19,7 @@
             }}
             class="flex items-center gap-2 p-1"
           >
-            <div class="font-bold">Show Thinking</div>
+            <div class="font-bold">{$t('ai.thinking')}</div>
             <Icon iconName="chevron-down" width="16" height="16" />
           </button>
           
