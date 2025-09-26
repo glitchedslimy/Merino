@@ -1,0 +1,35 @@
+name: Documentation Issue
+description: Report a problem, typo, or improvement in Merino's documentation.
+title: "[DOC]: "
+labels: ["documentation"]
+assignees:
+  - glitchedslimy
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve Merino's documentation!
+  - type: textarea
+    id: doc-part
+    attributes:
+      label: Documentation Section
+      description: Which part of the documentation does this relate to?
+      placeholder: e.g., README, Getting Started, API reference
+    validations:
+      required: true
+  - type: textarea
+    id: issue-description
+    attributes:
+      label: Issue Description
+      description: Describe the problem or improvement suggestion
+      placeholder: e.g., typo, unclear instructions, missing example
+    validations:
+      required: true
+  - type: textarea
+    id: suggested-fix
+    attributes:
+      label: Suggested Fix (optional)
+      description: How would you improve or fix this documentation?
+      placeholder: Optional suggested text, code, or example
+    validations:
+      required: false

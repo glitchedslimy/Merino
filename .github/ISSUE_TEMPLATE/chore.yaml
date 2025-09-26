@@ -1,0 +1,39 @@
+name: Maintenance Task
+description: Track non-feature work like CI/CD tweaks or cleanup tasks.
+title: "[TASK]: "
+labels: ["help wanted"]
+assignees:
+  - glitchedslimy
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template for general maintenance, cleanup, or internal tasks.
+  - type: textarea
+    id: task-description
+    attributes:
+      label: Task Description
+      description: Describe the work that needs to be done
+      placeholder: e.g., update dependencies, refactor code
+    validations:
+      required: true
+  - type: textarea
+    id: reason
+    attributes:
+      label: Reason
+      description: Why is this task necessary?
+      placeholder: Optional explanation
+    validations:
+      required: false
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: How urgent is this task?
+      options:
+        - Low
+        - Medium
+        - High
+      default: 1
+    validations:
+      required: true

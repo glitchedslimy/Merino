@@ -1,0 +1,51 @@
+name: Test / QA Issue
+description: Track testing results for Merino features.
+title: "[TEST]: "
+labels: ["testing", "QA"]
+assignees:
+  - glitchedslimy
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template to log test results, bugs found during QA, or feature verification.
+  - type: textarea
+    id: feature
+    attributes:
+      label: Feature / Module Tested
+      description: Which part of the project was tested?
+      placeholder: e.g., UI login flow, backend API
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps Performed
+      description: List the steps you took during testing
+      placeholder: Numbered list
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Result
+      description: What should have happened?
+      placeholder: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Result
+      description: What actually happened?
+      placeholder: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / Screenshots
+      description: Paste relevant logs or screenshots here
+      render: shell
+    validations:
+      required: false

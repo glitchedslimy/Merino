@@ -1,0 +1,45 @@
+name: Question / Support
+description: Ask a question or request help regarding Merino.
+title: "[QUESTION]: "
+labels: ["question"]
+assignees:
+  - glitchedslimy
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please provide as much detail as possible so I can help you faster.
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: What exactly are you asking or need help with?
+      placeholder: Describe your question clearly
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context / Code
+      description: Include any relevant code, screenshots, or examples
+      placeholder: Paste code or screenshots here
+    validations:
+      required: false
+  - type: checkboxes
+    id: contacttype
+    attributes:
+      label: Preferred contact method
+      description: Optional: How can I reach you if needed?
+      options:
+        - label: Discord
+          required: false
+        - label: Email
+          required: false
+  - type: input
+    id: contact
+    attributes:
+      label: Contact Details
+      description: Your contact details (Discord, email, etc.)
+      placeholder: ex. email@example.com, Discord user...
+    validations:
+      required: false

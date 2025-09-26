@@ -1,0 +1,47 @@
+name: Feature Request
+description: Suggest a new feature or enhancement for Merino.
+title: "[FEATURE]: "
+labels: ["enhancement"]
+assignees:
+  - glitchedslimy
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve Merino! Please describe your idea clearly.
+  - type: input
+    id: title
+    attributes:
+      label: Feature Title
+      description: A short title for the feature
+      placeholder: ex. Add dark mode toggle
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What is this feature and why is it useful?
+      placeholder: Describe your idea in detail
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Any alternative approaches or solutions you thought about
+      placeholder: Optional alternatives
+    validations:
+      required: false
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: How important is this feature?
+      options:
+        - Low
+        - Medium
+        - High
+      default: 1
+    validations:
+      required: true

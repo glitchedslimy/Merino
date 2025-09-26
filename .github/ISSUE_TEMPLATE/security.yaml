@@ -1,0 +1,48 @@
+name: Security Issue
+description: Report a security vulnerability in Merino.
+title: "[SECURITY]: "
+labels: ["security"]
+assignees:
+  - glitchedslimy
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ⚠️ This template is for reporting security vulnerabilities only.
+  - type: textarea
+    id: description
+    attributes:
+      label: Vulnerability Description
+      description: Describe the security issue in detail
+      placeholder: e.g., type of vulnerability, affected components
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: How can this vulnerability be reproduced?
+      placeholder: Numbered steps if possible
+    validations:
+      required: true
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      description: How severe is this issue?
+      options:
+        - Low
+        - Medium
+        - High
+        - Critical
+      default: 2
+    validations:
+      required: true
+  - type: input
+    id: contact
+    attributes:
+      label: Contact Info
+      description: How can we reach you if we need more information?
+      placeholder: email@example.com, Discord user...
+    validations:
+      required: true
