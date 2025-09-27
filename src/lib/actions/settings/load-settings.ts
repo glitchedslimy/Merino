@@ -1,6 +1,7 @@
 import { invoke } from "@tauri-apps/api/core";
 import { activeTheme, primaryColor } from "../../stores/settings/settings";
 import { get } from "svelte/store";
+import { locale } from "$lib/i18n";
 
 export async function loadSettings() {
     const styleElement = document.createElement("style");
@@ -15,6 +16,9 @@ export async function loadSettings() {
             }
             if (settings.theme) {
                 activeTheme.set(settings.theme);
+            }
+            if (settings.locale) {
+                locale.set(settings.locale);
             }
         }
         document.documentElement.setAttribute("data-theme", get(activeTheme) as string);

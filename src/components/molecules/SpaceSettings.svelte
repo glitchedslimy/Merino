@@ -9,6 +9,7 @@
   import NewSpaceCreation from "./NewSpaceCreation.svelte";
   import { showSpaceCreation } from "../../lib/stores/settings/settings";
     import { toasts } from "../../lib/stores/notifications/toast-store";
+    import { t } from "$lib/i18n";
 
   let activeSpaceName = $state<string | null>(null);
   let parentRect = $state<DOMRect | null>(null);
@@ -30,7 +31,7 @@
     try {
       await invoke("delete_space_cmd", { spaceName });
       await loadSpaces();
-      toasts.add(`Deleted space ${spaceName}`, "success")
+      toasts.add(`${$t('settings.spaces.deletedSpace')} ${spaceName}`, "success")
     } catch (e) {
       console.error(e);
     }
@@ -70,7 +71,7 @@
           {/each}
         </ul>
       {:else}
-        <p class="text-black-400 mb-sm">No spaces found.</p>
+        <p class="text-black-400 mb-sm">{$t("settings.spaces.noSpace")}</p>
       {/if}
     </div>
     <div class="flex justify-end w-full items-end">
@@ -78,7 +79,7 @@
         intent="primary"
         onClick={() => ($showSpaceCreation = !$showSpaceCreation)}
       >
-        Create new space
+        {$t("settings.spaces.createSpace")}
       </Button>
     </div>
   {/if}
@@ -118,7 +119,7 @@
           <path d="M19 6v14c0 1.105-.895 2-2 2H7c-1.105 0-2-.895-2-2V6" />
           <path d="M8 6V4c0-1.105.895-2 2-2h4c1.105 0 2 .895 2 2v2" />
         </svg>
-        Delete
+        {$t("settings.spaces.delete")}
       </button>
     </div>
   </div>

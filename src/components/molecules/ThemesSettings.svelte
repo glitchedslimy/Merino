@@ -9,6 +9,7 @@
     import { onMount } from "svelte";
     import { loadSettings } from "../../lib/actions/settings/load-settings";
     import { fade } from "svelte/transition";
+    import { t } from "$lib/i18n";
 
     let themes: any[] | undefined = $state([]);
 
@@ -28,7 +29,6 @@
         }
 
         const newSetting = JSON.stringify({ [key]: parsedValue });
-        console.log("Setting", newSetting)
         try {
             await invoke("update_settings_cmd", { newSetting });
         } catch (e) {
@@ -97,9 +97,9 @@
 <div class="w-full flex flex-col gap-y-lg justify-start">
     <div class="flex justify-between">
         <div>
-            <p>Selected theme</p>
+            <p>{$t('settings.appearance.themes.title')}</p>
             <p class="text-sm text-black-400 mb-2">
-                The base theme selected on Merino.
+                {$t('settings.appearance.themes.description')}
             </p>
         </div>
         <div>
@@ -112,9 +112,9 @@
     </div>
     <div class="flex justify-between">
         <div>
-            <p>Accent color</p>
+            <p>{$t('settings.appearance.color.title')}</p>
             <p class="text-sm text-black-400 mb-2">
-                Changes the accent color of the theme used.
+                {$t('settings.appearance.color.description')}
             </p>
         </div>
         <div>

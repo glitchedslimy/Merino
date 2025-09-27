@@ -5,6 +5,7 @@
     import { onMount } from "svelte";
     import { showModelCreation } from "../../lib/stores/settings/settings";
     import { notifications } from "../../lib/stores/notifications/notification-store";
+    import { t } from "$lib/i18n";
 
     let webModels = $state<string[]>([]);
     let pullingModels = $state<{ [key: string]: boolean }>({});
@@ -41,7 +42,7 @@
 <div class="overflow-y-auto">
     <Button intent="icon" class="flex items-center gap-x-xs" onClick={() => $showModelCreation = false}>
         <Icon iconName="back" />
-        <p>Back</p>
+        <p>{$t("settings.ai.fetch.back")}</p>
     </Button>
     {#if !webModels || webModels.length === 0}
         <div class="flex flex-col items-center justify-center p-xl text-center">
@@ -55,7 +56,7 @@
                 </div>
             </div>
             <p class="mt-md text-lg text-black-300 animate-pulse">
-                Fetching models from the web, please wait...
+                {$t("settings.ai.fetch.fetchingModels")}
             </p>
         </div>
     {/if}
@@ -87,11 +88,11 @@
                         <div class="flex gap-x-sm">
                             <p class="flex gap-x-xs text-black-300">
                                 <Icon iconName="download" width="20" />
-                                {model.pulls} Pulls
+                                {model.pulls} {$t("settings.ai.pulls")}
                             </p>
                             <p class="flex gap-x-xs text-black-300">
                                 <Icon iconName="clock" width="20" />
-                                Updated {model.date}
+                                {$t("settings.ai.updated")} {model.date}
                             </p>
                         </div>
                     </div>
@@ -103,12 +104,12 @@
                                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                     </svg>
-                                    Pulling...
+                                    {$t("settings.ai.pulling")}
                                 </span>
                             </Button>
                         {:else}
                             <Button intent="primary" onClick={() => pullModel(model.model_name)}>
-                                Pull model
+                                {$t("settings.ai.fetch.pullModelButton")}
                             </Button>
                         {/if}
                     </div>

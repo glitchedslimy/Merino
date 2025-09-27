@@ -16,40 +16,39 @@
     } from "../../lib/stores/contextmenu/contextmenu-store";
     import NotesQuickActions from "@components/molecules/NotesQuickActions.svelte";
     import NotesList from "@components/molecules/NotesList.svelte";
-    import { currentRightClickedFolder } from "../../lib/stores/workspace/folders-store";
     import { closeFolderContextMenu, handleFolderActionContextMenu } from "../../lib/actions/workspace/folders";
 
     const noteContextMenuItems = [
         {
             icon: "trash",
-            label: "Delete note",
+            label: 'workspace.popUpMenu.folder.delete',
             action: () => handleNoteActionContextMenu("delete"),
         },
         {
             icon: "pencil",
-            label: "Rename note",
+            label: 'workspace.popUpMenu.folder.rename',
             action: () => handleNoteActionContextMenu("rename"),
         },
     ];
     const folderContextMenuItems = [
         {
             icon: "newnote",
-            label: "Create a note in the folder",
+            label: 'workspace.popUpMenu.folder.createNote',
             action: () => handleFolderActionContextMenu("create_note"),
         },
         {
             icon: "newfolder",
-            label: "Create a folder",
+            label: 'workspace.popUpMenu.folder.create',
             action: () => handleFolderActionContextMenu("create_folder")
         },
         {
             icon: "trash",
-            label: "Delete folder",
+            label: 'workspace.popUpMenu.note.delete',
             action: () => handleFolderActionContextMenu("delete")
         },
         {
             icon: "pencil",
-            label: "Rename folder",
+            label: 'workspace.popUpMenu.note.rename',
             action: () => handleFolderActionContextMenu("rename")
         }
     ];

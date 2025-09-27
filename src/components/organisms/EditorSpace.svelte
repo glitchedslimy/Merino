@@ -1,12 +1,10 @@
 <script lang="ts">
     import { onDestroy, onMount } from "svelte";
-    import EditorJS, { type OutputData } from "@editorjs/editorjs";
+    import EditorJS from "@editorjs/editorjs";
     import { get } from "svelte/store";
     import { activeSpace } from "../../lib/stores/workspace/spaces-store";
     import { initializeEditor } from "../../lib/actions/editor/initializeEditor";
     import { getNoteContent } from "../../lib/api/tauri/get/notes-api-get";
-    import { marked } from "marked";
-    import { renderer } from "../../lib/actions/editor/renderer/marked";
 
     let {
         noteName,

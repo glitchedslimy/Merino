@@ -3,6 +3,7 @@
   import { aiIsLoading, aiMessages, chatContainer, selectedModel } from "../../lib/stores/ai/ai-store";
     import AiThinkingMessage from "@components/molecules/AIThinkingMessage.svelte";
     import Icon from "@components/atoms/Icon.svelte";
+    import { t } from "$lib/i18n";
 </script>
 
 <div class="flex-1 overflow-y-auto p-4 rounded-lg shadow-inner" bind:this={$chatContainer}>
@@ -18,7 +19,7 @@
           {:else}
             <div class="flex gap-x-sm items-center justify-start">
               <Icon iconName="WoolyStroke" width="16"/>
-              <p>AI</p>
+              <p>{$t('ai.ai')}</p>
             </div>
           {/if}
         </div>
@@ -29,7 +30,7 @@
 
   {#if $aiIsLoading}
     <div class="flex justify-center items-center gap-x-xs animate-pulse">
-      <p class="text-black-300 text-sm">AI is thinking...</p>
+      <p class="text-black-300 text-sm">{$t('ai.aiThinking')}</p>
     </div>
   {/if}
 </div>

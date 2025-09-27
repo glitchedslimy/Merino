@@ -1,0 +1,132 @@
+{
+  "settings": {
+    "options": "オプション",
+    "about": {
+      "title": "アプリ",
+      "application": {
+        "title": "アプリケーション",
+        "version": "アプリケーションのバージョン: ",
+        "upToDate": "アプリは最新です！",
+        "checking": "確認中...",
+        "checkingUpdates": "アップデートを確認中...",
+        "updateFound": "アップデートがあります: ",
+        "checkFail": "アップデート確認に失敗しました。",
+        "changelogs": "変更履歴を見る",
+        "search": "アップデートを確認",
+        "install": "アップデートをインストール"
+      },
+      "language": {
+        "title": "言語",
+        "changeLang": "表示する言語を変更します。"
+      }
+    },
+    "spaces": {
+      "title": "スペース",
+      "createSpace": "新しいスペースを作成",
+      "create": "作成",
+      "spaceCreation": {
+        "title": "スペース作成",
+        "inputTitle": "スペース名",
+        "inputPlaceholder": "私のエピックな名前空間"
+      },
+      "noSpace": "スペースが見つかりません。",
+      "deletedSpace": "削除されたスペース",
+      "delete": "削除"
+    },
+    "appearance": {
+      "title": "外観",
+      "themes": {
+        "title": "選択したテーマ",
+        "description": "Merinoで選択された基本テーマ。"
+      },
+      "color": {
+        "title": "アクセントカラー",
+        "description": "使用されるテーマのアクセントカラーを変更します。"
+      }
+    },
+    "shortcuts": {
+      "title": "ショートカット",
+      "disclaimer": "現在はショートカットの表示のみです",
+      "shortcut": {
+        "openSettings": "設定を開く",
+        "commandPalette": "コマンドパレットを開く / ノートを検索"
+      }
+    },
+    "ai": {
+      "title": "AI",
+      "pullModelButton": "新しいモデルを取得",
+      "delete": "削除",
+      "pulling": "取得中...",
+      "pulls": "取得",
+      "updated": "更新済み",
+      "noModels": "モデルが見つかりません",
+      "fetch": {
+        "fetchingModels": "Ollamaからモデルを取得中、しばらくお待ちください。",
+        "pullModelButton": "モデルを取得",
+        "back": "戻る"
+      }
+    }
+  },
+  "workspace": {
+    "askWooly": "Woolyに聞く",
+    "templates": "テンプレート",
+    "popUpMenu": {
+      "folder": {
+        "createNote": "フォルダーに新しいノートを作成",
+        "create": "新しいフォルダーを作成",
+        "delete": "フォルダーを削除",
+        "rename": "フォルダー名を変更"
+      },
+      "note": {
+        "delete": "ノートを削除",
+        "rename": "ノート名を変更"
+      }
+    }
+  },
+  "editor": {
+    "noNotesOpen": "スペースにノートがないか、開かれていません。",
+    "openNoteToStart": "ノートを開いて開始してください",
+    "quickAccess": {
+      "createNote": "新しいノートを作成 (Ctrl + N)",
+      "searchNote": "このスペースでノートを検索 (Ctrl + P)"
+    },
+    "editor": {
+      "text": "テキスト",
+      "attachment": "添付ファイル",
+      "unordered": "箇条書き",
+      "ordered": "番号付きリスト",
+      "checklist": "チェックリスト",
+      "delimiter": "区切り線",
+      "quote": "引用",
+      "video": "ビデオ",
+      "heading": "見出し"
+    }
+  },
+  "ai": {
+    "inputPlaceholder": "フォローアップを尋ねる",
+    "thinking": "思考中",
+    "selectModel": "AIモデルを選択してください。",
+    "noResponse": "申し訳ありませんが、現時点では応答を生成できません。",
+    "noMsg": "AIへのメッセージを送信できませんでした。",
+    "genStopped": "ユーザーによって生成が停止されました。",
+    "chatMode": "チャットモード",
+    "agenticMode": "エージェントモード",
+    "ai": "AI",
+    "aiThinking": "AIが考えています...",
+    "ollama": {
+      "title": "AI機能を利用するにはOllamaをインストールまたは実行してください。",
+      "getOllama": "Ollamaを入手",
+      "externalModel": "外部モデルを使用します。"
+    }
+  },
+  "commandPalette": {
+    "placeholder": "ノートを検索またはコマンドを使用",
+    "createNote": "新しいノート",
+    "searching": "検索中...",
+    "noNotesOrCommands": "コマンドやノートがありません。"
+  },
+  "notifications": {
+    "noNew": "新しい通知はありません。",
+    "dismiss": "閉じる"
+  }
+}

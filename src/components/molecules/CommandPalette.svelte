@@ -6,6 +6,7 @@
     import { openNote } from "../../lib/actions/editor/notes-buffer";
     import { createNote } from "../../lib/actions/workspace/notes";
     import { activeSpace } from "../../lib/stores/workspace/spaces-store";
+    import { t } from "$lib/i18n";
 
     // Utility function to debounce API calls
     function debounce<T extends (...args: any[]) => void>(
@@ -29,7 +30,7 @@
     // Hardcoded commands as before
     const commands = [
         {
-            name: "New Note",
+            name: $t("commandPalette.createNote"),
             action: () => createNote($activeSpace ?? "", null),
         },
     ];
@@ -121,7 +122,7 @@
     <input
         type="text"
         class="w-full px-2 py-1 bg-black-100 border border-black-200 rounded-md mb-xs"
-        placeholder="Search a note or use a command."
+        placeholder={$t("commandPalette.placeholder")}
         bind:value={searchTerm}
         bind:this={inputElement}
     />
@@ -146,11 +147,11 @@
             {/each}
         {:else if isSearching}
             <li class="px-2 py-1 text-black-300 text-sm italic">
-                Searching...
+                {$t("commandPalette.searching")}
             </li>
         {:else}
             <li class="px-2 py-1 text-black-300 text-sm italic">
-                No commands or notes found.
+                {$t("commandPalette.noNotesOrCommands")}
             </li>
         {/if}
     </ul>
