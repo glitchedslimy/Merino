@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { t } from "$lib/i18n";
     import Icon from "@components/atoms/Icon.svelte";
     import { slide } from "svelte/transition";
 
@@ -68,7 +69,7 @@
             class="px-2 py-2 text-left rounded-sm hover:bg-black-200 flex items-center space-x-xs"
         >
             <Icon iconName={item.icon} width="20" />
-            <span>{item.label}</span>
+            <span>{$t(item.label)}</span>
         </button>
     {/each}
 </div>

@@ -11,6 +11,7 @@
     const dropdownOptions = [
         { name: "Español", code: "es" },
         { name: "English", code: "en" },
+        { name: "日本語", code: 'jp'}
     ];
 
     let appVersion = $state("v0.0.0");
@@ -21,6 +22,7 @@
         switch($locale) {
             case "es": return 'Español';
             case "en": return "English";
+            case 'jp': return '日本語';
             default: return "English";
         }
     });

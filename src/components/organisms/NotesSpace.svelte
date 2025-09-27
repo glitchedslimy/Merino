@@ -17,39 +17,38 @@
     import NotesQuickActions from "@components/molecules/NotesQuickActions.svelte";
     import NotesList from "@components/molecules/NotesList.svelte";
     import { closeFolderContextMenu, handleFolderActionContextMenu } from "../../lib/actions/workspace/folders";
-    import { t } from "$lib/i18n";
 
     const noteContextMenuItems = [
         {
             icon: "trash",
-            label: $t('workspace.popUpMenu.note.delete'),
+            label: 'workspace.popUpMenu.folder.delete',
             action: () => handleNoteActionContextMenu("delete"),
         },
         {
             icon: "pencil",
-            label: $t('workspace.popUpMenu.note.rename'),
+            label: 'workspace.popUpMenu.folder.rename',
             action: () => handleNoteActionContextMenu("rename"),
         },
     ];
     const folderContextMenuItems = [
         {
             icon: "newnote",
-            label: $t('workspace.popUpMenu.folder.createNote'),
+            label: 'workspace.popUpMenu.folder.createNote',
             action: () => handleFolderActionContextMenu("create_note"),
         },
         {
             icon: "newfolder",
-            label: $t('workspace.popUpMenu.folder.create'),
+            label: 'workspace.popUpMenu.folder.create',
             action: () => handleFolderActionContextMenu("create_folder")
         },
         {
             icon: "trash",
-            label: $t('workspace.popUpMenu.folder.delete'),
+            label: 'workspace.popUpMenu.note.delete',
             action: () => handleFolderActionContextMenu("delete")
         },
         {
             icon: "pencil",
-            label: $t('workspace.popUpMenu.note.rename'),
+            label: 'workspace.popUpMenu.note.rename',
             action: () => handleFolderActionContextMenu("rename")
         }
     ];

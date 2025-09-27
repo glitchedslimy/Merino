@@ -71,13 +71,13 @@
         "templates": "Plantillas",
         "popUpMenu": {
             "folder": {
-                "createNote": "Crear una nueva nota en la carpeta",
-                "create": "Crear una nueva carpeta",
+                "createNote": "Crear nota en carpeta",
+                "create": "Crear carpeta",
                 "delete": "Borrar carpeta",
                 "rename": "Renombrar carpeta"
             },
             "note": {
-                "delete": "Borrar nota",
+                "delete": "Crear nota",
                 "rename": "Renombrar nota"
             }
         }

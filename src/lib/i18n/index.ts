@@ -4,10 +4,11 @@ type Messages = Record<string, any>;
 
 const locales: Record<string, () => Promise<Messages>> = {
     en: () => import('./locales/en.json'),
-    es: () => import('./locales/es.json')
+    es: () => import('./locales/es.json'),
+    jp: () => import('./locales/jp.json')
 }
 
-export const locale = writable<'en' | 'es'>('en');
+export const locale = writable<'en' | 'es' | 'jp'>('en');
 const messages = writable<Messages>({});
 
 locale.subscribe(async (lang) => {
