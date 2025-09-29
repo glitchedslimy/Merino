@@ -8,9 +8,9 @@ importers:
 
   .:
     dependencies:
-      '@calumk/editorjs-columns':
-        specifier: 0.3.2
-        version: 0.3.2
+      '@calumk/editorjs-codecup':
+        specifier: ^1.3.0
+        version: 1.3.0
       '@cychann/editorjs-quote':
         specifier: 1.0.4
         version: 1.0.4
@@ -32,9 +32,18 @@ importers:
       '@editorjs/list':
         specifier: 2.0.8
         version: 2.0.8
+      '@editorjs/marker':
+        specifier: ^1.4.0
+        version: 1.4.0
       '@editorjs/paragraph':
         specifier: 2.11.7
         version: 2.11.7
+      '@editorjs/table':
+        specifier: ^2.4.5
+        version: 2.4.5
+      '@sotaproject/strikethrough':
+        specifier: ^1.0.1
+        version: 1.0.1
       '@tailwindcss/vite':
         specifier: 4.1.13
         version: 4.1.13(vite@7.1.7(jiti@2.6.0)(lightningcss@1.30.1))
@@ -56,6 +65,9 @@ importers:
       class-variance-authority:
         specifier: 0.7.1
         version: 0.7.1
+      editorjs-alert:
+        specifier: ^1.1.4
+        version: 1.1.4
       editorjs-collapsible-block:
         specifier: 1.0.1
         version: 1.0.1
@@ -65,6 +77,9 @@ importers:
       editorjs-embed-control:
         specifier: 1.0.2
         version: 1.0.2
+      editorjs-inline-hotkey:
+        specifier: ^1.0.5
+        version: 1.0.5
       express:
         specifier: 5.1.0
         version: 5.1.0
@@ -108,14 +123,23 @@ importers:
 
 packages:
 
-  '@calumk/editorjs-columns@0.3.2':
-    resolution: {integrity: sha512-/2dIbuy3Kip7eEt6Z+qGU2js93b7ZtJqVCFCiYdPKuqeYLZlUveueTHvlbOECtZ1sDxUFrVaKbm0wPOR1W0ntw==}
+  '@calumk/codecup@1.9.4':
+    resolution: {integrity: sha512-WWdgRnlMVMl7ivW8mQ3vsjtIh/qQ+29CHm+6uhX6jXOnCS3lXs4IE4e1i301Bmvxdd6EJvizHAF8cVi+QsNAnw==}
+
+  '@calumk/editorjs-codecup@1.3.0':
+    resolution: {integrity: sha512-qBqzF4ycpG1Dfbhbj4XKcHMKQVjf937W+Jb5Ha9xAPYOuuzcGzBUat2evH2XI/vUHnemr/Oj20hbyHYqbsucNQ==}
 
   '@codexteam/icons@0.0.4':
     resolution: {integrity: sha512-V8N/TY2TGyas4wLrPIFq7bcow68b3gu8DfDt1+rrHPtXxcexadKauRJL6eQgfG7Z0LCrN4boLRawR4S9gjIh/Q==}
 
   '@codexteam/icons@0.0.5':
     resolution: {integrity: sha512-s6H2KXhLz2rgbMZSkRm8dsMJvyUNZsEjxobBEg9ztdrb1B2H3pEzY6iTwI4XUPJWJ3c3qRKwV4TrO3J5jUdoQA==}
+
+  '@codexteam/icons@0.0.6':
+    resolution: {integrity: sha512-L7Q5PET8PjKcBT5wp7VR+FCjwCi5PUp7rd/XjsgQ0CI5FJz0DphyHGRILMuDUdCW2MQT9NHbVr4QP31vwAkS/A==}
+
+  '@codexteam/icons@0.0.8':
+    resolution: {integrity: sha512-toTLbLPbrDFl2ZK2mtDC+P7sdrJaqOK6URsjFy6m54Pry8q4ckKeKJ1fOEwVcSGKiwdRhrRO3ZzSbL16DaIBJA==}
 
   '@codexteam/icons@0.3.2':
     resolution: {integrity: sha512-P1ep2fHoy0tv4wx85eic+uee5plDnZQ1Qa6gDfv7eHPkCXorMtVqJhzMb75o1izogh6G7380PqmFDXV3bW3Pig==}
@@ -156,8 +180,14 @@ packages:
   '@editorjs/list@2.0.8':
     resolution: {integrity: sha512-/EJNvpeJYa1YDtYa85ug9R3sbDyI5ZlMHQ2bIh5S9iPa19qXe45jk6kgcew+jMNQq3j4NS4Q6YeeFbU1QkNMWw==}
 
+  '@editorjs/marker@1.4.0':
+    resolution: {integrity: sha512-5ipEXfL44jTTRzgNp/p/YjMO7jT08S5z4V8qA3FFJTfdhKgQyM3mvP1zpdYKw47ZZpVWMCncvk5Nto3BxihEtg==}
+
   '@editorjs/paragraph@2.11.7':
     resolution: {integrity: sha512-qD6bbWvRc4VvP0mXDOm+hOhzzhUYR9ZjcAvgCuKWcCbUMpCvhVF1s8NX40zdjekPi6JEnuHTamCncTrSzVsVhw==}
+
+  '@editorjs/table@2.4.5':
+    resolution: {integrity: sha512-pF48R2wc5m0c+N+RjtCLXBGZd23Rl7EjfSFpmcSViwNsu5RwMgYGrEiQ8mzVh98mbvYQwXm/NYBi9DEUUs970A==}
 
   '@esbuild/aix-ppc64@0.25.10':
     resolution: {integrity: sha512-0NFWnA+7l41irNuaSVlLfgNT12caWJVLzp5eAVhZ0z1qpxbockccEt3s+149rE64VUI3Ml2zt8Nv5JVc4QXTsw==}
@@ -448,6 +478,9 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  '@sotaproject/strikethrough@1.0.1':
+    resolution: {integrity: sha512-tgfYXrg+lY6lCh2ZXyoPfe8rxpe+orRgiI2mOSyu1z/+gb9xIjOGhIXNgC6ehOmZUzqtoWzi9SrIEALCYfQpjA==}
+
   '@standard-schema/spec@1.0.0':
     resolution: {integrity: sha512-m2bOd0f2RT9k8QJx1JN85cZYyH1RqFBdlwtkSlf4tBDYLCiiZnv1fIIwacK6cqwXavOydf0NPToMQgpKq+dVlA==}
 
@@ -671,6 +704,9 @@ packages:
   '@types/estree@1.0.8':
     resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
 
+  '@types/prismjs@1.26.5':
+    resolution: {integrity: sha512-AUZTa7hQ2KY5L7AmtSiqxlhWxb4ina0yd8hNbl4TWuqnv/pFP0nDMb3YrfSBf4hJVGLh2YEIBfKaBW/9UEl6IQ==}
+
   accepts@2.0.0:
     resolution: {integrity: sha512-5cvg6CtKwfgdmVqY1WIiXKc3Q1bkRqGLi+2W/6ao+6Y7gu/RCwRuAhGEzh5B4KlszSuTLgZYuqFqo5bImjNKng==}
     engines: {node: '>= 0.6'}
@@ -773,6 +809,9 @@ packages:
     resolution: {integrity: sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==}
     engines: {node: '>= 0.4'}
 
+  editorjs-alert@1.1.4:
+    resolution: {integrity: sha512-m6w/cRxnFucC3dyfrB+DTNXw70SnJNv05AX6P3bZ8qkbzB1OAJTuaFrEKZBdN0YvEvTe1zvg3S344EkPAveemQ==}
+
   editorjs-collapsible-block@1.0.1:
     resolution: {integrity: sha512-TzKHle2GIVIfhRMBEa+oMOsM3guemNgM5cn/oRGxSED0DsN3f+LK957+U9LvG721Qcy5xfAYxqPoHDk6TIMaiw==}
 
@@ -784,6 +823,9 @@ packages:
 
   editorjs-embed-control@1.0.2:
     resolution: {integrity: sha512-86LMjOTwm+er9aq32OOnfPXXiJwRfVkyjfpwX1e7K4DcJ1JaWLOaXWZW0hEl5ZJ97CxqU3cFHQUkvEHqBLXjxQ==}
+
+  editorjs-inline-hotkey@1.0.5:
+    resolution: {integrity: sha512-lMvmqE3H3msLuJB5WCmnva3Vj920cjuyN/f8hpgho3+9f4sZNs6Y1ttFM6P6FyIAXI1iQ++v4SriYAKcOko6Jg==}
 
   ee-first@1.1.1:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
@@ -1070,6 +1112,10 @@ packages:
     resolution: {integrity: sha512-3Ybi1tAuwAP9s0r1UQ2J4n5Y0G05bJkpUIO0/bI9MhwmD70S5aTWbXGBwxHrelT+XM1k6dM0pk+SwNkpTRN7Pg==}
     engines: {node: ^10 || ^12 || >=14}
 
+  prismjs@1.30.0:
+    resolution: {integrity: sha512-DEvV2ZF2r2/63V+tK8hQvrR2ZGn10srHbXviTlcv7Kpzw8jWiNTqbVgjO3IY8RxrrOUF8VPMQQFysYYYv0YZxw==}
+    engines: {node: '>=6'}
+
   proxy-addr@2.0.7:
     resolution: {integrity: sha512-llQsMLSUDUPT44jdrU/O37qlnifitDP+ZwrmmZcoSKyLKvtZxpyV0n2/bD/N4tBAAZ/gJEdZU7KMraoK1+XYAg==}
     engines: {node: '>= 0.10'}
@@ -1167,9 +1213,6 @@ packages:
     resolution: {integrity: sha512-bOJXmuwLNaoqPCTWO8mPu/fwxI5peGE5Efe7oo6Cakpz/G60vsnVF6mxbGODaxMUFUKEnjm6XOwHEqOht6cbvw==}
     engines: {node: '>=18'}
 
-  sweetalert2@11.23.0:
-    resolution: {integrity: sha512-cKzzbC3C1sIs7o9XAMw4E8F9kBtGXsBDUsd2JZ8JM/dqa+nzWwSGM+9LLYILZWzWHzX9W+HJNHyBlbHPVS/krw==}
-
   tailwindcss@4.1.13:
     resolution: {integrity: sha512-i+zidfmTqtwquj4hMEwdjshYYgMbOrPzb9a0M3ZgNa0JMoZeFC6bxZvO8yr8ozS6ix2SDz0+mvryPeBs2TFE+w==}
 
@@ -1205,10 +1248,6 @@ packages:
   unpipe@1.0.0:
     resolution: {integrity: sha512-pjy2bYhSsufwWlKwPc+l3cN7+wuJlK6uz0YdJEOlQDbl6jo/YlPi4mb8agUkVC8BF7V8NuzeyPNqRksA3hztKQ==}
     engines: {node: '>= 0.8'}
-
-  uuid@8.3.2:
-    resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
-    hasBin: true
 
   vary@1.1.2:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
@@ -1277,15 +1316,22 @@ packages:
 
 snapshots:
 
-  '@calumk/editorjs-columns@0.3.2':
+  '@calumk/codecup@1.9.4':
     dependencies:
-      '@editorjs/editorjs': 2.31.0
-      sweetalert2: 11.23.0
-      uuid: 8.3.2
+      '@types/prismjs': 1.26.5
+      prismjs: 1.30.0
+
+  '@calumk/editorjs-codecup@1.3.0':
+    dependencies:
+      '@calumk/codecup': 1.9.4
 
   '@codexteam/icons@0.0.4': {}
 
   '@codexteam/icons@0.0.5': {}
+
+  '@codexteam/icons@0.0.6': {}
+
+  '@codexteam/icons@0.0.8': {}
 
   '@codexteam/icons@0.3.2': {}
 
@@ -1336,9 +1382,17 @@ snapshots:
     dependencies:
       '@codexteam/icons': 0.3.3
 
+  '@editorjs/marker@1.4.0':
+    dependencies:
+      '@codexteam/icons': 0.0.5
+
   '@editorjs/paragraph@2.11.7':
     dependencies:
       '@codexteam/icons': 0.0.4
+
+  '@editorjs/table@2.4.5':
+    dependencies:
+      '@codexteam/icons': 0.0.6
 
   '@esbuild/aix-ppc64@0.25.10':
     optional: true
@@ -1508,6 +1562,10 @@ snapshots:
 
   '@rollup/rollup-win32-x64-msvc@4.52.2':
     optional: true
+
+  '@sotaproject/strikethrough@1.0.1':
+    dependencies:
+      '@codexteam/icons': 0.0.8
 
   '@standard-schema/spec@1.0.0': {}
 
@@ -1699,6 +1757,8 @@ snapshots:
 
   '@types/estree@1.0.8': {}
 
+  '@types/prismjs@1.26.5': {}
+
   accepts@2.0.0:
     dependencies:
       mime-types: 3.0.1
@@ -1782,6 +1842,8 @@ snapshots:
       es-errors: 1.3.0
       gopd: 1.2.0
 
+  editorjs-alert@1.1.4: {}
+
   editorjs-collapsible-block@1.0.1:
     dependencies:
       '@codexteam/icons': 0.3.3
@@ -1796,6 +1858,8 @@ snapshots:
   editorjs-embed-control@1.0.2:
     dependencies:
       '@codexteam/icons': 0.3.3
+
+  editorjs-inline-hotkey@1.0.5: {}
 
   ee-first@1.1.1: {}
 
@@ -2076,6 +2140,8 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
+  prismjs@1.30.0: {}
+
   proxy-addr@2.0.7:
     dependencies:
       forwarded: 0.2.0
@@ -2240,8 +2306,6 @@ snapshots:
       magic-string: 0.30.19
       zimmerframe: 1.1.4
 
-  sweetalert2@11.23.0: {}
-
   tailwindcss@4.1.13: {}
 
   tapable@2.2.3: {}
@@ -2272,8 +2336,6 @@ snapshots:
   typescript@5.9.2: {}
 
   unpipe@1.0.0: {}
-
-  uuid@8.3.2: {}
 
   vary@1.1.2: {}
 

@@ -10,19 +10,44 @@ import Quote from "@cychann/editorjs-quote";
 import Delimiter from "@editorjs/delimiter";
 import Attaches from '@editorjs/attaches';
 import ColorPicker from "editorjs-color-picker";
-
+import Marker from "@editorjs/marker";
+import Alert from 'editorjs-alert';
+import Table from '@editorjs/table'
+import Strike from '@sotaproject/strikethrough'
+import Hotkey from 'editorjs-inline-hotkey'
+import Code from '@calumk/editorjs-codecup'
 interface EditorJSConfig extends ConversionConfig, I18nConfig, ToolConfig, EditorConfig { }
 
 const editorConfig: EditorJSConfig = {
     placeholder: "Hey! What are we going to do today?",
 
     tools: {
+        code: {
+            class: Code,
+            inlineToolbar: true
+        },
+        hotkey: {
+            class: Hotkey,
+            inlineToolbar: true
+        },
+        strike: {
+            class: Strike,
+            inlineToolbar: true
+        },
+        Table: {
+            class: Table,
+            inlineToolbar: true
+        },
+        Marker: {
+            class: Marker,
+            inlineToolbar: true
+        },
+        alert: {
+            class: Alert,
+            inlineToolbar: true
+        },
         ColorPicker: {
             class: ColorPicker,
-        },
-        attaches: {
-            class: Attaches,
-            inlineToolbar: true
         },
         list: {
             class: EditorjsList,

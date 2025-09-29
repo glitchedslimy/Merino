@@ -295,3 +295,46 @@ h6.ce-header {
     background-color: var(--color-black-200); /* choose your selection color */
     color: #fff; /* the text color while selected */
 }
+
+.cdx-block > .cdx-marker {
+    background-color: var(--color-utils-yellow-bright);
+}
+
+.tc-cell--selected {
+    background-color: var(--color-black-100) !important;
+}
+
+.tc-popover--opened {
+    background-color: var(--color-black-100) !important;
+    color: #fff !important;
+    border-color: var(--color-black-200) !important;
+}
+
+.tc-popover__item-icon {
+    background-color: var(--color-black-200) !important;
+    border: none !important;
+}
+
+.tc-add-row:hover {
+    background-color: var(--color-black-100) !important;
+}
+
+.tc-add-row::before {
+    background-color: var(--color-black-100) !important;
+}
+
+.tc-wrap {
+    --color-background: var(--color-black-100) !important;
+    --color-border: var(--color-black-200) !important;
+}
+
+.editorjs-inline-hotkey {
+    background-color: var(--color-black-100) !important;
+    color: #fff !important;
+    border-color: var(--color-black-300) !important;
+    box-shadow: var(--color-black-300) 0px 1px 0px !important;
+}
+
+.ce-popover-item:hover {
+    background-color: var(--color-black-200) !important;
+}
